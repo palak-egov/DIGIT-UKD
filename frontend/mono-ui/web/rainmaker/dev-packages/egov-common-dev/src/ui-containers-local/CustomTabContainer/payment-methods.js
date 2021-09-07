@@ -155,7 +155,6 @@ export const payeeDetails = getCommonContainer({
       labelKey: "NOC_PAYMENT_PAYER_NAME_PLACEHOLDER"
     },
     jsonPath: "ReceiptTemp[0].Bill[0].paidBy",
-    pattern: getPattern("Name"),
     required: true
   }),
   payerMobileNo: getTextField({
@@ -303,6 +302,7 @@ export const chequeDetails = getCommonContainer({
       labelKey: "NOC_PAYMENT_IFSC_CODE_PLACEHOLDER"
     },
     required: true,
+    pattern: "^[A-Z]{4}0[A-Z0-9]{6}$",
     jsonPath: "ReceiptTemp[0].instrument.ifscCode",
     iconObj: {
       iconName: "search",
@@ -441,7 +441,9 @@ export const demandDraftDetails = getCommonContainer({
       labelKey: "NOC_PAYMENT_IFSC_CODE_PLACEHOLDER"
     },
     required: true,
+    pattern: "^[A-Z]{4}0[A-Z0-9]{6}$",
     jsonPath: "ReceiptTemp[0].instrument.ifscCode",
+    
     iconObj: {
       iconName: "search",
       position: "end",
@@ -556,7 +558,7 @@ export const paymentMethods = [
     tabButton: "COMMON_CHEQUE",
     tabIcon: "Schedule",
     tabContent: { cheque }
-  },
+  }/* ,
   {
     code: "DD",
     tabButton: "COMMON_DD",
@@ -586,6 +588,6 @@ export const paymentMethods = [
     tabButton: "COMMON_POSTAL_ORDER",
     tabIcon: "Schedule",
     tabContent: { postal_order }
-  }
+  } */
 ]
 

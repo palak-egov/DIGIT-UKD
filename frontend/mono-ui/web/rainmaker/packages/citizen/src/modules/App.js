@@ -1,20 +1,22 @@
-import { LoadingIndicator, Toast } from "components";
+import React, { Component } from "react";
+import { withRouter } from "react-router";
+import { connect } from "react-redux";
+import { Toast } from "components";
+import { addBodyClass } from "egov-ui-kit/utils/commons";
+import { fetchCurrentLocation, fetchLocalizationLabel, toggleSnackbarAndSetText, setRoute, setPreviousRoute } from "egov-ui-kit/redux/app/actions";
+import { fetchMDMSData } from "egov-ui-kit/redux/common/actions";
+import { logout } from "egov-ui-kit/redux/auth/actions";
+import Router from "./Router";
 import commonConfig from "config/common";
 import redirectionLink from "egov-ui-kit/config/smsRedirectionLinks";
-import { fetchCurrentLocation, fetchLocalizationLabel, setPreviousRoute, setRoute, toggleSnackbarAndSetText } from "egov-ui-kit/redux/app/actions";
-import { logout } from "egov-ui-kit/redux/auth/actions";
-import { fetchMDMSData } from "egov-ui-kit/redux/common/actions";
-import { handleFieldChange } from "egov-ui-kit/redux/form/actions";
-import { addBodyClass, getQueryArg } from "egov-ui-kit/utils/commons";
-import { getLocale } from "egov-ui-kit/utils/localStorageUtils";
-import get from "lodash/get";
-import isEmpty from "lodash/isEmpty";
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router";
-import './index.css';
-import Router from "./Router";
 import routes from "./Routes";
+import { LoadingIndicator } from "components";
+import { getLocale } from "egov-ui-kit/utils/localStorageUtils";
+import { handleFieldChange } from "egov-ui-kit/redux/form/actions";
+import { getQueryArg } from "egov-ui-kit/utils/commons";
+import isEmpty from "lodash/isEmpty";
+import get from "lodash/get"
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -75,29 +77,22 @@ class App extends Component {
   };
 
   handleSMSLinks = () => {
-    const { authenticated, setPreviousRoute, setRoute, userInfo, logout } = this.props;
+    const { authenticated, setPreviousRoute, setRoute, userInfo,logout } = this.props;
     const { href } = window.location;
-    const mobileNumber = getQueryArg(href, "mobileNo");
+    const mobileNumber = getQueryArg(href,"mobileNo");
     const citizenMobileNo = get(userInfo, "mobileNumber");
 
-    if (authenticated) {
-      if (mobileNumber === citizenMobileNo||(mobileNumber&&typeof mobileNumber=="string"&&mobileNumber.includes(citizenMobileNo))) {
-        let redirectionURL = redirectionLink(href);
-        if (redirectionURL && redirectionURL.includes && redirectionURL.includes('digit-ui')) {
-          window.location.href = redirectionURL.startsWith('/digit') ? redirectionURL.split('&')[0] : `/${redirectionURL.split('&')[0]}`;
-          return;
-        } else {
-          setRoute(redirectionURL);
-        }
-      } else {
+    if(authenticated){
+      if(mobileNumber === citizenMobileNo){
+        setRoute(redirectionLink(href));
+      }else{
         logout()
         setRoute("/user/otp?smsLink=true");
-        // setPreviousRoute(redirectionLink(href));
-      }
-    } else {
+       // setPreviousRoute(redirectionLink(href));
+      } 
+    }else{
       setRoute("/user/otp?smsLink=true");
-      let redirectionURL = redirectionLink(href);
-      setPreviousRoute(redirectionURL);
+      setPreviousRoute(redirectionLink(href));
     }
     // if (!authenticated) {
     //   setRoute("/user/otp?smsLink=true");
@@ -116,7 +111,7 @@ class App extends Component {
     }
     const isWithoutAuthSelfRedirect = location && location.pathname && location.pathname.includes("openlink");
     const isPrivacyPolicy = location && location.pathname && location.pathname.includes("privacy-policy");
-    const isPublicSearch = location && location.pathname && (location.pathname.includes("/withoutAuth/pt-mutation/public-search") || location.pathname.includes("/withoutAuth/wns/public-search"));
+    const isPublicSearch = location && location.pathname && (location.pathname.includes("/withoutAuth/pt-mutation/public-search"));
     const isPublicSearchPay = location && location.pathname && location.pathname.includes("/withoutAuth/egov-common/pay");
     if (nextProps.hasLocalisation !== this.props.hasLocalisation && !authenticated && !getQueryArg("", "smsLink") && !isWithoutAuthSelfRedirect && !isPrivacyPolicy && !isPublicSearch && !isPublicSearchPay) {
       nextProps.hasLocalisation && this.props.history.replace("/language-selection");
@@ -125,34 +120,11 @@ class App extends Component {
 
   render() {
     const { toast, loading, defaultUrl, hasLocalisation } = this.props;
-    let loginScreens = false;
-    let logginScreensUrls = ['/citizen/user/login','/citizen/user/otp', '/citizen/forgot-password', '/citizen/language-selection', '/citizen/user/register'];
-    if (logginScreensUrls.includes(window.location.pathname)) {
-      loginScreens = true;
-    }
-    let sourceUrl = `${window.location.origin}/citizen`;
-     sourceUrl="https://s3.ap-south-1.amazonaws.com/egov-qa-assets";  // changes for the image configured in s3 bucket
     return (
       <div>
-            <div style={{minHeight:'calc(100vh - 3em)'}}>
         <Router routes={routes} hasLocalisation={hasLocalisation} defaultUrl={defaultUrl} />
-          </div>
         {toast && toast.open && !isEmpty(toast.message) && <Toast open={toast.open} message={toast.message} variant={toast.variant} />}
         {loading && <LoadingIndicator />}
-        {!loginScreens && <div style={{ width: '100%', display: 'flex', flexFlow: 'column' }}>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <img style={{ display: "inline-flex", height: '1.4em' }} className={"jk-footer-image-cursor"} alt={"Powered by DIGIT"} src={`${sourceUrl}/digit-footer.png`} onError={"this.src='./../digit-footer.png'"} onClick={() => {
-              window.open('https://www.digit.org/', '_blank').focus();
-            }}></img>
-          </div>
-        </div>}
-        {loginScreens && <div style={{ width: '100%', position: 'fixed', bottom: 0 }}>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <img style={{ display: "inline-flex", height: '1em' }} className={"jk-footer-image-cursor"} alt={"Powered by DIGIT"} src={`${sourceUrl}/digit-footer-bw.png`} onError={"this.src='./../digit-footer-bw.png'"} onClick={() => {
-              window.open('https://www.digit.org/', '_blank').focus();
-            }}></img>
-          </div>
-        </div>}
       </div>
     );
   }
@@ -160,7 +132,7 @@ class App extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { app, auth, common } = state;
-  const { authenticated, userInfo, token } = auth || false;
+  const { authenticated,userInfo,token } = auth || false;
   const { route, toast } = app;
   const { spinner } = common;
   const { stateInfoById } = common || [];

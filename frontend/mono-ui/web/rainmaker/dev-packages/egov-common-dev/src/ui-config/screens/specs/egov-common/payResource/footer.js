@@ -90,7 +90,7 @@ export const callPGService = async (state, dispatch) => {
     );
     return;
   }
-  const payerInfo=get(billPayload, "Bill[0].payer",'').replace("COMMON_",'');
+
   const user = {
     name: get(billPayload, "Bill[0].paidBy", get(billPayload, "Bill[0].payerName")),
     mobileNumber: get(billPayload, "Bill[0].payerMobileNumber", get(billPayload, "Bill[0].mobileNumber")),
@@ -116,12 +116,11 @@ export const callPGService = async (state, dispatch) => {
         billId: get(billPayload, "Bill[0].id"),
         consumerCode: consumerCode,
         productInfo: "Common Payment",
-        gateway: "AXIS",
+        gateway: "CCAVENUE",
         taxAndPayments,
         user,
         callbackUrl,
-        additionalDetails: { isWhatsapp: localStorage.getItem('pay-channel') == 'whatsapp' ? true : false,
-        paidBy:payerInfo }
+        additionalDetails: { isWhatsapp: localStorage.getItem('pay-channel') == 'whatsapp' ? true : false }
       }
     };
     const goToPaymentGateway = await httpRequest(

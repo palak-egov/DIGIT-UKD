@@ -6,15 +6,16 @@ import { toggleSnackbarAndSetText } from "egov-ui-kit/redux/app/actions";
 import { setFieldProperty } from "egov-ui-kit/redux/form/actions";
 import { httpRequest } from "egov-ui-kit/utils/api";
 import { TENANT } from "egov-ui-kit/utils/endPoints";
-import { getAccessToken, getTenantId, getUserInfo, localStorageGet, localStorageSet } from "egov-ui-kit/utils/localStorageUtils";
+import { getAccessToken, getTenantId, getUserInfo, localStorageGet, localStorageSet, getLocale } from "egov-ui-kit/utils/localStorageUtils";
 import Label from "egov-ui-kit/utils/translationNode";
 import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
 import set from "lodash/set";
 import React from "react";
-import { FETCHBILL, PAYMENTSEARCH } from "./endPoints";
-import { routeTo } from "./PTCommon/FormWizardUtils/formActionUtils";
-import { getPropertyInfoScreenUrl } from "./PTCommon/FormWizardUtils/formUtils";
+import {  PAYMENTSEARCH } from "./endPoints";
+import { initLocalizationLabels } from "egov-ui-kit/redux/app/utils";
+import { showSpinner, hideSpinner } from "egov-ui-kit/redux/common/actions";
+
 
 export const statusToMessageMapping = {
   rejected: "Rejected",
@@ -641,6 +642,7 @@ export const fetchDropdownData = async (dispatch, dataFetchConfig, formKey, fiel
     if (url) {
       let localizationLabels = {};
       if (state && state.app) localizationLabels = (state.app && state.app.localizationLabels) || {};
+      dispatch(showSpinner())
       const payloadSpec = await httpRequest(url, action, queryParams || [], requestBody);
       const dropdownData = boundary
         ? // ? jp.query(payloadSpec, dataFetchConfig.dataPath)
@@ -658,8 +660,15 @@ export const fetchDropdownData = async (dispatch, dataFetchConfig, formKey, fiel
             const mohallaCode = `${queryParams[0].value.toUpperCase().replace(/[.]/g, "_")}_${hierarchyType}_${item.code
               .toUpperCase()
               .replace(/[._:-\s\/]/g, "_")}`;
+              let updatedLabel;
+              if(localizationLabels.hasOwnProperty(mohallaCode)){
+                 updatedLabel = getTranslatedLabel(mohallaCode, localizationLabels);
+              }else{
+                let abc = initLocalizationLabels((getLocale() || "en_IN"))
+                 updatedLabel = getTranslatedLabel(mohallaCode, abc)
+              }              
             option = {
-              label: getTranslatedLabel(mohallaCode, localizationLabels),
+              label: updatedLabel,
               value: item.code,
             };
           } else {
@@ -682,6 +691,7 @@ export const fetchDropdownData = async (dispatch, dataFetchConfig, formKey, fiel
           return ddData;
         }, []);
       dispatch(setFieldProperty(formKey, fieldKey, "dropDownData", ddData));
+      dispatch(hideSpinner())
     }
   } catch (error) {
     const { message } = error;
@@ -890,13 +900,11 @@ export const getTotalAmountDue = (payload) => {
 
 
 export const setRoute = (link) => {
-  // let moduleName = process.env.REACT_APP_NAME === "Citizen" ? '/citizen' : '/employee';
-  // window.location.href =
-  //   process.env.NODE_ENV === "production"
-  //     ? moduleName + link
-  //     : link;
-
-  routeTo(link)
+  let moduleName = process.env.REACT_APP_NAME === "Citizen" ? '/citizen' : '/employee';
+  window.location.href =
+    process.env.NODE_ENV === "production"
+      ? moduleName + link
+      : link;
 }
 
 
@@ -905,12 +913,10 @@ export const navigateToApplication = (businessService, propsHistory, application
     setRoute(`/pt-mutation/search-preview?applicationNumber=${applicationNo}&propertyId=${propertyId}&tenantId=${tenantId}`);
   } else if (businessService == 'PT.CREATE') {
     setRoute(`/property-tax/application-preview?propertyId=${propertyId}&applicationNumber=${applicationNo}&tenantId=${tenantId}&type=property`);
-  } else if (businessService == 'PT.UPDATE') {
-    setRoute(`/property-tax/application-preview?propertyId=${propertyId}&applicationNumber=${applicationNo}&tenantId=${tenantId}&type=updateProperty`);
-  } else if (businessService == 'PT.LEGACY') {
-    setRoute(`/property-tax/application-preview?propertyId=${propertyId}&applicationNumber=${applicationNo}&tenantId=${tenantId}&type=legacy`);
   } else {
-    setRoute(getPropertyInfoScreenUrl(propertyId, tenantId));
+    process.env.REACT_APP_NAME === "Citizen" ?
+      setRoute(`/property-tax/my-properties/property/${propertyId}/${tenantId}`)
+      : setRoute(`/property-tax/property/${propertyId}/${tenantId}`)
   }
 }
 
@@ -926,10 +932,8 @@ export const getApplicationType = async (applicationNumber, tenantId, creationRe
         return 'PT.MUTATION';
       } else if (creationReason == 'CREATE') {
         return 'PT.CREATE';
-      } else if (creationReason == 'LEGACY_ENTRY') {
-        return 'PT.LEGACY';
       } else if (creationReason == 'UPDATE') {
-        return 'PT.UPDATE';
+        return 'PT.CREATE';
       }
       else {
         return 'NA';
@@ -949,101 +953,29 @@ export const getApplicationType = async (applicationNumber, tenantId, creationRe
   }
 }
 
-export const isDocumentValid = (docUploaded, requiredDocCount) => {
-  const totalDocsKeys = Object.keys(docUploaded) || [];
-  let isValid = true;
-  for (let key = 0; key < totalDocsKeys.length; key++) {
-    if (docUploaded[key].isDocumentRequired) {
-      if (docUploaded[key].documents && docUploaded[key].dropdown && docUploaded[key].dropdown.value) {
-        isValid = true;
-      } else {
-        isValid = false;
-        break;
-      }
-    } else {
-      if (docUploaded[key].documents && (!docUploaded[key].dropdown || !docUploaded[key].dropdown.value)) {
-        isValid = false;
-        break;
-      }
+export const convertDateToEpoch = (dateString, dayStartOrEnd = "dayend") => {
+  //example input format : "2018-10-02"
+  try {
+    const parts = dateString.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+    const DateObj = new Date(Date.UTC(parts[1], parts[2] - 1, parts[3]));
+    DateObj.setMinutes(DateObj.getMinutes() + DateObj.getTimezoneOffset());
+    if (dayStartOrEnd === "dayend") {
+      DateObj.setHours(DateObj.getHours() + 24);
+      DateObj.setSeconds(DateObj.getSeconds() - 1);
     }
+    return DateObj.getTime();
+  } catch (e) {
+    return dateString;
   }
-  return isValid;
-}
+};
 
-export const getMohallaData = (payload, tenantId) => {
-  return payload && payload.TenantBoundary[0] && payload.TenantBoundary[0].boundary && payload.TenantBoundary[0].boundary.reduce((result, item) => {
-    result.push({
-      ...item,
-      name: `${tenantId
-        .toUpperCase()
-        .replace(
-          /[.]/g,
-          "_"
-        )}_REVENUE_${item.code
-          .toUpperCase()
-          .replace(/[._:-\s\/]/g, "_")}`
-    });
-    return result;
-  }, []);
-}
-
-
-
-export const downloadPdf = (link, openIn = '_blank') => {
-  var win = window.open(link, openIn);
-  if (win) {
-    win.focus();
-  }
-}
-
-export const printPdf = async (link) => {
-  var response = await axios.get(link, {
-    responseType: "arraybuffer",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/pdf"
-    }
-  });
-  const file = new Blob([response.data], { type: "application/pdf" });
-  const fileURL = URL.createObjectURL(file);
-  var myWindow = window.open(fileURL);
-  if (myWindow != undefined) {
-    myWindow.addEventListener("load", event => {
-      myWindow.focus();
-      myWindow.print();
-    });
-  }
-}
-
-
-export const openPdf = async (link, openIn = '_blank') => {
-  if (window && window.mSewaApp && window.mSewaApp.isMsewaApp && window.mSewaApp.isMsewaApp()) {
-    downloadPdf(link, '_self');
-  } else {
-    var response = await axios.get(link, {
-      responseType: "arraybuffer",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/pdf"
-      }
-    });
-    const file = new Blob([response.data], { type: "application/pdf" });
-    const fileURL = URL.createObjectURL(file);
-    var myWindow = window.open(fileURL, openIn);
-    if (myWindow != undefined) {
-      myWindow.addEventListener("load", event => {
-        myWindow.focus();
-      });
-    }
-  }
-}
 
 export const getModuleName = () => {
   const pathName = window.location.pathname;
   if (pathName.indexOf("inbox") > -1) { return "rainmaker-common"; }
   else if (pathName.indexOf("dss") > -1) { return "rainmaker-dss"; }
   else if (pathName.indexOf("receipts") > -1) { return "rainmaker-receipts"; }
-  else if (pathName.indexOf("property-tax") > -1 || pathName.indexOf("rainmaker-pt") > -1 || pathName.indexOf("pt-mutation") > -1) { return "rainmaker-pt,rainmaker-pgr"; }
+  else if (pathName.indexOf("property-tax") > -1 || pathName.indexOf("rainmaker-pt") > -1 || pathName.indexOf("pt-mutation") > -1) { return "rainmaker-pt"; }
   else if (pathName.indexOf("pt-common-screens") > -1 || pathName.indexOf("pt-mutation/public-search") > -1) { return "rainmaker-pt"; }
   else if (pathName.indexOf("complaint") > -1 || pathName.indexOf("pgr") > -1 || pathName.indexOf("resolve-success") > -1 || pathName.indexOf("employee-directory") > -1 || pathName.indexOf("reopen-acknowledgement") > -1 || pathName.indexOf("feedback") > -1 || pathName.indexOf("request-reassign") > -1 || pathName.indexOf("reassign-success") > -1) { return "rainmaker-pgr"; }
   else if (pathName.indexOf("wns") > -1 || pathName.indexOf("wns/public-search") > -1) { return "rainmaker-ws"; }
@@ -1056,7 +988,6 @@ export const getModuleName = () => {
   else if (pathName.indexOf("login") > -1) { return "rainmaker-common"; }
   else if (pathName.indexOf("pay") > -1) { return "rainmaker-noc"; }
   else if (pathName.indexOf("abg") > -1) { return "rainmaker-abg"; }
-  else if (pathName.indexOf("bills") > -1) { return "rainmaker-ws,rainmaker-abg,rainmaker-bills"; }
   else if (pathName.indexOf("uc") > -1) { return "rainmaker-uc"; }
   else if (pathName.indexOf("pgr-home") > -1 || pathName.indexOf("rainmaker-pgr") > -1) { return "rainmaker-pgr"; }
   else if (pathName.indexOf("bpastakeholder") > -1 || pathName.indexOf("edcrscrutiny") > -1 ||
@@ -1084,25 +1015,6 @@ export const businessServiceInfo = async (mdmsBody, businessService) => {
   return businessServiceInfoItem;
 }
 
-export const searchConsumer = async (items, queryObject) => {
-  const payload = await httpRequest(
-    `/${items.fetchConsumerUrl}`,
-    "_search",
-    queryObject
-  );
-  let consumerDetails =  payload && payload.WaterConnection ? payload.WaterConnection : payload.SewerageConnections;
-  return consumerDetails;
-}
-
-export const fetchConsumerBill = async (items, queryObject) => {
-  const response = await httpRequest(
-    `/${items.fecthBillUrl}`,
-    "_search",
-    queryObject
-  );
-  return response && response.Bill && response.Bill[0];
-}
-
 export const getBusinessServiceMdmsData = async (dispatch, tenantId, businessService) => {
   let mdmsBody = {
     MdmsCriteria: {
@@ -1123,8 +1035,22 @@ export const getBusinessServiceMdmsData = async (dispatch, tenantId, businessSer
   }
 };
 
-
-
+export const getMohallaData = (payload, tenantId) => {
+  return payload && payload.TenantBoundary[0] && payload.TenantBoundary[0].boundary && payload.TenantBoundary[0].boundary.reduce((result, item) => {
+    result.push({
+      ...item,
+      name: `${tenantId
+        .toUpperCase()
+        .replace(
+          /[.]/g,
+          "_"
+        )}_REVENUE_${item.code
+          .toUpperCase()
+          .replace(/[._:-\s\/]/g, "_")}`
+    });
+    return result;
+  }, []);
+}
 
 export const getPaymentSearchAPI = (businessService='')=>{
   if(businessService=='-1'){
@@ -1133,15 +1059,4 @@ export const getPaymentSearchAPI = (businessService='')=>{
     return `${PAYMENTSEARCH.GET.URL}${PAYMENTSEARCH.GET.ACTION}`;
   }
   return `${PAYMENTSEARCH.GET.URL}${businessService}/${PAYMENTSEARCH.GET.ACTION}`;
-}
-
-export const getFetchBillAPI = () => {
-  return `${FETCHBILL.GET.URL}`
-}
-
-
-
-export const getUserSearchedResponse =()=>{
-  const userObject=JSON.parse(localStorage.getItem("citizen.userRequestObject"))||{};
-  return {user:[userObject]};
 }

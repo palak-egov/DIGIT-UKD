@@ -131,6 +131,7 @@ public class TLBatchService {
                 smsRequests.addAll(util.createSMSRequest(message,mobileNumberToOwner));
             }
             catch (Exception e){
+                e.printStackTrace();
                 producer.push(config.getReminderErrorTopic(), license);
             }
         }
@@ -159,6 +160,7 @@ public class TLBatchService {
             producer.push(config.getUpdateWorkflowTopic(), new TradeLicenseRequest(requestInfo, licenses));
         }
         catch (Exception e){
+            e.printStackTrace();
             producer.push(config.getExpiryErrorTopic(), licenses);
         }
 

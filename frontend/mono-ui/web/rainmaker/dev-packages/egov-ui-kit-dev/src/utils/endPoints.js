@@ -118,25 +118,6 @@ export const ACTIONMENU = {
     ACTION: "_get",
   },
 };
-export const INBOXRECORDS = {
-  GET: {
-    URL: "/egov-workflow-v2/egov-wf/process/_search",
-    ACTION: "_search",
-  },
-};
-export const INBOXRECORDSCOUNT = {
-  GET: {
-    URL: "/egov-workflow-v2/egov-wf/process/_count",
-    ACTION: "_get",
-  },
-};
-export const INBOXESCALTEDRECORDS = {
-  GET: {
-    URL: "/egov-workflow-v2/egov-wf/escalate/_search",
-    ACTION: "_search",
-  },
-}; 
-
 
 export const PROPERTY = {
   GET: {

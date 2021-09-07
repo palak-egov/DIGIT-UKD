@@ -14,15 +14,33 @@ const downloadprintMenu = (
   tenantId,
   uiCommonPayConfig
 ) => {
-  const receiptKey = get(
+  
+
+   let businessService=getQueryArg(window.location.href, "businessService")
+   let key="";
+   if(businessService=='TL'){
+  
+     key= 'tl-receipt'
+
+   }
+   else if(businessService=='PT'){
+   
+     key= 'consolidatedreceipt'
+  
+   }
+   else if(businessService=='PT.MUTATION'){
+ 
+     key='pt-mutation-receipt'
+  
+   }
+   else{
+      key='misc-receipt';
+   
+   }
+   const receiptKey = get(
     uiCommonPayConfig,
     "receiptKey",
-    "consolidatedreceipt"
-  );
-  const pdfModule = get(
-    uiCommonPayConfig,
-    "pdfModule",
-    "PAYMENT"
+    key
   );
   let receiptDownloadObject = {
     label: {
@@ -38,10 +56,11 @@ const downloadprintMenu = (
           value: getQueryArg(window.location.href, "businessService"),
         },
       ];
-      download(receiptQueryString, "download", receiptKey, pdfModule,state);
+      download(receiptQueryString, "download", receiptKey, state);
     },
     leftIcon: "receipt",
   };
+
   let receiptPrintObject = {
     label: { labelName: "PRINT RECEIPT", labelKey: "COMMON_PRINT_RECEIPT" },
     link: () => {
@@ -53,7 +72,7 @@ const downloadprintMenu = (
           value: getQueryArg(window.location.href, "businessService"),
         },
       ];
-      download(receiptQueryString, "print", receiptKey, pdfModule,state );
+      download(receiptQueryString, "print", receiptKey, state);
     },
     leftIcon: "receipt",
   };
@@ -228,15 +247,14 @@ const screenConfig = {
       window.location.href,
       "businessService"
     );
-
+    if (status == 'success' && localStorage.getItem('pay-channel') && localStorage.getItem('pay-redirectNumber')) {
+      setTimeout(() => {
+        const weblink = "https://api.whatsapp.com/send?phone=" + localStorage.getItem('pay-redirectNumber') + "&text=" + ``;
+        window.location.href = weblink
+      }, 1500)
+    }
     // Calling the Bill so that payer information can be set in the PDF for Citizen application
     if (process.env.REACT_APP_NAME === "Citizen") {
-      if ((status == 'success'||status == 'failure') && localStorage.getItem('pay-channel')=="whatsapp" && localStorage.getItem('pay-redirectNumber')) {
-        setTimeout(() => {
-          const weblink = "https://api.whatsapp.com/send?phone=" + localStorage.getItem('pay-redirectNumber') + "&text=" + ``;
-          window.location.href = weblink
-        }, 1500)
-      }
       generateBill(dispatch, consumerCode, tenant, businessService);
     }
     const data = getAcknowledgementCard(

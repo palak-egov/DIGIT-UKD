@@ -4,6 +4,7 @@ import { prepareFinalObject,handleScreenConfigurationFieldChange as handleField,
 import { disableField, enableField, getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import compact from "lodash/compact";
 import get from "lodash/get";
+import set from 'lodash/set';
 import store from "ui-redux/store";
 import { httpRequest } from "../../../../../ui-utils";
 import { prepareDocumentsUploadData } from "../../../../../ui-utils/commons";
@@ -28,7 +29,7 @@ const setReviewPageRoute = (state, dispatch) => {
 };
 const moveToReview = (state, dispatch) => {
   const documentsFormat = Object.values(
-    get(state.screenConfiguration.preparedFinalObject, "ptmDocumentsUploadRedux")
+    get(state.screenConfiguration.preparedFinalObject, "documentsUploadRedux")
   );
 
   let validateDocumentField = false;
@@ -136,7 +137,7 @@ const callBackForApply = async (state, dispatch) => {
 
 
   let documentsUploadRedux = get(
-    state, "screenConfiguration.preparedFinalObject.ptmDocumentsUploadRedux");
+    state, "screenConfiguration.preparedFinalObject.documentsUploadRedux");
 
   let isDocumentValid = true;
   Object.keys(documentsUploadRedux).map((key) => {
@@ -157,10 +158,36 @@ const callBackForApply = async (state, dispatch) => {
     "action": getQueryArg(window.location.href, "action") === "edit"?"REOPEN":"OPEN",
     "moduleName": "PT"
   },
+  
     propertyPayload.owners.map(owner => {
       owner.status = "INACTIVE";
 
     })
+   // console.log("flag",propertyPayload.oldmobileNumber)
+    let phoneno = /^[6-9][0-9]{9}$/;
+     let newMob= propertyPayload.oldmobileNumber;
+    let flag=true
+    propertyPayload.owners.map(owner => {
+      if(!owner.mobileNumber.match(phoneno))
+      {
+
+        flag=false
+        owner.mobileNumber=newMob;
+
+      }
+
+    })
+
+  if(!flag)
+  {
+    
+    dispatch(handleField('apply', "components.div.children.formwizardFirstStep.children.transfereeDetails.children.cardContent.children.oldMobileNumberCard",{}))
+
+   
+    
+  }
+
+    
 
   propertyPayload.ownersTemp.map(owner => {
     if (owner.documentUid && owner.documentType) {
@@ -173,14 +200,14 @@ const callBackForApply = async (state, dispatch) => {
   propertyPayload.additionalDetails.documentDate = convertDateToEpoch(
     propertyPayload.additionalDetails.documentDate);
 
-  if (propertyPayload.ownershipCategory.includes("INDIVIDUAL") && propertyPayload.ownershipCategoryTemp.includes("INDIVIDUAL")) {
+  if (propertyPayload.ownershipCategory.includes("INDIVIDUAL") && propertyPayload.ownershipCategoryInit.includes("INDIVIDUAL")) {
     propertyPayload.ownersTemp.map(owner => {
       owner.status = "ACTIVE";
-      // owner.ownerType = 'NONE';
+      owner.ownerType = 'NONE';
     })
     propertyPayload.owners = [...propertyPayload.owners, ...propertyPayload.ownersTemp]
     delete propertyPayload.ownersTemp;
-  } else if (propertyPayload.ownershipCategory.includes("INSTITUTIONAL") && propertyPayload.ownershipCategoryTemp.includes("INDIVIDUAL")) {
+  } else if (propertyPayload.ownershipCategory.includes("INSTITUTIONAL") && propertyPayload.ownershipCategoryInit.includes("INDIVIDUAL")) {
     propertyPayload.ownersTemp.map(owner => {
       owner.status = "ACTIVE";
       owner.ownerType = 'NONE';
@@ -188,7 +215,7 @@ const callBackForApply = async (state, dispatch) => {
     propertyPayload.institution = null;
     propertyPayload.owners = [...propertyPayload.owners, ...propertyPayload.ownersTemp]
     delete propertyPayload.ownersTemp;
-  } else if (propertyPayload.ownershipCategory.includes("INDIVIDUAL") && propertyPayload.ownershipCategoryTemp.includes("INSTITUTIONAL")) {
+  } else if (propertyPayload.ownershipCategory.includes("INDIVIDUAL") && propertyPayload.ownershipCategoryInit.includes("INSTITUTIONAL")) {
     propertyPayload.owners.map(owner => {
       owner.altContactNumber = propertyPayload.institutionTemp.landlineNumber;
     })
@@ -202,10 +229,10 @@ const callBackForApply = async (state, dispatch) => {
     propertyPayload.institutionTemp.altContactNumber = propertyPayload.institutionTemp.landlineNumber;
     propertyPayload.institutionTemp.ownerType = "NONE";
     propertyPayload.institutionTemp.status = "ACTIVE";
-    // propertyPayload.institutionTemp.type = propertyPayload.ownershipCategoryTemp;
+    // propertyPayload.institutionTemp.type = propertyPayload.ownershipCategoryInit;
     propertyPayload.owners = [...propertyPayload.owners, propertyPayload.institutionTemp]
     delete propertyPayload.institutionTemp;
-  } else if (propertyPayload.ownershipCategory.includes("INSTITUTIONAL") && propertyPayload.ownershipCategoryTemp.includes("INSTITUTIONAL")) {
+  } else if (propertyPayload.ownershipCategory.includes("INSTITUTIONAL") && propertyPayload.ownershipCategoryInit.includes("INSTITUTIONAL")) {
     propertyPayload.institution = {};
     propertyPayload.institution.nameOfAuthorizedPerson = propertyPayload.institutionTemp.name;
     propertyPayload.institution.name = propertyPayload.institutionTemp.institutionName;
@@ -216,12 +243,12 @@ const callBackForApply = async (state, dispatch) => {
     propertyPayload.institutionTemp.altContactNumber = propertyPayload.institutionTemp.landlineNumber;
     propertyPayload.institutionTemp.ownerType = "NONE";
     propertyPayload.institutionTemp.status = "ACTIVE";
-    // propertyPayload.institutionTemp.type = propertyPayload.ownershipCategoryTemp;
+    // propertyPayload.institutionTemp.type = propertyPayload.ownershipCategoryInit;
     propertyPayload.owners = [...propertyPayload.owners, propertyPayload.institutionTemp]
     delete propertyPayload.institutionTemp;
   }
-  propertyPayload.ownershipCategory = propertyPayload.ownershipCategoryTemp;
-  delete propertyPayload.ownershipCategoryTemp;
+  propertyPayload.ownershipCategory = propertyPayload.ownershipCategoryInit;
+  delete propertyPayload.ownershipCategoryInit;
   let newDocuments = Object.values(documentsUploadRedux).map(document => {
     if (document.dropdown && document.dropdown.value && document.documents && document.documents[0] && document.documents[0].fileStoreId) {
       let documentValue = document.dropdown.value.includes('TRANSFERREASONDOCUMENT') ? document.dropdown.value.split('.')[2] : document.dropdown.value;
@@ -242,6 +269,8 @@ const callBackForApply = async (state, dispatch) => {
   oldDocuments = oldDocuments || [];
   propertyPayload.documents = [...newDocuments, ...oldDocuments];
 
+    set(propertyPayload,"additionalDetails.lateFee", 0 );
+    set(propertyPayload,"additionalDetails.mutationFee", 0);
   try {
     let queryObject = [
       {
@@ -253,7 +282,6 @@ const callBackForApply = async (state, dispatch) => {
         value: consumerCode
       }
     ];
-    propertyPayload.owners =propertyPayload.owners.filter(owner=>owner.isDeleted!==false);
     propertyPayload.creationReason = 'MUTATION';
     let payload = null;
     payload = await httpRequest(
@@ -307,16 +335,16 @@ const validateMobileNumber = (state) => {
     const names = owners.map(owner => {
       return owner.name
     })
-    // const mobileNumbers = owners.map(owner => {
-    //   if (owner.status == "ACTIVE") {
-    //     return owner.mobileNumber;
-    //   }
-    // })
-    // newOwners.map(owner => {
-    //   if (mobileNumbers.includes(owner.mobileNumber)) {
-    //     err = "OWNER_NUMBER_SAME";
-    //   }
-    // })
+    const mobileNumbers = owners.map(owner => {
+      if (owner.status == "ACTIVE") {
+        return owner.mobileNumber;
+      }
+    })
+    newOwners.map(owner => {
+      if (mobileNumbers.includes(owner.mobileNumber)) {
+        err = "OWNER_NUMBER_SAME";
+      }
+    })
   } else {
 
     let newOwners = get(state, 'screenConfiguration.preparedFinalObject.Property.ownersTemp');
@@ -326,19 +354,19 @@ const validateMobileNumber = (state) => {
       })
     }
     const owners = get(state, 'screenConfiguration.preparedFinalObject.Property.owners');
-    // const names = owners.map(owner => {
-    //   return owner.name
-    // })
-    // const mobileNumbers = owners.map(owner => {
-    //   if (owner.status == "ACTIVE") {
-    //     return owner.mobileNumber;
-    //   }
-    // })
-    // newOwners.map(owner => {
-    //   if (mobileNumbers.includes(owner.mobileNumber)) {
-    //     err = "OWNER_NUMBER_SAME";
-    //   }
-    // })
+    const names = owners.map(owner => {
+      return owner.name
+    })
+    const mobileNumbers = owners.map(owner => {
+      if (owner.status == "ACTIVE") {
+        return owner.mobileNumber;
+      }
+    })
+    newOwners.map(owner => {
+      if (mobileNumbers.includes(owner.mobileNumber)) {
+        err = "OWNER_NUMBER_SAME";
+      }
+    })
     if (!err && ownershipCategoryTemp.includes('MULTIPLEOWNERS') && newOwners.length == 1) {
       err = "OWNERSHIPTYPE_CANNOT_BE_MULTIPLE";
     }
@@ -413,8 +441,15 @@ const callBackForNext = async (state, dispatch) => {
       hasFieldToaster = true;
     }
     if (isFormValid) {
+       const MutationReason = get(	
+        state.screenConfiguration.preparedFinalObject,	
+        "Property.additionalDetails.reasonForTransfer",	
+        ''	
+      );	
+      if(MutationReason && MutationReason !=="NAMECORRECTION")	
+      {
       errorMsg = validateMobileNumber(state);
-
+      }
       errorMsg ? isFormValid = false : {};
     }
     if (getQueryArg(window.location.href, "action") === "edit") {
@@ -706,7 +741,7 @@ export const footer = getCommonApplyFooter({
       },
       previousButtonLabel: getLabel({
         labelName: "Previous Step",
-        labelKey: "PT_COMMON_BUTTON_PREV_STEP"
+        labelKey: "HR_COMMON_BUTTON_PREV_STEP"
       })
     },
     onClickDefination: {

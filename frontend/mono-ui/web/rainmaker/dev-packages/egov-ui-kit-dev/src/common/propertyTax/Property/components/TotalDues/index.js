@@ -1,14 +1,12 @@
-import { downloadBill } from "egov-common/ui-utils/commons";
-import { Tooltip } from "egov-ui-framework/ui-molecules";
-import { toggleSnackbarAndSetText } from "egov-ui-kit/redux/app/actions";
-import { routeToCommonPay } from "egov-ui-kit/utils/PTCommon/FormWizardUtils/formUtils";
-import Label from "egov-ui-kit/utils/translationNode";
-import get from "lodash/get";
 import React from "react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { Tooltip } from "egov-ui-framework/ui-molecules";
+import Label from "egov-ui-kit/utils/translationNode";
 import { TotalDuesButton } from "./components";
+import { withRouter } from "react-router-dom";
+import { downloadBill } from "egov-common/ui-utils/commons";
 import "./index.css";
+import get from "lodash/get";
+import { routeToCommonPay } from "egov-ui-kit/utils/PTCommon/FormWizardUtils/formUtils";
 
 const labelStyle = {
   color: "rgba(0, 0, 0, 0.6)",
@@ -25,31 +23,36 @@ class TotalDues extends React.Component {
   };
   onClickAction = async (consumerCode, tenantId) => {
     this.setState({
-      url: await downloadBill(consumerCode, tenantId, "property-bill"),
+      url: await downloadBill(consumerCode, tenantId , "property-bill"),
     });
   };
+
   payAction = (consumerCode, tenantId) => {
-    const status = get(this.props, 'propertyDetails[0].status', '');
+  /*   const status = get(this.props, 'propertyDetails[0].status', '');
     if (status != "ACTIVE") {
       this.props.toggleSnackbarAndSetText(
         true,
         { labelName: "Property in Workflow", labelKey: "ERROR_PROPERTY_IN_WORKFLOW" },
         "error"
       );
-    } else {
+    } else { */
       routeToCommonPay(consumerCode, tenantId);
-    }
+   /*  } */
   }
-
   render() {
-    const { totalBillAmountDue, consumerCode, tenantId, isAdvanceAllowed, history } = this.props;
-    const envURL = "/egov-common/pay";
+    const { totalBillAmountDue, consumerCode, tenantId, history, citywiseconfig} = this.props;
+    let disabledCities = get(citywiseconfig, "[0].enabledCities");
     const { payAction } = this;
+
+    const envURL = "/egov-common/pay";
     const data = { value: "PT_TOTALDUES_TOOLTIP", key: "PT_TOTALDUES_TOOLTIP" };
     return (
-      <div className="" id="pt-header-due-amount">
-        <div className="col-xs-6 col-sm-3 flex-child" style={{ minHeight: "60px" }}>
+      <div className="">
+       <div className="col-xs-6 col-sm-3 flex-child" style={{ minHeight: "35px" }}>
           <Label buttonLabel={false} label="PT_TOTAL_DUES" color="rgba(0, 0, 0, 0.74)" labelStyle={labelStyle} fontSize="14px" />
+          </div>
+          <div className="col-xs-6 col-sm-3 flex-child" style={{ position: "absolute",
+          left: "134px", width: "30px", display: "inline-flex" }}>
           <Label
             label="Rs "
             secondaryText={totalBillAmountDue ? totalBillAmountDue : 0}
@@ -60,14 +63,14 @@ class TotalDues extends React.Component {
             height="35px"
           ></Label>
         </div>
-        <Tooltip
+          <Tooltip
           className="totaldues-tooltip-icon"
           val={data}
           icon={"info_circle"}
-          style={{ position: "absolute", left: "160px", top: "30px" }}
+          style={{ position: "absolute", left: "117px", width: "30px", display: "inline-flex" }}
         />
-        <div className="col-xs-6 col-sm-3 flex-child" style={{ minHeight: "60px" }}>
-        </div>
+      
+        {totalBillAmountDue > 0 && (
           <div className="col-xs-6 col-sm-3 flex-child-button">
             {/* <TotalDuesButton
               labelText="PT_TOTALDUES_VIEW"
@@ -77,7 +80,8 @@ class TotalDues extends React.Component {
               }}
             /> */}
           </div>
-        {(totalBillAmountDue > 0 || (totalBillAmountDue === 0 && isAdvanceAllowed)) && (
+        )}
+        {totalBillAmountDue > 0 && (process.env.REACT_APP_NAME !== "Citizen" || !disabledCities.includes(tenantId)) && (
           <div id="pt-flex-child-button" className="col-xs-12 col-sm-3 flex-child-button">
             <div style={{ float: "right" }}>
               <TotalDuesButton
@@ -94,25 +98,4 @@ class TotalDues extends React.Component {
     );
   }
 }
-
-const mapStateToProps = (state, ownProps) => {
-  const { propertiesById } = state.properties || {};
-  const propertyId = ownProps.consumerCode;
-  const selPropertyDetails = propertiesById[propertyId] || {};
-  const propertyDetails = selPropertyDetails.propertyDetails || [];
-  return {
-    propertyDetails,
-    propertyId
-  };
-};
-
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    toggleSnackbarAndSetText: (open, message, error) => dispatch(toggleSnackbarAndSetText(open, message, error)),
-  };
-};
-
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(TotalDues));
+export default withRouter(TotalDues);

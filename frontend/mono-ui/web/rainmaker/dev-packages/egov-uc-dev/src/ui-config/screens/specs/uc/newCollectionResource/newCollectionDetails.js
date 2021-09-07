@@ -351,7 +351,7 @@ export const newCollectionDetailsCard = getCommonCard(
             moduleName: "BillingService",
             masterName: "BusinessService",
             rootBlockSub: 'serviceCategories',
-            filter: "[?(@.type=='Adhoc')]"
+            filter: "[?(@.type=='Adhoc')][?(@.isActive==true)]"
           }
         },
         fromDate: getDateField({
@@ -548,14 +548,13 @@ const setTaxHeadFields = (value, state, dispatch) => {
               .split(".")
               .join("_")}`,
             required: item.isRequired || false,
-            pattern: /^[0-9]{0,8}$/i,
+            pattern: getPattern("Amount"),
             errorMessage: "Invalid Amount",
             visible: true,
             // required: true,
             props: {
               // required: true
             },
-            type:"number",
             jsonPath: `Demands[0].demandDetails[${index}].taxAmount`
           })
         )

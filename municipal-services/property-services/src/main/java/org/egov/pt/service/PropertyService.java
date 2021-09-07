@@ -1,5 +1,9 @@
 package org.egov.pt.service;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +13,7 @@ import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pt.config.PropertyConfiguration;
+import org.egov.pt.models.Owner;
 import org.egov.pt.models.OwnerInfo;
 import org.egov.pt.models.Property;
 import org.egov.pt.models.PropertyCriteria;
@@ -16,6 +21,8 @@ import org.egov.pt.models.enums.CreationReason;
 import org.egov.pt.models.enums.Status;
 import org.egov.pt.models.user.UserDetailResponse;
 import org.egov.pt.models.user.UserSearchRequest;
+import org.egov.pt.models.workflow.ProcessInstance;
+import org.egov.pt.models.workflow.ProcessInstanceRequest;
 import org.egov.pt.models.workflow.State;
 import org.egov.pt.producer.Producer;
 import org.egov.pt.repository.PropertyRepository;
@@ -82,7 +89,8 @@ public class PropertyService {
 		enrichmentService.enrichCreateRequest(request);
 		userService.createUser(request);
 		if (config.getIsWorkflowEnabled()
-				&& !request.getProperty().getCreationReason().equals(CreationReason.DATA_UPLOAD)) {
+				&& !request.getProperty().getCreationReason().equals(CreationReason.DATA_UPLOAD)
+				&& !"LEGACY_RECORD".equals(request.getProperty().getSource().toString())) {
 			wfService.updateWorkflow(request, request.getProperty().getCreationReason());
 
 		} else {
@@ -112,6 +120,7 @@ public class PropertyService {
 		Property propertyFromSearch = propertyValidator.validateCommonUpdateInformation(request);
 
 		boolean isRequestForOwnerMutation = CreationReason.MUTATION.equals(request.getProperty().getCreationReason());
+		System.out.println("isRequestForOwnerMutation -------- "+isRequestForOwnerMutation);
 
 		if (isRequestForOwnerMutation)
 			processOwnerMutation(request, propertyFromSearch);
@@ -134,10 +143,26 @@ public class PropertyService {
 		if (CreationReason.CREATE.equals(request.getProperty().getCreationReason())) {
 			userService.createUser(request);
 		} else {
-			request.getProperty().setOwners(util.getCopyOfOwners(propertyFromSearch.getOwners()));
+			if ("LEGACY_RECORD".equals(request.getProperty().getSource().toString())) {
+				userService.createUser(request);
+
+				for (OwnerInfo info : propertyFromSearch.getOwners()) {
+					info.setStatus(Status.INACTIVE);
+				}
+				
+				for (OwnerInfo info : request.getProperty().getOwners()) {
+					info.setStatus(Status.ACTIVE);
 		}
 
+				List<OwnerInfo> collectedOwners = new ArrayList<OwnerInfo>();
+				collectedOwners.addAll(propertyFromSearch.getOwners());
+				collectedOwners.addAll(request.getProperty().getOwners());
 
+				request.getProperty().setOwners(util.getCopyOfOwners(collectedOwners));
+			} else
+				request.getProperty().setOwners(util.getCopyOfOwners(propertyFromSearch.getOwners()));
+
+		}
 		enrichmentService.enrichAssignes(request.getProperty());
 		enrichmentService.enrichUpdateRequest(request, propertyFromSearch);
 
@@ -148,7 +173,7 @@ public class PropertyService {
 
 		util.mergeAdditionalDetails(request, propertyFromSearch);
 
-		if(config.getIsWorkflowEnabled()) {
+		if(config.getIsWorkflowEnabled() && ! "LEGACY_RECORD".equals(request.getProperty().getSource().toString())) {
 
 			State state = wfService.updateWorkflow(request, CreationReason.UPDATE);
 
@@ -193,10 +218,14 @@ public class PropertyService {
 		userService.createUserForMutation(request, !propertyFromSearch.getStatus().equals(Status.INWORKFLOW));
 		enrichmentService.enrichAssignes(request.getProperty());
 		enrichmentService.enrichMutationRequest(request, propertyFromSearch);
+		util.mergeAdditionalDetails(request, propertyFromSearch);
+		System.out.println("--------- merge additionaldetails before calculate ---------- ");
 		calculatorService.calculateMutationFee(request.getRequestInfo(), request.getProperty());
+		//String feesPresent = calculatorService.checkApplicableFees(request.getRequestInfo(), request.getProperty());
+		//System.out.println("--------- feesPresent = "+feesPresent);
 
 		// TODO FIX ME block property changes FIXME
-		util.mergeAdditionalDetails(request, propertyFromSearch);
+		//util.mergeAdditionalDetails(request, propertyFromSearch);
 		PropertyRequest oldPropertyRequest = PropertyRequest.builder()
 				.requestInfo(request.getRequestInfo())
 				.property(propertyFromSearch)
@@ -206,6 +235,11 @@ public class PropertyService {
 
 			State state = wfService.updateWorkflow(request, CreationReason.MUTATION);
 
+			System.out.println("Request State ~~~~~~~~~~~~~~~~~~~~"+request.getProperty().getWorkflow().getState().getState());
+			if (Arrays.asList(config.getSkipPaymentStatuses().split(","))
+					.contains(state.getState())) {
+				skipPayment(request, state.getState());
+			}
 			/*
 			 * updating property from search to INACTIVE status
 			 *
@@ -214,6 +248,11 @@ public class PropertyService {
 			if (state.getIsStartState() == true
 					&& state.getApplicationStatus().equalsIgnoreCase(Status.INWORKFLOW.toString())
 					&& !propertyFromSearch.getStatus().equals(Status.INWORKFLOW)) {
+
+				/*if (Arrays.asList(config.getSkipPaymentStatuses().split(","))
+						.contains(state.getState())) {
+					skipPayment(request, state.getApplicationStatus(), state);
+				}*/
 
 				propertyFromSearch.setStatus(Status.INACTIVE);
 				producer.push(config.getUpdatePropertyTopic(), oldPropertyRequest);
@@ -230,6 +269,7 @@ public class PropertyService {
 				/*
 				 * If property is In Workflow then continue
 				 */
+				System.out.println("~~~~~~~~~~~~ Updating property in else ~~~~~~~~~~~ ");
 				producer.push(config.getUpdatePropertyTopic(), request);
 			}
 
@@ -354,4 +394,34 @@ public class PropertyService {
 		util.enrichOwner(userDetailResponse, properties, false);
 		return properties;
 	}
+	
+	public void skipPayment(PropertyRequest propertyRequest, String currentState){
+    	System.out.println("~~~~~~~~~~ Current state = "+currentState);
+    	Property property = propertyRequest.getProperty();
+		BigDecimal balanceAmount = util.getBalanceAmount(propertyRequest);
+		if (!(balanceAmount.compareTo(BigDecimal.ZERO) > 0)) {
+			System.out.println("~~~~~~~~~~ Enabling skip payment for balance = "+balanceAmount);
+			String action = EMPTY;
+			if("APPLICATION_FEE_PAYMENT".equalsIgnoreCase(currentState))
+				action = PTConstants.ACTION_SKIP_PAY;
+			else if("APPROVED".equalsIgnoreCase(currentState)) 
+				action = PTConstants.ACTION_FINAL_SKIP_PAY;
+			
+			ProcessInstance workflow = ProcessInstance.builder().action(action).build();
+			workflow.setBusinessId(property.getAcknowldgementNumber());
+			workflow.setTenantId(property.getTenantId());
+			workflow.setBusinessService(config.getMutationWfName());
+			workflow.setModuleName(config.getPropertyModuleName());
+			property.setWorkflow(workflow);
+			ProcessInstanceRequest workflowRequest = new ProcessInstanceRequest(propertyRequest.getRequestInfo(),
+					Collections.singletonList(workflow));
+			wfService.callWorkFlow(workflowRequest);
+			System.out.println("~~~~~~~~~ Payment skipped ~~~~~~~~~~");
+			//Activate the property while skipping payment after approval
+			if("APPROVED".equalsIgnoreCase(currentState)) 
+				propertyRequest.getProperty().setStatus(Status.ACTIVE);
+		}
+	}
+    
+    
 }

@@ -3,7 +3,6 @@ import {
   handleScreenConfigurationFieldChange as handleField, prepareFinalObject,
   toggleSnackbar
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import { getLocaleLabels, getTransformedLocale } from "egov-ui-framework/ui-utils/commons";
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 import get from "lodash/get";
 import set from "lodash/set";
@@ -95,7 +94,7 @@ export const setRolesList = (state, dispatch) => {
 
   jurisdictions.map((judis, ind) => {
     let furnishedRolesList = judis && judis.roles && Array.isArray(judis.roles) && judis.roles.map(role => {
-      return ` ${getLocaleLabels("NA", `ACCESSCONTROL_ROLES_ROLES_${getTransformedLocale(role.code)}`)}`;
+      return " " + role.label;
     }) || [];
     dispatch(
       prepareFinalObject(
@@ -719,7 +718,7 @@ const showActivateDetails = (dispatch, activate = true) => {
     )
   );
 
-
+  
   dispatch(
     handleField(
       "view",

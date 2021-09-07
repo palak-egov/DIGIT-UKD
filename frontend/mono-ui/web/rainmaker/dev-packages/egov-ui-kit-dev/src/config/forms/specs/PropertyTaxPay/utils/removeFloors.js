@@ -18,7 +18,7 @@ export const removeFormKey = (formKey, field, dispatch, state) => {
       dispatch(setFieldProperty("plotDetails", "annualRent", "hideField", true));
       const updateFloorValue=()=>{
         dispatch(setFieldProperty("plotDetails", "floorCount", "value", 1));
-        dispatch(prepareFormData("Properties[0].propertyDetails[0].noOfFloors",1));
+        dispatch(prepareFormData("Properties[0].propertyDetails[0].noOfFloors",2));
       }
       if (field.id==="typeOfBuilding" && get(state,"common.prepareFormData.Properties[0].propertyDetails[0].usageCategoryMajor")!=="RESIDENTIAL") {
         updateFloorValue();
@@ -28,11 +28,11 @@ export const removeFormKey = (formKey, field, dispatch, state) => {
       }
     }
 
-    if (field.id==="typeOfBuilding" && field.value==="SHAREDPROPERTY") {
+    if (field.id==="typeOfBuilding" && field.value==="BUILTUP.SHAREDPROPERTY") {
       updateFloorCount();
     }
 
-    else if(field.id==="typeOfUsage" && get(state,"common.prepareFormData.Properties[0].propertyDetails[0].propertySubType")==="SHAREDPROPERTY") {
+    else if(field.id==="typeOfUsage" && get(state,"common.prepareFormData.Properties[0].propertyDetails[0].propertySubType")==="BUILTUP.SHAREDPROPERTY") {
       updateFloorCount();
     }
 
