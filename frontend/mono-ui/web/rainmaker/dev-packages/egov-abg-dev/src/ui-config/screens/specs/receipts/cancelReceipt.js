@@ -31,7 +31,7 @@ const getData = async (action, state, dispatch) => {
 
   let requestBody = {
     MdmsCriteria: {
-      tenantId: "uk",
+      tenantId: commonConfig.tenantId,
       moduleDetails: [
         {
           moduleName: "common-masters",
