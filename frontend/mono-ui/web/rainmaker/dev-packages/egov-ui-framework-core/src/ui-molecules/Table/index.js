@@ -60,14 +60,6 @@ class Table extends React.Component {
             fontSize: 14
           }
         },
-        MuiSvgIcon :
-        {
-          root:{
-            fontSize: "x-large",
-            marginLeft: "57px",
-            
-          },        
-        },
         ...this.getExtraTableStyle()
       }
     });
