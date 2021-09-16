@@ -6,6 +6,7 @@ import org.egov.web.notification.sms.config.SMSProperties;
 import org.egov.web.notification.sms.models.Sms;
 import org.egov.web.notification.sms.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.*;
@@ -24,6 +25,7 @@ import java.util.Map;
 @Service
 @Slf4j
 @ConditionalOnProperty(value = "sms.provider.class", matchIfMissing = true, havingValue = "MSDG")
+@Qualifier
 public class MSDGSMSServiceImpl extends BaseSMSService {
 	
 	@Autowired

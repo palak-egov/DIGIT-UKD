@@ -8,7 +8,9 @@ import org.egov.web.notification.sms.models.Sms;
 import org.egov.web.notification.sms.service.SMSBodyBuilder;
 import org.egov.web.notification.sms.service.SMSService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,14 +23,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@ConditionalOnProperty(value = "sms.gateway.to.use", havingValue = "HOLY_SMS")
+@ConditionalOnProperty(value = "sms.gateway.to.use", havingValue = "HOLY_SMS", matchIfMissing = true)
 @Slf4j
+@Primary
+@Qualifier
 public class HolySMSSMSServiceImpl implements SMSService {
 
 	@Autowired
 	private SMSProperties smsProperties;
 
-	@Autowired
 	private SMSBodyBuilder bodyBuilder;
 	
 	@Autowired
