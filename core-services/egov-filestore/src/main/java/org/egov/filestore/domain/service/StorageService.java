@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.egov.filestore.domain.exception.EmptyFileUploadRequestException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -28,6 +29,7 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.slf4j.Slf4j;
@@ -108,6 +110,12 @@ public class StorageService {
 		log.info(UPLOAD_MESSAGE, module, tag, filesToStore.size());
 		List<Artifact> artifacts = mapFilesToArtifact(filesToStore, module, tag, tenantId);
 		return this.artifactRepository.save(artifacts, requestInfo);
+	}
+	
+	private void validateFilesToUpload(List<MultipartFile> filesToStore, String module, String tag, String tenantId) {
+		if (CollectionUtils.isEmpty(filesToStore)) {
+			throw new EmptyFileUploadRequestException(module, tag, tenantId);
+		}
 	}
 
 	private List<Artifact> mapFilesToArtifact(List<MultipartFile> files, String module, String tag, String tenantId) {

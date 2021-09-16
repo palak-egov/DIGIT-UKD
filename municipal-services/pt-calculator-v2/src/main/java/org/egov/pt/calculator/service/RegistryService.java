@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.egov.pt.calculator.web.models.CalculationCriteria;
 import org.egov.pt.calculator.web.models.CalculationReq;
-import org.egov.pt.calculator.web.models.property.Property;
+import org.egov.pt.calculator.web.models.registry.Property;
 import org.egov.pt.calculator.web.models.property.PropertyDetail;
 import org.egov.pt.calculator.web.models.registry.Assessment;
 import org.egov.pt.calculator.web.models.registry.CalculationRequestV2;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class RegistryService {
 	
 	public CalculationReq calculationWrapper(CalculationRequestV2 requestV2) {
-		org.egov.pt.calculator.web.models.registry.Property propertyV2 = requestV2.getCalculationCriteria().getProperty();
+		Property propertyV2 = requestV2.getCalculationCriteria().getProperty();
 		Assessment assessmentV2 = requestV2.getCalculationCriteria().getAssessment();
 		
 		PropertyDetail detail = PropertyDetail.builder()
@@ -42,7 +42,7 @@ public class RegistryService {
 		details.add(detail);
 				
 		
-		Property property = Property.builder()
+		org.egov.pt.calculator.web.models.property.Property property = org.egov.pt.calculator.web.models.property.Property.builder()
 				.address(propertyV2.getAddress())
 				.auditDetails(propertyV2.getAuditDetails())
 				.creationReason(propertyV2.getCreationReason())

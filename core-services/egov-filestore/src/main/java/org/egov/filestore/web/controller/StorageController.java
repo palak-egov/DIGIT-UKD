@@ -68,7 +68,7 @@ public class StorageController {
 			resource = storageService.retrieve(fileStoreId, tenantId);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			logger.error("Error while retrieving file: " + e.getMessage());
+			log.error("Error while retrieving file: " + e.getMessage());
 		}
 		String fileName=resource.getFileName().substring(resource.getFileName().lastIndexOf('/')+1,resource.getFileName().length());
 		return ResponseEntity.ok()
@@ -85,7 +85,7 @@ public class StorageController {
 		    resource = storageService.retrieve(fileStoreId, tenantId);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			logger.error("Error while fetching metadata: " + e.getMessage());
+			log.error("Error while fetching metadata: " + e.getMessage());
 		}
 		resource.setResource(null);
 		return new ResponseEntity<>(resource, HttpStatus.OK);
