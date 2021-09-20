@@ -17,14 +17,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ArtifactRepository {
+public class ArtifactRepository  {
 
 	private FileStoreJpaRepository fileStoreJpaRepository;
 	
 	@Autowired
 	private AwsS3Repository s3Repository;
 
-	@Autowired
 	private CloudFilesManager cloudFilesManager;
 
 	@Value("${isS3Enabled}")
