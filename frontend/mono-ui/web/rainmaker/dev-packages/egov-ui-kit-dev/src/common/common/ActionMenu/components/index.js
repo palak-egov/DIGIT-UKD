@@ -431,6 +431,13 @@ class ActionMenuComp extends Component {
                         //  localStorageSet("menuPath", item.path);
                         updateActiveRoute(item.path, item.name);
                         document.title = item.name;
+                        if (item.navigationURL && item.navigationURL.includes('digit-ui')) {
+                          window.location.href = item.navigationURL
+                          return;
+                        }
+                        else {
+                          updateActiveRoute(item.path, item.name);
+                        }
                         toggleDrawer && toggleDrawer();
                         if (window.location.href.indexOf(item.navigationURL) > 0 && item.navigationURL.startsWith("integration")) {
                           window.location.reload();

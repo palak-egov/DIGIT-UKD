@@ -79,7 +79,15 @@ class Inbox extends Component {
             return {
                   labelName: obj.displayName,
                   labelKey: `ACTION_TEST_${obj.displayName.toUpperCase().replace(/[._:-\s\/]/g, "_")}`,
-                  link: () => setRoute(obj.navigationURL)
+                  link: () => {if (obj.navigationURL === "tradelicence/apply") {
+                    this.props.setRequiredDocumentFlag();
+                  }
+                  if (obj.navigationURL && obj.navigationURL.includes('digit-ui')) {
+                    window.location.href = obj.navigationURL;
+                    return;
+                  } else {
+                    setRoute(obj.navigationURL)
+                  }}
                  }
             }
             else
@@ -92,7 +100,16 @@ class Inbox extends Component {
             return {
               labelName: obj.displayName,
               labelKey: `ACTION_TEST_${obj.displayName.toUpperCase().replace(/[._:-\s\/]/g, "_")}`,
-              link: () => setRoute(obj.navigationURL)
+              link: () => { if (obj.navigationURL === "tradelicence/apply") {
+                this.props.setRequiredDocumentFlag();
+              }
+              if (obj.navigationURL && obj.navigationURL.includes('digit-ui')) {
+                window.location.href = obj.navigationURL;
+                return;
+              } else {
+                setRoute(obj.navigationURL)
+              }
+            }
                }
           }
     
