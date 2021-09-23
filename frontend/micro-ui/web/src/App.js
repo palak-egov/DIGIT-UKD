@@ -1,20 +1,58 @@
-import React from 'react';
+import React from "react";
 
-import { initPGRComponents, PGRReducers } from "@egovernments/digit-ui-module-pgr";
+import {
+  initPGRComponents,
+  PGRReducers,
+} from "@egovernments/digit-ui-module-pgr";
 import { initFSMComponents } from "@egovernments/digit-ui-module-fsm";
-import { PTModule, PTLinks, PTComponents } from "@egovernments/digit-ui-module-pt";
-import { MCollectModule, MCollectLinks, initMCollectComponents } from "@egovernments/digit-ui-module-mcollect";
-import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
-import { PaymentModule, PaymentLinks, paymentConfigs } from "@egovernments/digit-ui-module-common";
+import {
+  PTModule,
+  PTLinks,
+  PTComponents,
+} from "@egovernments/digit-ui-module-pt";
+import {
+  MCollectModule,
+  MCollectLinks,
+  initMCollectComponents,
+} from "@egovernments/digit-ui-module-mcollect";
+// import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
+import {
+  PaymentModule,
+  PaymentLinks,
+  paymentConfigs,
+} from "@egovernments/digit-ui-module-common";
 import { DigitUI } from "@egovernments/digit-ui-module-core";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
-import { HRMSModule ,initHRMSComponents  } from "@egovernments/digit-ui-module-hrms";
-import { TLModule, TLLinks,initTLComponents } from "@egovernments/digit-ui-module-tl";
-import { initReceiptsComponents, ReceiptsModule } from "@egovernments/digit-ui-module-receipts";
+import {
+  HRMSModule,
+  initHRMSComponents,
+} from "@egovernments/digit-ui-module-hrms";
+import {
+  TLModule,
+  TLLinks,
+  initTLComponents,
+} from "@egovernments/digit-ui-module-tl";
+import {
+  initReceiptsComponents,
+  ReceiptsModule,
+} from "@egovernments/digit-ui-module-receipts";
+
+import { customizations } from "./customizations";
 
 initLibraries();
 
-const enabledModules = ["PGR", "FSM", "Payment", "PT", "QuickPayLinks", "DSS", "MCollect","HRMS", "TL","Receipts"];
+const enabledModules = [
+  "PGR",
+  "FSM",
+  "Payment",
+  "PT",
+  "QuickPayLinks",
+  "DSS",
+  "MCollect",
+  "HRMS",
+  "TL",
+  "Receipts",
+];
 window.Digit.ComponentRegistryService.setupRegistry({
   ...paymentConfigs,
   PTModule,
@@ -27,14 +65,14 @@ window.Digit.ComponentRegistryService.setupRegistry({
   HRMSModule,
   TLModule,
   TLLinks,
-  ReceiptsModule
+  ReceiptsModule,
 });
 
 initPGRComponents();
 initFSMComponents();
-initDSSComponents();
+// initDSSComponents();
 initMCollectComponents();
-initHRMSComponents()
+initHRMSComponents();
 initTLComponents();
 initReceiptsComponents();
 
@@ -42,13 +80,27 @@ const moduleReducers = (initData) => ({
   pgr: PGRReducers(initData),
 });
 
+// window.Digit.ComponentRegistryService.setComponent(
+//   "SelectTradeName",
+//   SelectTradeName
+// );
+
+customizations.forEach((setup) => setup());
+
 function App() {
-  const stateCode = window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || process.env.REACT_APP_STATE_LEVEL_TENANT_ID;
+  const stateCode =
+    window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") ||
+    process.env.REACT_APP_STATE_LEVEL_TENANT_ID;
+
   if (!stateCode) {
-    return <h1>stateCode is not defined</h1>
+    return <h1>stateCode is not defined</h1>;
   }
   return (
-    <DigitUI stateCode={stateCode} enabledModules={enabledModules} moduleReducers={moduleReducers} />
+    <DigitUI
+      stateCode={stateCode}
+      enabledModules={enabledModules}
+      moduleReducers={moduleReducers}
+    />
   );
 }
 
