@@ -9,7 +9,6 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-@Setter
 public class Sms {
 
     private String mobileNumber;

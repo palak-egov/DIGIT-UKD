@@ -11,20 +11,19 @@ import org.egov.filestore.domain.model.FileLocation;
 import org.egov.filestore.domain.model.Resource;
 import org.egov.filestore.persistence.entity.Artifact;
 import org.egov.filestore.repository.CloudFilesManager;
-import org.egov.filestore.repository.impl.minio.MinioRepository;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ArtifactRepository {
+public class ArtifactRepository  {
 
 	private FileStoreJpaRepository fileStoreJpaRepository;
+	
 	@Autowired
 	private AwsS3Repository s3Repository;
 
-	@Autowired
 	private CloudFilesManager cloudFilesManager;
 
 	@Value("${isS3Enabled}")

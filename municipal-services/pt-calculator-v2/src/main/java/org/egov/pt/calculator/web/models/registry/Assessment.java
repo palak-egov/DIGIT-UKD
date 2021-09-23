@@ -1,5 +1,6 @@
 package org.egov.pt.calculator.web.models.registry;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -59,7 +60,7 @@ public class Assessment {
         private Source source ;
 
         @JsonProperty("buildUpArea")
-        private Double buildUpArea ;
+        private BigDecimal buildUpArea ;
 
         @JsonProperty("auditDetails")
         private AuditDetails auditDetails ;

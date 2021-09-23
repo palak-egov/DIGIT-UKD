@@ -140,7 +140,7 @@ public class PropertyQueryBuilder {
 					&& null == criteria.getMobileNumber()
 					&& null == criteria.getName()
 					&& null == criteria.getOldPropertyId()
-					&& CollectionUtils.isEmpty(criteria.getCreationReason());
+					&& CollectionUtils.isEmpty(criteria.getCreationReason())
 					&& null == criteria.getLocality()
 					&& null == criteria.getDoorNo()
 					&& null == criteria.getOldPropertyId();

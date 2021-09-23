@@ -17,10 +17,10 @@ public class URLShorterService {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	@Value("${egov.url.shorter.host}")
+	@Value("${egov.url.shortner.host}")
 	private String shorterHost;
 
-	@Value("${egov.url.shorter.endpoint}")
+	@Value("${egov.url.shortner.endpoint}")
 	private String endpoint;
 
 	public String getUrl(String longURL) {

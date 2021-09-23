@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @ConditionalOnProperty(value = "isS3Enabled", havingValue = "true", matchIfMissing = true)
-public class AWSS3BucketImpl implements CloudFilesManager {
+public abstract class AWSS3BucketImpl implements CloudFilesManager {
 	
 	@Autowired
 	private FileStoreConfig configs;

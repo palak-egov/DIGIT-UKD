@@ -1,5 +1,6 @@
 package org.egov.pt.calculator.web.models.registry;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -69,7 +70,7 @@ public class Property extends PropertyInfo {
 
 	@JsonProperty("landArea")
 	@Min(1)
-	private Double landArea;
+	private BigDecimal landArea;
 
 	@JsonProperty("source")
 	@NotNull
@@ -151,7 +152,7 @@ public class Property extends PropertyInfo {
 			StatusEnum status, Address address, List<String> parentProperties, String acknowldgementNumber,
 			String propertyType, String usageCategory, String ownershipCategory, Set<OwnerInfo> owners,
 			List<Institution> institution, CreationReasonEnum creationReason, Long occupancyDate, Long constructionDate,
-			Long noOfFloors, Double landArea, Source source, List<Document> documents, Object additionalDetails,
+			Long noOfFloors, BigDecimal landArea, Source source, List<Document> documents, Object additionalDetails,
 			AuditDetails auditDetails) {
 		super(id, propertyId, tenantId, accountId, oldPropertyId, status, address, parentProperties);
 		this.acknowldgementNumber = acknowldgementNumber;
