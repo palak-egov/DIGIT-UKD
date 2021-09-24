@@ -6,6 +6,7 @@ import {
   TextInput,
 } from "@egovernments/digit-ui-react-components";
 import React, { useState } from "react";
+import SelectOwnerDetails from "./SelectOwnerDetails";
 
 const SelectTradeName = ({
   t,
@@ -92,6 +93,10 @@ const customize = () => {
     "SelectTradeName",
     SelectTradeName
   );
+  window.Digit.ComponentRegistryService.setComponent(
+    "SelectOwnerDetails",
+    SelectOwnerDetails
+  ); 
 };
 
 export default customize;
