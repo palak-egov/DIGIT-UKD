@@ -12,6 +12,8 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
 
   const [isPrimaryOwner, setisPrimaryOwner] = useState(false);
   const [gender, setGender] = useState(formData?.owners?.gender);
+  const [tradeRelationship, settradeRelationship] = useState(formData?.owners?.tradeRelationship);
+  const [relationship, setRelationship] = useState(formData?.owners?.relationship);
   const [mobilenumber, setMobileNumber] = useState(formData?.owners?.mobilenumber || "");
   const [fields, setFeilds] = useState(
     (formData?.owners && formData?.owners?.owners) || [{ name: "", gender: "", mobilenumber: null, isprimaryowner: false }]
@@ -42,7 +44,17 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
 
   const {data: Menu} = window.Digit.Hooks.tl.useTLGenderMDMS(stateId, "common-masters", "GenderType");
 
+   const TradeRelationshipMenu = [
+    { i18nKey: "TL_PROPRIETOR", code: "PROPRIETOR" },
+    { i18nKey: "TL_PARTNER", code: "PARTNER" },
+    { i18nKey: "TL_DIRECTOR", code: "DIRECTOR" },
+    { i18nKey: "TL_AUTHORIZEDSIGNATORY", code: "AUTHORIZEDSIGNATORY" },
+  ];  
   
+  const relationshipMenu = [
+    { i18nKey: "TL_FATHER", code: "FATHER" },
+    { i18nKey: "TL_HUSBAND", code: "HUSBAND" },
+    ]; 
   let TLmenu = [];
     Menu &&
       Menu.map((genders) => {
@@ -74,6 +86,12 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
       setCanmovenext(false);}
   }
 
+function setPanCardValue(i, e) {
+    let units = [...fields];
+    units[i].panCard = e.target.value;
+    setPanCard(e.target.value);
+    setFeilds(units);
+  }
   function setGenderName(i, value) {
     let units = [...fields];
     units[i].gender = value;
@@ -81,6 +99,22 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
     setFeilds(units);
     if(units[i].gender && units[i].mobilenumber && units[i].name){
     setCanmovenext(false);}
+  }
+    function setTradeRelationshipValue(i, value) {
+    let units = [...fields];
+    units[i].tradeRelationship = value;
+    settradeRelationship(value);
+    setFeilds(units);  
+      
+  }
+
+  function setRelationshipValue(i, value) {
+    let units = [...fields];
+    units[i].relationship = value;
+    setRelationship(value);
+    setFeilds(units);    
+    if(units[i].gender && units[i].mobilenumber && units[i].name && units[i].relationship){
+      setCanmovenext(false);}
   }
   function setMobileNo(i, e) {
     let units = [...fields];
@@ -173,9 +207,9 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
               type={"text"}
               isMandatory={false}
               optionKey="i18nKey"
-              name="name"
+              name="panCard"
               value={field.panCard}
-              onChange={(e) => setPanCard(index, e)}
+              onChange={(e) => setPanCardValue(index, e)}
               {...(validation = {
                 isRequired: true,
                 pattern: "^[A-Za-z]{5}([0-9]){4}[A-Za-z]{1} *$",
@@ -183,6 +217,21 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
                 title: t("TL_PANCARD_ERROR_MESSAGE"),
               })}
             />
+            <CardLabel>{`${t("TL_NEW_RELATIONSHIP_LABEL")}`}</CardLabel>
+            <RadioButtons
+              t={t}
+              options={relationshipMenu}
+              optionsKey="code"
+              name="relationship"
+              value={relationship}
+              selectedOption={field.relationship}
+              onSelect={(e) => setRelationshipValue(index, e)}
+              //isDependent={true}
+              labelKey="TL_RELATIONSHIP"
+              //disabled={isUpdateProperty || isEditProperty}
+            />
+          
+
              <CardLabel>{`${t("TL_NEW_OWNER_DETAILS_GENDER_LABEL")}`}</CardLabel>
             <RadioButtons
               t={t}
@@ -196,6 +245,19 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
               labelKey="TL_GENDER"
               //disabled={isUpdateProperty || isEditProperty}
             />
+           <CardLabel>{`${t("TL_NEW_TRADE_RELATIONSHIP_LABEL")}`}</CardLabel>
+            <RadioButtons
+              t={t}
+              options={TradeRelationshipMenu}
+              optionsKey="code"
+              name="tradeRelationship"
+              value={tradeRelationship}
+              selectedOption={field.tradeRelationship}
+              onSelect={(e) => setTradeRelationshipValue(index, e)}
+              //isDependent={true}
+              labelKey="TL_TRADERELATIONSHIP"
+              //disabled={isUpdateProperty || isEditProperty}
+            /> 
             <CardLabel>{`${t("TL_MOBILE_NUMBER_LABEL")}`}</CardLabel>
             <div className="field-container">
               <span className="employee-card-input employee-card-input--front" style={{ marginTop: "-1px" }}>
