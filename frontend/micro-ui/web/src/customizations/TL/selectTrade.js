@@ -7,6 +7,8 @@ import {
 } from "@egovernments/digit-ui-react-components";
 import React, { useState } from "react";
 import SelectOwnerDetails from "./SelectOwnerDetails";
+import SelectStreet from "./SelectStreet";
+import TLSelectPropertyID from "./TLSelectPropertyID";
 
 const SelectTradeName = ({
   t,
@@ -96,6 +98,14 @@ const customize = () => {
   window.Digit.ComponentRegistryService.setComponent(
     "SelectOwnerDetails",
     SelectOwnerDetails
+  ); 
+  window.Digit.ComponentRegistryService.setComponent(
+    "SelectStreet",
+    SelectStreet
+  ); 
+  window.Digit.ComponentRegistryService.setComponent(
+    "TLSelectPropertyID",
+    TLSelectPropertyID
   ); 
 };
 
