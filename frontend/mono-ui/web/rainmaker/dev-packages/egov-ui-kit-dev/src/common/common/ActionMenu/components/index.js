@@ -11,12 +11,7 @@ import MenuItem from "material-ui/MenuItem";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import Tooltip from "@material-ui/core/Tooltip";
 import "./index.css";
-import commonConfig from "config/common.js";
-import { httpRequest } from "egov-ui-framework/ui-utils/api";
 
 const styles = {
   inputStyle: {
@@ -52,7 +47,7 @@ const styles = {
     textIndent: "15px",
   },
   inputStyle: {
-//    color: "white",
+    //    color: "white",
     color: window.innerWidth > 768 ? "white" : "black",
     bottom: "5px",
     height: "auto",
@@ -70,7 +65,6 @@ class ActionMenuComp extends Component {
       path: "",
       menuItems: [],
       selectedMenuIndex: 0,
-      citywiseconfig:null
     };
     this.setWrapperRef = this.setWrapperRef.bind(this);
   }
@@ -94,50 +88,9 @@ class ActionMenuComp extends Component {
     }
   }
 
-  componentDidMount = async () => {    // for better reusability moving out
+  componentDidMount() {
+    // for better reusability moving out
     this.initialMenuUpdate();
-
-    let citywiseConfig = localStorage.getItem("citywiseConfig");
-    citywiseConfig = citywiseConfig && JSON.parse(citywiseConfig);
-   let citywiseConfigb;
-    if(!citywiseConfig || citywiseConfig && citywiseConfig.length === 0){
-      const tenantRequestBody = {
-        MdmsCriteria: {
-          tenantId: commonConfig.tenantId,
-          moduleDetails: [
-            {
-              moduleName: "tenant",
-              masterDetails: [
-                {
-                  name: "citywiseconfig",
-                  filter: "[?(@.config=='assessmentEnabledCities')]"
-                }
-              ]
-            }
-          ]
-        },
-      };
-      let citywiseconfigs = await httpRequest(
-          "post",
-          "/egov-mdms-service/v1/_search",
-          "_search",
-          [],
-          tenantRequestBody);
-        localStorage.setItem("citywiseconfig",JSON.stringify(citywiseconfigs.MdmsRes.tenant.citywiseconfig))
-        citywiseConfigb = citywiseconfigs.MdmsRes.tenant.citywiseconfig
-    }
-     citywiseConfig = citywiseConfig || citywiseConfigb;
-    // if(citywiseConfiga ||)
-    if(citywiseConfig && citywiseConfig[0] && citywiseConfig[0].enabledCities ){
-      let dataentryShow = citywiseConfig[0].enabledCities.find( item =>{
-        return item === getTenantId()
-      })
-      /* if(dataentryShow){
-        continue;
-      } */
-    }
-  
-
   }
   initialMenuUpdate() {
     let pathParam = {};
@@ -166,8 +119,7 @@ class ActionMenuComp extends Component {
     }
   }
   componentWillReceiveProps(nextProps) {
-    if (nextProps && nextProps.activeRoutePath != this.props.activeRoutePath) {
-
+    if (nextProps && nextProps.activeRoutePath !== "null" && nextProps.activeRoutePath != this.props.activeRoutePath) {
       this.fetchLocales();
       this.initialMenuUpdate();
       this.setState({
@@ -226,7 +178,7 @@ class ActionMenuComp extends Component {
       path,
     });
   };
-  menuChange = async(pathParam,state) => {
+  menuChange = (pathParam) => {
     let path = pathParam.path;
     let { role, actionListArr } = this.props;
     let actionList = actionListArr;
@@ -234,50 +186,6 @@ class ActionMenuComp extends Component {
     for (var i = 0; i < (actionList && actionList.length); i++) {
       if (actionList[i].path !== "") {
         if (path && !path.parentMenu && actionList[i].path.startsWith(path + ".")) {
-          if(actionList[i].name === "Data Entry"){
-            let citywiseConfig = localStorage.getItem("citywiseConfig");
-            citywiseConfig = citywiseConfig && JSON.parse(citywiseConfig);
-           let citywiseConfigb;
-            if(!citywiseConfig || citywiseConfig && citywiseConfig.length === 0){
-              const tenantRequestBody = {
-                MdmsCriteria: {
-                  tenantId: commonConfig.tenantId,
-                  moduleDetails: [
-                    {
-                      moduleName: "tenant",
-                      masterDetails: [
-                        {
-                          name: "citywiseconfig",
-                          filter: "[?(@.config=='assessmentEnabledCities')]"
-                        }
-                      ]
-                    }
-                  ]
-                },
-              };
-              let citywiseconfigs = await httpRequest(
-                  "post",
-                  "/egov-mdms-service/v1/_search",
-                  "_search",
-                  [],
-                  tenantRequestBody);
-                localStorage.setItem("citywiseconfig",JSON.stringify(citywiseconfigs.MdmsRes.tenant.citywiseconfig))
-                citywiseConfigb = citywiseconfigs.MdmsRes.tenant.citywiseconfig
-            }
-             citywiseConfig = citywiseConfig || citywiseConfigb;
-            // if(citywiseConfiga ||)
-            if(citywiseConfig && citywiseConfig[0] && citywiseConfig[0].enabledCities ){
-              let dataentryShow = citywiseConfig[0].enabledCities.find( item =>{
-                return item === getTenantId()
-              })
-              if(dataentryShow){
-                continue;
-              }
-            }
-          }
-
-          
-          
           let splitArray = actionList[i].path.split(path + ".")[1].split(".");
           let leftIconArray = actionList[i].leftIcon.split(".");
           let leftIcon =
@@ -285,8 +193,8 @@ class ActionMenuComp extends Component {
             (leftIconArray.length > path.split(".").length
               ? leftIconArray[path.split(".").length]
               : leftIconArray.length >= 1
-              ? leftIconArray[leftIconArray.length - 1]
-              : null);
+                ? leftIconArray[leftIconArray.length - 1]
+                : null);
           this.addMenuItems(path, splitArray, menuItems, i, leftIcon);
         } else if (pathParam && pathParam.parentMenu && actionList[i].navigationURL) {
           let splitArray = actionList[i].path.split(".");
@@ -340,7 +248,7 @@ class ActionMenuComp extends Component {
         <Icon
           name={leftIcon[1]}
           action={leftIcon[0]}
-        // color="rgba(255, 255, 255, 0.87)"
+          // color="rgba(255, 255, 255, 0.87)"
           style={styles.fibreIconStyle}
           className={`iconClassHover left-icon-color material-icons whiteColor custom-style-for-${item.leftIcon.name}`}
         />
@@ -402,7 +310,7 @@ class ActionMenuComp extends Component {
                       parentPath: false,
                     };
                     toggleDrawer && toggleDrawer();
-                    menuChange(pathParam,this.state);
+                    menuChange(pathParam);
                   }}
                 />
                 {/* </Tooltip> */}
@@ -429,7 +337,10 @@ class ActionMenuComp extends Component {
                       id={item.name.toUpperCase().replace(/[\s]/g, "-") + "-" + index}
                       onClick={() => {
                         //  localStorageSet("menuPath", item.path);
-                        updateActiveRoute(item.path, item.name);
+                        if (item.navigationURL === "tradelicence/apply") {
+                          this.props.setRequiredDocumentFlag()
+                        }
+
                         document.title = item.name;
                         if (item.navigationURL && item.navigationURL.includes('digit-ui')) {
                           window.location.href = item.navigationURL
@@ -438,6 +349,7 @@ class ActionMenuComp extends Component {
                         else {
                           updateActiveRoute(item.path, item.name);
                         }
+
                         toggleDrawer && toggleDrawer();
                         if (window.location.href.indexOf(item.navigationURL) > 0 && item.navigationURL.startsWith("integration")) {
                           window.location.reload();
@@ -449,7 +361,7 @@ class ActionMenuComp extends Component {
                           className="menuStyle"
                           //defaultLabel={item.name}
                           label={item.name ? `ACTION_TEST_${item.name.toUpperCase().replace(/[.:-\s\/]/g, "_")}` : ""}
-                     //   color="rgba(255, 255, 255, 0.87)"
+                        //   color="rgba(255, 255, 255, 0.87)"
                         />
                       }
                     />
@@ -459,7 +371,7 @@ class ActionMenuComp extends Component {
               );
             } else {
               return (
-                <a href={item.url} target="_blank">
+                <a href={item.url} target="_blank" rel="noopener noreferrer">
                   <div className="sideMenuItem">
                     {/* <Tooltip
                       id={"menu-toggle-tooltip"}
@@ -481,7 +393,7 @@ class ActionMenuComp extends Component {
                           className="menuStyle"
                           //defaultLabel={item.name}
                           label={item.name ? `ACTION_TEST_${item.name.toUpperCase().replace(/[.:-\s\/]/g, "_")}` : ""}
-                         // color="rgba(255, 255, 255, 0.87)"
+                        // color="rgba(255, 255, 255, 0.87)"
                         />
                       }
                     />
@@ -611,7 +523,7 @@ class ActionMenuComp extends Component {
                 this.changeRoute("/");
               }}
             >
-              <Icon  className = "menu-label-style" name="home" action="action" />
+              <Icon className="menu-label-style" name="home" action="action" />
             </div>
             // </Tooltip>
           )}
@@ -619,41 +531,44 @@ class ActionMenuComp extends Component {
           <div className="clearfix" />
 
           <div style={{ paddingLeft: "-24px" }}>{showMenuItem()}</div>
-          {toggleDrawer ? (
-            <div className="sideMenuItem drawer-collapse-menu-item">
-              {/* <Tooltip
-                id={"menu-toggle-tooltip"}
-                title={<Label defaultLabel={"Expand Menu"} label={menuDrawerOpen ? "" : "COMMON_ACTION_TEST_EXPAND_MENU"} />}
-                placement="right"
-              > */}
-              <MenuItem
-                innerDivStyle={styles.defaultMenuItemStyle}
-                style={{ whiteSpace: "initial" }}
-                onClick={() => {
-                  toggleDrawer && toggleDrawer(false);
-                }}
-                leftIcon={
-                  menuDrawerOpen ? (
-                    <ChevronLeftIcon style={styles.fibreIconStyle} className="iconClassHover material-icons whiteColor" />
-                  ) : (
-                    <ChevronRightIcon style={styles.fibreIconStyle} className="iconClassHover material-icons whiteColor" />
-                  )
-                }
-                primaryText={
-                  <Label
-                    className="menuStyle"
-                    defaultLabel="COMMON_ACTION_TEST_COLLAPSE"
-                    label={menuDrawerOpen ? "COMMON_ACTION_TEST_COLLAPSE" : ""}
-                   //  color="rgba(255, 255, 255, 0.87)"
+          {
+            // toggleDrawer ? (
+            //   <div className="sideMenuItem drawer-collapse-menu-item">
+            //     {/* <Tooltip
+            //       id={"menu-toggle-tooltip"}
+            //       title={<Label defaultLabel={"Expand Menu"} label={menuDrawerOpen ? "" : "COMMON_ACTION_TEST_EXPAND_MENU"} />}
+            //       placement="right"
+            //     > */}
+            //     <MenuItem
+            //       innerDivStyle={styles.defaultMenuItemStyle}
+            //       style={{ whiteSpace: "initial" }}
+            //       onClick={() => {
+            //         toggleDrawer && toggleDrawer(false);
+            //       }}
+            //       leftIcon={
+            //         menuDrawerOpen ? (
+            //           <ChevronLeftIcon style={styles.fibreIconStyle} className="iconClassHover material-icons whiteColor" />
+            //         ) : (
+            //           <ChevronRightIcon style={styles.fibreIconStyle} className="iconClassHover material-icons whiteColor" />
+            //         )
+            //       }
+            //       primaryText={
+            //         <Label
+            //           className="menuStyle"
+            //           defaultLabel="COMMON_ACTION_TEST_COLLAPSE"
+            //           label={menuDrawerOpen ? "COMMON_ACTION_TEST_COLLAPSE" : ""}
+            //          //  color="rgba(255, 255, 255, 0.87)"
 
-                  />
-                }
-              />
-              {/* </Tooltip> */}
-            </div>
-          ) : (
-            ""
-          )}
+            //         />
+            //       }
+            //     />
+            //     {/* </Tooltip> */}
+            //   </div>
+            // ) : (
+            //   ""
+            // )
+          }
+
         </Menu>
       </div>
     ) : null;
@@ -663,8 +578,7 @@ class ActionMenuComp extends Component {
 const mapDispatchToProps = (dispatch) => ({
   handleToggle: (showMenu) => dispatch({ type: "MENU_TOGGLE", showMenu }),
   setRoute: (route) => dispatch({ type: "SET_ROUTE", route }),
-  setCityWiseConfig: (cityWiseData) => dispatch(prepareFinalObject("cityWiseConfigActionMenu",cityWiseData)),
-  fetchLocalizationLabel: (locale, moduleName, tenantId) => dispatch(fetchLocalizationLabel(locale, moduleName, tenantId)),  setRequiredDocumentFlag: () => dispatch(prepareFinalObject("isRequiredDocuments", true)),
+  fetchLocalizationLabel: (locale, moduleName, tenantId) => dispatch(fetchLocalizationLabel(locale, moduleName, tenantId)),
   setRequiredDocumentFlag: () => dispatch(prepareFinalObject("isRequiredDocuments", true))
 });
 export default connect(
