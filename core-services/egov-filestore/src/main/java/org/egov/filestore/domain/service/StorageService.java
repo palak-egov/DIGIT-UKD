@@ -66,6 +66,7 @@ public class StorageService {
 	@Value("${source.azure.blob}")
 	private String azureBlobSource;
 
+	@Autowired
 	private CloudFilesManager cloudFilesManager;
 
 	private static final String UPLOAD_MESSAGE = "Received upload request for "

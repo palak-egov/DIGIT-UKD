@@ -24,6 +24,7 @@ public class ArtifactRepository  {
 	@Autowired
 	private AwsS3Repository s3Repository;
 
+	@Autowired
 	private CloudFilesManager cloudFilesManager;
 
 	@Value("${isS3Enabled}")

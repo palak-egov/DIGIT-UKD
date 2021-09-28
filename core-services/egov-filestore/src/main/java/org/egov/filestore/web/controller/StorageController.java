@@ -52,7 +52,7 @@ public class StorageController {
 	private FileStoreConfig fileStoreConfig;
 	
 	@Autowired
-	public StorageController(StorageService storageService, ResponseFactory responseFactory, FileStoreConfig fileStoreConfig) {
+	public StorageController(StorageService storageService, ResponseFactory responseFactory, StorageUtil storageUtil, FileStoreConfig fileStoreConfig) {
 		this.storageService = storageService;
 		this.responseFactory = responseFactory;
 		this.storageUtil = storageUtil;
