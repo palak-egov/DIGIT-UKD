@@ -20,7 +20,7 @@ import static org.apache.commons.io.FileUtils.getUserDirectoryPath;
 
 @Service
 @ConditionalOnProperty(value = "isNfsStorageEnabled", havingValue = "true")
-public abstract class DiskFileStoreRepository  implements CloudFilesManager {
+public class DiskFileStoreRepository  implements CloudFilesManager {
 
 	@Value("${disk.storage.host.url}")
 	private String hostUrl;
@@ -105,6 +105,12 @@ public abstract class DiskFileStoreRepository  implements CloudFilesManager {
 				.contentType(artifact.getMultipartFile().getContentType()).module(fileLocation.getModule())
 				.tag(fileLocation.getTag()).tenantId(fileLocation.getTenantId())
 				.fileSource(fileLocation.getFileSource()).build();
+	}
+
+	@Override
+	public Map<String, String> getFiles(List<Artifact> artifacts) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
