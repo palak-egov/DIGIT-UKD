@@ -36,7 +36,13 @@ WebFont.load({
 });
 
 // move it to a env file
-window.basename = process.env.NODE_ENV === "production" ? "/employee" : "";
+if (window.location.href && window.location.href.includes('digit-ui')) {
+  window.basename = process.env.NODE_ENV === "production" ? "/" : "";
+}
+else
+{
+   window.basename = process.env.NODE_ENV === "production" ? "/employee" : "";
+}
 window.__CURRENT_APP__ = "EMPLOYEE"
 // hardcoded the base; to be changed soon!!!!!
 render(
