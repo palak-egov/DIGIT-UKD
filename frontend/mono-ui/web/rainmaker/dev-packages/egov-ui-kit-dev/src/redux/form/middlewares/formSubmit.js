@@ -98,6 +98,8 @@ const formSubmit = (store) => (next) => (action) => {
 
     if (redirectionRoute && redirectionRoute.length) {
       redirectionRoute = idJsonPath ? addQueryArg(redirectionRoute, [{ key: "id", value: get(payload, idJsonPath) }]) : redirectionRoute;
+      console.log("prasad redirectionRoute in middlewares", redirectionRoute);
+
       if (redirectionRoute && redirectionRoute.includes && redirectionRoute.includes('digit-ui')) {
         window.location.href = redirectionRoute.startsWith('/digit') ? redirectionRoute.split('&')[0] : `/${redirectionRoute.split('&')[0]}`;
         return;

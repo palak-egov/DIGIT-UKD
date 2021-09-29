@@ -342,6 +342,8 @@ class ActionMenuComp extends Component {
                         }
 
                         document.title = item.name;
+                        console.log("prasad item.navigationURL in MEnu component", item.navigationURL);
+
                         if (item.navigationURL && item.navigationURL.includes('digit-ui')) {
                           window.location.href = item.navigationURL
                           return;
