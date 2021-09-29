@@ -9,6 +9,7 @@ import React, { useState } from "react";
 import SelectOwnerDetails from "./SelectOwnerDetails";
 import SelectStreet from "./SelectStreet";
 import TLSelectPropertyID from "./TLSelectPropertyID";
+import TLTradeDetailsEmployee from "./TLTradeDetailsEmployee";
 
 const SelectTradeName = ({
   t,
@@ -107,6 +108,11 @@ const customize = () => {
     "TLSelectPropertyID",
     TLSelectPropertyID
   ); 
+  window.Digit.ComponentRegistryService.setComponent(
+    "TLTradeDetailsEmployee",
+    TLTradeDetailsEmployee  );
+
+  
 };
 
 export default customize;
