@@ -26,8 +26,11 @@ const SelectOccupancyType = ({ t, config, onSelect, userType, formData }) => {
 
   function goNext() {
     sessionStorage.setItem("OccupancyType", OccupancyType.i18nKey);
-    onSelect(config.key, { OccupancyType });
+    console.log(OccupancyType, "occupancy");
+
+    onSelect(config.key, { ...formData[config.key], OccupancyType });
   }
+
   return (
     <FormStep
       t={t}
