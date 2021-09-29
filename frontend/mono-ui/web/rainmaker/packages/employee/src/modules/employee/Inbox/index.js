@@ -82,6 +82,7 @@ class Inbox extends Component {
                   link: () => {if (obj.navigationURL === "tradelicence/apply") {
                     this.props.setRequiredDocumentFlag();
                   }
+                  console.log("prasad obj.navigationURL in employee inbox file", obj.navigationURL);
                   if (obj.navigationURL && obj.navigationURL.includes('digit-ui')) {
                     window.location.href = obj.navigationURL;
                     return;
@@ -103,6 +104,7 @@ class Inbox extends Component {
               link: () => { if (obj.navigationURL === "tradelicence/apply") {
                 this.props.setRequiredDocumentFlag();
               }
+              console.log("prasad obj.navigationURL in employee inbox file else condition", obj.navigationURL);
               if (obj.navigationURL && obj.navigationURL.includes('digit-ui')) {
                 window.location.href = obj.navigationURL;
                 return;

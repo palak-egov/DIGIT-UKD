@@ -70,6 +70,7 @@ class ServiceList extends React.Component {
     } else {
       list = menu && menu.filter((item) => item.url === "card");
     }
+    console.log("prasad list", list);
     this.setState({
       actionList: list,
     });
@@ -89,6 +90,7 @@ class ServiceList extends React.Component {
                 <Card
                   className={classes.paper}
                   onClick={(e) => {
+                    console.log("prasad service.navigationURL for employee", service.navigationURL);
                     if (service.navigationURL && service.navigationURL.includes('digit-ui')) {
                       window.location.href = service.navigationURL;
                       return;
@@ -117,6 +119,8 @@ class ServiceList extends React.Component {
                 <Card
                   className={`${classes.paper} service-module-style`}
                   onClick={(e) => {
+                    console.log("prasad service.navigationURL in xsdown for employee", service.navigationURL);
+
                     if (service.navigationURL && service.navigationURL.includes('digit-ui')) {
                       window.location.href = service.navigationURL;
                       return;
