@@ -4,18 +4,18 @@ import React, { useState } from "react";
 const TLSelectPropertyID = ({ t, config, onSelect, value, userType, formData }) => {
   let validation = {};
   const onSkip = () => onSelect();
-  const [PropertyID, setPropertyID] = useState(formData.TradeDetails?.PropertyID);
+  const [propertyId, setpropertyId] = useState(formData.TradeDetails?.propertyId);
   const tenantId = window.Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
   const isEdit = window.location.href.includes("/edit-application/") || window.location.href.includes("renew-trade");
   const { isLoading } = window.Digit.Hooks.tl.useTradeLicenseMDMS(stateId, "egf-master", "FinancialYear");
 
-  function setSelectPropertyID(e) {
-    setPropertyID(e.target.value);
+  function setSelectpropertyId(e) {
+    setpropertyId(e.target.value);
   }
 
   const goNext = () => {
-    onSelect(config.key, { PropertyID });
+    onSelect(config.key, { propertyId });
   };
   if (isLoading) {
     return <Loader></Loader>
@@ -28,7 +28,7 @@ const TLSelectPropertyID = ({ t, config, onSelect, value, userType, formData }) 
         onSelect={goNext}
         onSkip={onSkip}
         t={t}
-        isDisabled={!PropertyID}
+        isDisabled={!propertyId}
       >
         <CardLabel>{`${t("TL_LOCALIZATION_PROPERTY_ID")}`}</CardLabel>
         <TextInput
@@ -36,9 +36,9 @@ const TLSelectPropertyID = ({ t, config, onSelect, value, userType, formData }) 
           isMandatory={false}
           type={"text"}
           optionKey="i18nKey"
-          name="PropertyID"
-          value={PropertyID}
-          onChange={setSelectPropertyID}
+          name="propertyId"
+          value={propertyId}
+          onChange={setSelectpropertyId}
           disable={isEdit}
           {...(validation = { pattern: "^[a-zA-Z-.`' ]*$", isRequired: true, type: "text", title: t("TL_INVALID_PROPERYID") })}
         />
