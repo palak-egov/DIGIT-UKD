@@ -10,6 +10,7 @@ import SelectOwnerDetails from "./SelectOwnerDetails";
 import SelectStreet from "./SelectStreet";
 import TLSelectPropertyID from "./TLSelectPropertyID";
 import TLTradeDetailsEmployee from "./TLTradeDetailsEmployee";
+import TLOwnerDetailsEmployee from "./TLOwnerDetialsEmployee";
 
 const SelectTradeName = ({
   t,
@@ -113,6 +114,10 @@ const customize = () => {
   window.Digit.ComponentRegistryService.setComponent(
     "TLTradeDetailsEmployee",
     TLTradeDetailsEmployee  );
+    window.Digit.ComponentRegistryService.setComponent(
+      "TLOwnerDetailsEmployee",
+      TLOwnerDetailsEmployee  );
+  
 
   
 };
