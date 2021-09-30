@@ -80,12 +80,9 @@ const moduleReducers = (initData) => ({
   pgr: PGRReducers(initData),
 });
 
-// window.Digit.ComponentRegistryService.setComponent(
-//   "SelectTradeName",
-//   SelectTradeName
-// );
-
 customizations.forEach((setup) => setup());
+
+// console.log(window.Digit.ComponentRegistryService);
 
 function App() {
   const stateCode =

@@ -35,6 +35,8 @@ const SelectTradeName = ({
       "FinancialYear"
     );
 
+  console.log("formData", formData);
+
   let mdmsFinancialYear = fydata["egf-master"]
     ? fydata["egf-master"].FinancialYear.filter((y) => y.module === "TL")
     : [];
