@@ -30,6 +30,8 @@ const TLOwnerDetailsEmployee = ({ config, onSelect, userType, formData, setError
   const [isErrors, setIsErrors] = useState(false);
   const [previousLicenseDetails, setPreviousLicenseDetails] = useState(formData?.tradedetils1 || []);
 
+  console.log("prasad formData", formData);
+
   const { data: mdmsData, isLoading } = window.Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", [
     "UsageCategory",
     "OccupancyType",
@@ -275,6 +277,7 @@ const OwnerForm = (_props) => {
               />
             </div>
           </LabelFieldPair>
+          
           <LabelFieldPair>
             <CardLabel className="card-label-smaller">{`${t("TL_OWNER_PANCARD_LABEL")} * :`}</CardLabel>
             <div className="field">
@@ -358,7 +361,7 @@ const OwnerForm = (_props) => {
             </div>
           </LabelFieldPair>
           <CardLabelError style={errorStyle}> {localFormState.touched.fatherOrHusbandName ? errors?.fatherOrHusbandName?.message : ""} </CardLabelError> */}
-          {/* <LabelFieldPair>
+           <LabelFieldPair>
             <CardLabel className="card-label-smaller">{`${t("TL_RELATIONSHIP_WITH_GUARDIAN_LABEL")} * :`}</CardLabel>
             <Controller
               control={control}
@@ -386,7 +389,7 @@ const OwnerForm = (_props) => {
               )}
             />
           </LabelFieldPair>
-          <CardLabelError style={errorStyle}>{localFormState.touched.relationship ? errors?.relationship?.message : ""}</CardLabelError> */}
+          <CardLabelError style={errorStyle}>{localFormState.touched.relationship ? errors?.relationship?.message : ""}</CardLabelError> 
           <LabelFieldPair>
             <CardLabel className="card-label-smaller">{`${t("TL_NEW_OWNER_DETAILS_GENDER_LABEL")} * :`}</CardLabel>
             <Controller
