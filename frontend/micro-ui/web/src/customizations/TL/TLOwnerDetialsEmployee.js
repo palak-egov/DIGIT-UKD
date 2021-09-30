@@ -183,7 +183,22 @@ const OwnerForm = (_props) => {
       })) || [],
     [mdmsData]
   );
+/*   const relationTypeMenu = useMemo(
+    () =>
+      mdmsData?.PropertyTax?.relationType?.map?.((e) => ({
+        i18nKey: `${e.code.replaceAll("PROPERTY", "COMMON_MASTERS").replaceAll(".", "_")}`,
+        code: e.code,
+      })) || [],
+    [mdmsData]
+  );
+ */
 
+  const relationTypeMenu = [
+    { i18nKey: "TL_PROPRIETOR", code: "PROPRIETOR" },
+    { i18nKey: "TL_PARTNER", code: "PARTNER" },
+    { i18nKey: "TL_DIRECTOR", code: "DIRECTOR" },
+    { i18nKey: "TL_AUTHORIZEDSIGNATORY", code: "AUTHORIZEDSIGNATORY" },
+  ];  
   const genderFilterTypeMenu = genderTypeData && genderTypeData["common-masters"]?.GenderType?.filter(e => e.active);
 
   const genderTypeMenu = useMemo(
@@ -467,6 +482,31 @@ const OwnerForm = (_props) => {
             />
           </LabelFieldPair>
           <CardLabelError style={errorStyle}>{localFormState.touched.ownerType ? errors?.ownerType?.message : ""}</CardLabelError>
+          <LabelFieldPair>
+            <CardLabel className="card-label-smaller">{`${t("TL_OWNER_TRADE_RELATION_CATEGORY")} :`}</CardLabel>
+            <Controller
+              control={control}
+              name={"relationType"}
+              defaultValue={owner?.relationType}
+              // rules={}
+              render={(props) => (
+                <Dropdown
+                  className="form-field"
+                  selected={props.value}
+                  errorStyle={(localFormState.touched.relationType && errors?.relationType?.message) ? true : false}
+                  select={(e) => {
+                    if(e?.code !=  owner?.relationType?.code && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
+                    props.onChange(e)
+                  }}
+                  onBlur={props.onBlur}
+                  option={relationTypeMenu}
+                  optionKey="i18nKey"
+                  t={t}
+                />
+              )}
+            />
+          </LabelFieldPair>
+          <CardLabelError style={errorStyle}>{localFormState.touched.relationType ? errors?.relationType?.message : ""}</CardLabelError>
           <LabelFieldPair>
             <CardLabel className="card-label-smaller">{`${t("TL_NEW_OWNER_DETAILS_ADDR_LABEL")} :`}</CardLabel>
             <div className="field">
