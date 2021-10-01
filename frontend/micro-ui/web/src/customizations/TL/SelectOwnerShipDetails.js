@@ -22,6 +22,8 @@ const SelectOwnerShipDetails = ({
   setError,
   clearErrors,
 }) => {
+  const selectedValue = formData?.[config.key]?.ownership;
+
   const stateId = window.Digit.ULBService.getStateId();
 
   const { isLoading, data: Menu } = window.Digit.Hooks.tl.useTradeLicenseMDMS(
@@ -32,6 +34,13 @@ const SelectOwnerShipDetails = ({
     { select: (d) => d["common-masters"]["OwnerShipCategory"] }
   );
 
+  const [mainOwnerShipType, setMainOwnership] = useState({
+    code: selectedValue.split(".")[0],
+  });
+  const [ownership, setOwnerShip] = useState(() => ({
+    code: selectedValue,
+  }));
+
   const ownserShipTypeMenu = useMemo(() => {
     let obj = {};
     Menu?.forEach((e) => {
@@ -41,24 +50,39 @@ const SelectOwnerShipDetails = ({
     return Object.keys(obj).map((e) => ({ code: e }));
   }, [Menu]);
 
-  const [mainOwnerShipType, setMainOwnership] = useState(null);
-  const [ownership, setOwnerShip] = useState(null);
-
   const subOwnerShipMenu = useMemo(
     () => Menu?.filter((e) => e.code.split(".")[0] === mainOwnerShipType?.code),
     [mainOwnerShipType]
   );
 
   useEffect(() => {
-    setOwnerShip(null);
+    if (!ownership?.code?.includes(mainOwnerShipType?.code)) {
+      setOwnerShip(null);
+    }
   }, [mainOwnerShipType]);
 
+  useEffect(() => {
+    if (Menu?.length) {
+      setMainOwnership(
+        ownserShipTypeMenu.find((o) => selectedValue.split(".")[0] === o?.code)
+      );
+      setOwnerShip(subOwnerShipMenu?.find((o) => selectedValue === o.code));
+    }
+  }, [Menu]);
+
+  console.log(selectedValue, ownership, subOwnerShipMenu, "selectedValue");
+
   const goNext = (data) => {
-    onSelect(config.key, { ...formData[config.key], ...data });
+    onSelect(config.key, { ownership: ownership?.code });
   };
 
   return (
-    <FormStep t={t} config={config} onSelect={goNext}>
+    <FormStep
+      t={t}
+      config={config}
+      onSelect={goNext}
+      isDisabled={!ownership?.code}
+    >
       <CardLabel>{t("TL_OWNERSHIP_TYPE")}</CardLabel>
       <RadioOrSelect
         options={ownserShipTypeMenu || []}
