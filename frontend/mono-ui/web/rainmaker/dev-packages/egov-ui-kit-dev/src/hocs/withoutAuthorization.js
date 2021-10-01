@@ -93,7 +93,6 @@ const withoutAuthorization = (redirectionUrl) => (Component) => {
 /* if (process.env.REACT_APP_NAME === "Citizen") {
        /*  const tenantInfo = getQueryArg(window.location.href, "tenantId");
         const userInfo = JSON.parse(getUserInfo());
-        console.log("prasad userInfo", userInfo);
         tenantId = userInfo && userInfo.permanentCity;
         tenantId = tenantInfo ? tenantInfo : tenantId;
         tenantId = "uk"
