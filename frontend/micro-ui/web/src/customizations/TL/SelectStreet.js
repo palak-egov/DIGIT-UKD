@@ -4,7 +4,6 @@ import { useForm, Controller } from "react-hook-form";
 import _ from "lodash";
 
 const SelectStreet = ({ t, config, onSelect, userType, formData, formState, setError, clearErrors }) => {
-    console.log("prasad confign in selectstreet", config);
   const onSkip = () => onSelect();
 
   const [focusIndex, setFocusIndex] = useState({ index: -1, type: "" });
