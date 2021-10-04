@@ -7,7 +7,7 @@ import {
   MobileNumber,
   DatePicker,
 } from "@egovernments/digit-ui-react-components";
-import { useLocation } from "react-router-dom";
+import {} from "";
 
 const SelectNonIndividualOwner = ({
   t,
@@ -52,8 +52,41 @@ const SelectNonIndividualOwner = ({
   const [relationship, setRelationship] = useState(null);
   const [DOB, setDOB] = useState(null);
 
+  const disabled = () => {
+    let obj = {
+      mobileNumber,
+      authorisedPersonName,
+      fatherHusbandName,
+      gender,
+      email,
+      tradeRelationship,
+      officialMobileNumber,
+      designation,
+      corrAddress,
+      relationship,
+      DOB,
+    };
+  };
+
+  const goNext = () => {
+    onSelect(config.key, {
+      ...formData?.[config.key],
+      mobileNumber,
+      authorisedPersonName,
+      fatherHusbandName,
+      gender,
+      email,
+      tradeRelationship,
+      officialMobileNumber,
+      designation,
+      corrAddress,
+      relationship,
+      DOB,
+    });
+  };
+
   return (
-    <FormStep config={config} onSelect={() => {}} onSkip={() => {}} t={t}>
+    <FormStep config={config} onSelect={goNext} onSkip={() => {}} t={t}>
       <CardLabel>{t("TL_MOBILE_NUMBER_LABEL")}</CardLabel>
       <MobileNumber onChange={setMobileNumber} value={mobileNumber} />
       <CardLabel>{t("TL_AUTHORISED_PERSON_LABEL")}</CardLabel>

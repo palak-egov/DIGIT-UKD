@@ -35,7 +35,7 @@ const SelectOwnerShipDetails = ({
   );
 
   const [mainOwnerShipType, setMainOwnership] = useState({
-    code: selectedValue.split(".")[0],
+    code: selectedValue?.split(".")[0],
   });
   const [ownership, setOwnerShip] = useState(() => ({
     code: selectedValue,
@@ -62,12 +62,12 @@ const SelectOwnerShipDetails = ({
   }, [mainOwnerShipType]);
 
   useEffect(() => {
-    if (Menu?.length) {
-      setMainOwnership(
-        ownserShipTypeMenu.find((o) => selectedValue.split(".")[0] === o?.code)
-      );
-      setOwnerShip(subOwnerShipMenu?.find((o) => selectedValue === o.code));
-    }
+    // if (Menu?.length) {
+    //   setMainOwnership(
+    //     ownserShipTypeMenu.find((o) => selectedValue.split(".")[0] === o?.code)
+    //   );
+    //   setOwnerShip(subOwnerShipMenu?.find((o) => selectedValue === o.code));
+    // }
   }, [Menu]);
 
   console.log(selectedValue, ownership, subOwnerShipMenu, "selectedValue");

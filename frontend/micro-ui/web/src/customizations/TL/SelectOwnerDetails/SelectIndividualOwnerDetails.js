@@ -13,25 +13,35 @@ import { useLocation } from "react-router-dom";
 
 const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   let validation = {};
+
   let isedittrade = window.location.href.includes("edit-application");
+
   let isrenewtrade = window.location.href.includes("renew-trade");
+
   const [canmovenext, setCanmovenext] = useState(
     isedittrade || isrenewtrade ? false : true
   );
+
   const [name, setName] = useState(formData?.owners?.name || "");
+
   const [panCard, setPanCard] = useState(formData?.owners?.panCard || "");
 
   const [isPrimaryOwner, setisPrimaryOwner] = useState(false);
+
   const [gender, setGender] = useState(formData?.owners?.gender);
+
   const [tradeRelationship, settradeRelationship] = useState(
     formData?.owners?.tradeRelationship
   );
+
   const [relationship, setRelationship] = useState(
     formData?.owners?.relationship
   );
+
   const [mobilenumber, setMobileNumber] = useState(
     formData?.owners?.mobilenumber || ""
   );
+
   const [fields, setFeilds] = useState(
     (formData?.owners && formData?.owners?.owners) || [
       { name: "", gender: "", mobilenumber: null, isprimaryowner: false },
@@ -76,6 +86,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
     { i18nKey: "TL_FATHER", code: "FATHER" },
     { i18nKey: "TL_HUSBAND", code: "HUSBAND" },
   ];
+
   let TLmenu = [];
   Menu &&
     Menu.map((genders) => {
