@@ -7,7 +7,10 @@ import {
   MobileNumber,
   DatePicker,
 } from "@egovernments/digit-ui-react-components";
-import {} from "";
+
+import { useForm, Controller } from "react-hook-form";
+
+import _ from "lodash";
 
 const SelectNonIndividualOwner = ({
   t,
@@ -23,6 +26,21 @@ const SelectNonIndividualOwner = ({
     "GenderType",
     {}
   );
+
+  const defaultValues = {
+    mobileNumber: "",
+    authorisedPersonName: "",
+    fatherHusbandName: "",
+    gender: "",
+    tradeRelationship: "",
+    email: "",
+    designation: "",
+    relationship: "",
+    DOB: "",
+    correspondenceAddress: "",
+  };
+
+  const [_formValue, setFormValue] = useState(defaultValues);
 
   useEffect(() => {
     console.log(genderMenu, "MENU");
@@ -40,122 +58,189 @@ const SelectNonIndividualOwner = ({
     { i18nKey: "TL_HUSBAND", code: "HUSBAND" },
   ];
 
-  const [mobileNumber, setMobileNumber] = useState("");
-  const [authorisedPersonName, setAuthorisedPersonName] = useState("");
-  const [fatherHusbandName, setFatherHusbandName] = useState("");
-  const [gender, setGender] = useState(null);
-  const [email, setEmail] = useState("");
-  const [tradeRelationship, setTradeRelatioship] = useState(null);
-  const [officialMobileNumber, setOfficialMobileNumber] = useState("");
-  const [designation, setDesignation] = useState("");
-  const [corrAddress, setCorrAddress] = useState("");
-  const [relationship, setRelationship] = useState(null);
-  const [DOB, setDOB] = useState(null);
+  const { control, setError, setValue, formState, watch, trigger } = useForm({
+    defaultValues,
+  });
 
-  const disabled = () => {
-    let obj = {
-      mobileNumber,
-      authorisedPersonName,
-      fatherHusbandName,
-      gender,
-      email,
-      tradeRelationship,
-      officialMobileNumber,
-      designation,
-      corrAddress,
-      relationship,
-      DOB,
-    };
-  };
+  const { errors } = formState;
+
+  const formValue = watch();
 
   const goNext = () => {
-    onSelect(config.key, {
-      ...formData?.[config.key],
-      mobileNumber,
-      authorisedPersonName,
-      fatherHusbandName,
-      gender,
-      email,
-      tradeRelationship,
-      officialMobileNumber,
-      designation,
-      corrAddress,
-      relationship,
-      DOB,
-    });
+    onSelect(config.key, { ...formData?.[config.key], ...formValue });
   };
 
+  useEffect(() => {
+    const keys = Object.keys(formValue);
+    const part = {};
+    keys.forEach((key) => (part[key] = _formValue[key]));
+    if (!_.isEqual(formValue, part)) {
+      trigger();
+      setFormValue(formValue);
+    }
+  }, [formValue]);
+
+  console.log(errors, formValue, "errors here");
+
   return (
-    <FormStep config={config} onSelect={goNext} onSkip={() => {}} t={t}>
+    <FormStep
+      config={config}
+      onSelect={goNext}
+      disabled={Object.keys(errors).length}
+      t={t}
+    >
       <CardLabel>{t("TL_MOBILE_NUMBER_LABEL")}</CardLabel>
-      <MobileNumber onChange={setMobileNumber} value={mobileNumber} />
+      <Controller
+        name="mobileNumber"
+        rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+        control={control}
+        render={({ onChange, onBlur, value }) => (
+          <MobileNumber onChange={onChange} value={value} />
+        )}
+      />
       <CardLabel>{t("TL_AUTHORISED_PERSON_LABEL")}</CardLabel>
       <div className="field-container">
-        <TextInput
-          value={authorisedPersonName}
-          onChange={(e) => setAuthorisedPersonName(e.target.value)}
+        <Controller
+          name="authorisedPersonName"
+          rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+          control={control}
+          render={({ onChange, onBlur, value }) => (
+            <TextInput
+              value={value}
+              onChange={(e) => {
+                onChange(e.target.value);
+              }}
+              onBlur={onBlur}
+            />
+          )}
         />
       </div>
       <CardLabel>{t("TL_FATHER_HUSBAND_NAME_LABEL")}</CardLabel>
       <div className="field-container">
-        <TextInput
-          value={fatherHusbandName}
-          onChange={(e) => setFatherHusbandName(e.target.value)}
+        <Controller
+          name="fatherHusbandName"
+          rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+          control={control}
+          render={({ onChange, onBlur, value }) => (
+            <TextInput
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+            />
+          )}
         />
       </div>
       <CardLabel>{t("TL_GENDER_LABEL")}</CardLabel>
-      <RadioOrSelect
-        options={genderMenu || []}
-        onSelect={setGender}
-        selectedOption={gender}
-        optionKey={"i18nKey"}
-        t={t}
+      <Controller
+        name="gender"
+        rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+        control={control}
+        render={({ onChange, onBlur, value }) => (
+          <RadioOrSelect
+            options={genderMenu || []}
+            onSelect={onChange}
+            selectedOption={value}
+            optionKey={"i18nKey"}
+            onBlur={onBlur}
+            t={t}
+          />
+        )}
       />
+
       <CardLabel>{t("TL_TRADE_RELATIONSHIP")}</CardLabel>
-      <RadioOrSelect
-        options={TradeRelationshipMenu || []}
-        onSelect={setTradeRelatioship}
-        selectedOption={tradeRelationship}
-        optionKey={"i18nKey"}
-        t={t}
+      <Controller
+        name="tradeRelationship"
+        rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+        control={control}
+        render={({ onChange, onBlur, value }) => (
+          <RadioOrSelect
+            options={TradeRelationshipMenu || []}
+            onSelect={onChange}
+            selectedOption={value}
+            optionKey={"i18nKey"}
+            onBlur={onBlur}
+            t={t}
+          />
+        )}
       />
       <CardLabel>{t("TL_EMAIL_LABEL")}</CardLabel>
-      <div className="field-container">
-        <TextInput value={email} onChange={(e) => setEmail(e.target.value)} />
-      </div>
+      <Controller
+        name="email"
+        rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+        control={control}
+        render={({ onChange, onBlur, value }) => (
+          <div className="field-container">
+            <TextInput
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+            />
+          </div>
+        )}
+      />
 
       <CardLabel>{t("TL_OFFICIAL_MOBILE_NUMBER_LABEL")}</CardLabel>
-      <MobileNumber
-        onChange={setOfficialMobileNumber}
-        value={officialMobileNumber}
+      <Controller
+        name="mobileNumber"
+        rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+        control={control}
+        render={({ onChange, onBlur, value }) => (
+          <MobileNumber onChange={onChange} value={value} />
+        )}
       />
       <CardLabel>{t("TL_DESIGNATION_LABEL")}</CardLabel>
-      <div className="field-container">
-        <TextInput
-          value={designation}
-          onChange={(e) => setDesignation(e.target.value)}
-        />
-      </div>
+      <Controller
+        name="designation"
+        rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+        control={control}
+        render={({ onChange, onBlur, value }) => (
+          <div className="field-container">
+            <TextInput
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+            />
+          </div>
+        )}
+      />
 
       <CardLabel>{t("TL_RELATIONSHIP_LABEL")}</CardLabel>
-      <RadioOrSelect
-        options={relationshipMenu}
-        selectedOption={relationship}
-        onSelect={setRelationship}
-        optionKey={"i18nKey"}
-        t={t}
+      <Controller
+        name="relationship"
+        rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+        control={control}
+        render={({ onChange, onBlur, value }) => (
+          <RadioOrSelect
+            options={relationshipMenu}
+            selectedOption={value}
+            onSelect={onChange}
+            optionKey={"i18nKey"}
+            t={t}
+          />
+        )}
       />
 
       <CardLabel>{t("TL_DATE_OF_BIRTH_LABEL")}</CardLabel>
-      <DatePicker onChange={setDOB} date={DOB} />
+      <Controller
+        name="DOB"
+        rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+        control={control}
+        render={({ onChange, onBlur, value }) => (
+          <DatePicker onChange={onChange} date={value} />
+        )}
+      />
 
       <CardLabel>{t("TL_CORRESPONDENCE_ADDRESS_LABEL")}</CardLabel>
-      <div className="field-container">
-        <TextInput
-          value={corrAddress}
-          onChange={(e) => setCorrAddress(e.target.value)}
-        />
-      </div>
+      <Controller
+        name="correspondenceAddress"
+        rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+        control={control}
+        render={({ onChange, onBlur, value }) => (
+          <div className="field-container">
+            <TextInput
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+            />
+          </div>
+        )}
+      />
     </FormStep>
   );
 };

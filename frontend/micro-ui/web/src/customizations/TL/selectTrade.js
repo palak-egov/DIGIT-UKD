@@ -6,7 +6,7 @@ import {
   TextInput,
 } from "@egovernments/digit-ui-react-components";
 import React, { useState } from "react";
-import SelectOwnerDetails from "./SelectOwnerDetails";
+// import SelectOwnerDetails from "./SelectOwnerDetails";
 import SelectStreet from "./SelectStreet";
 import TLSelectPropertyID from "./TLSelectPropertyID";
 import TLTradeDetailsEmployee from "./TLTradeDetailsEmployee";
@@ -99,27 +99,26 @@ const customize = () => {
     "SelectTradeName",
     SelectTradeName
   );
-  window.Digit.ComponentRegistryService.setComponent(
-    "SelectOwnerDetails",
-    SelectOwnerDetails
-  ); 
+  // window.Digit.ComponentRegistryService.setComponent(
+  //   "SelectOwnerDetails",
+  //   SelectOwnerDetails
+  // );
   window.Digit.ComponentRegistryService.setComponent(
     "SelectStreet",
     SelectStreet
-  ); 
+  );
   window.Digit.ComponentRegistryService.setComponent(
     "TLSelectPropertyID",
     TLSelectPropertyID
-  ); 
+  );
   window.Digit.ComponentRegistryService.setComponent(
     "TLTradeDetailsEmployee",
-    TLTradeDetailsEmployee  );
-    window.Digit.ComponentRegistryService.setComponent(
-      "TLOwnerDetailsEmployee",
-      TLOwnerDetailsEmployee  );
-  
-
-  
+    TLTradeDetailsEmployee
+  );
+  window.Digit.ComponentRegistryService.setComponent(
+    "TLOwnerDetailsEmployee",
+    TLOwnerDetailsEmployee
+  );
 };
 
 export default customize;

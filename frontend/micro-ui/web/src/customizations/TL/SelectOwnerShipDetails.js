@@ -34,12 +34,9 @@ const SelectOwnerShipDetails = ({
     { select: (d) => d["common-masters"]["OwnerShipCategory"] }
   );
 
-  const [mainOwnerShipType, setMainOwnership] = useState({
-    code: selectedValue?.split(".")[0],
-  });
-  const [ownership, setOwnerShip] = useState(() => ({
-    code: selectedValue,
-  }));
+  const [mainOwnerShipType, setMainOwnership] = useState();
+
+  const [ownership, setOwnerShip] = useState();
 
   const ownserShipTypeMenu = useMemo(() => {
     let obj = {};
@@ -56,18 +53,28 @@ const SelectOwnerShipDetails = ({
   );
 
   useEffect(() => {
-    if (!ownership?.code?.includes(mainOwnerShipType?.code)) {
+    if (
+      ownership?.code &&
+      !ownership?.code?.includes(mainOwnerShipType?.code)
+    ) {
       setOwnerShip(null);
+    } else if (selectedValue) {
+      setOwnerShip({ code: selectedValue });
     }
   }, [mainOwnerShipType]);
 
   useEffect(() => {
-    // if (Menu?.length) {
-    //   setMainOwnership(
-    //     ownserShipTypeMenu.find((o) => selectedValue.split(".")[0] === o?.code)
-    //   );
-    //   setOwnerShip(subOwnerShipMenu?.find((o) => selectedValue === o.code));
-    // }
+    if (selectedValue?.includes(mainOwnerShipType?.code)) {
+      setOwnerShip(subOwnerShipMenu?.find((o) => selectedValue === o.code));
+    }
+  }, [subOwnerShipMenu]);
+
+  useEffect(() => {
+    if (Menu?.length) {
+      setMainOwnership(
+        ownserShipTypeMenu.find((o) => selectedValue.split(".")[0] === o?.code)
+      );
+    }
   }, [Menu]);
 
   console.log(selectedValue, ownership, subOwnerShipMenu, "selectedValue");
