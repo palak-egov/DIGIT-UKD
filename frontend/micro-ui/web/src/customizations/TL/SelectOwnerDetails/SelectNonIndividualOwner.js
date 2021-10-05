@@ -43,8 +43,8 @@ const SelectNonIndividualOwner = ({
   const [_formValue, setFormValue] = useState(defaultValues);
 
   useEffect(() => {
-    console.log(genderMenu, "MENU");
-  }, [genderMenu]);
+    trigger();
+  }, []);
 
   const TradeRelationshipMenu = [
     { i18nKey: "TL_PROPRIETOR", code: "PROPRIETOR" },
@@ -86,13 +86,13 @@ const SelectNonIndividualOwner = ({
     <FormStep
       config={config}
       onSelect={goNext}
-      disabled={Object.keys(errors).length}
+      isDisabled={Object.keys(errors).length > 0}
       t={t}
     >
       <CardLabel>{t("TL_MOBILE_NUMBER_LABEL")}</CardLabel>
       <Controller
         name="mobileNumber"
-        rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+        rules={{ required: true }}
         control={control}
         render={({ onChange, onBlur, value }) => (
           <MobileNumber onChange={onChange} value={value} />
@@ -132,7 +132,7 @@ const SelectNonIndividualOwner = ({
       <CardLabel>{t("TL_GENDER_LABEL")}</CardLabel>
       <Controller
         name="gender"
-        rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+        rules={{ required: true }}
         control={control}
         render={({ onChange, onBlur, value }) => (
           <RadioOrSelect
@@ -149,7 +149,7 @@ const SelectNonIndividualOwner = ({
       <CardLabel>{t("TL_TRADE_RELATIONSHIP")}</CardLabel>
       <Controller
         name="tradeRelationship"
-        rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+        rules={{ required: true }}
         control={control}
         render={({ onChange, onBlur, value }) => (
           <RadioOrSelect
@@ -165,7 +165,7 @@ const SelectNonIndividualOwner = ({
       <CardLabel>{t("TL_EMAIL_LABEL")}</CardLabel>
       <Controller
         name="email"
-        rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+        rules={{ required: true }}
         control={control}
         render={({ onChange, onBlur, value }) => (
           <div className="field-container">
@@ -180,7 +180,7 @@ const SelectNonIndividualOwner = ({
       <CardLabel>{t("TL_OFFICIAL_MOBILE_NUMBER_LABEL")}</CardLabel>
       <Controller
         name="mobileNumber"
-        rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+        rules={{ required: true }}
         control={control}
         render={({ onChange, onBlur, value }) => (
           <MobileNumber onChange={onChange} value={value} />
@@ -189,7 +189,7 @@ const SelectNonIndividualOwner = ({
       <CardLabel>{t("TL_DESIGNATION_LABEL")}</CardLabel>
       <Controller
         name="designation"
-        rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+        rules={{ required: true }}
         control={control}
         render={({ onChange, onBlur, value }) => (
           <div className="field-container">
@@ -204,7 +204,7 @@ const SelectNonIndividualOwner = ({
       <CardLabel>{t("TL_RELATIONSHIP_LABEL")}</CardLabel>
       <Controller
         name="relationship"
-        rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+        rules={{ required: true }}
         control={control}
         render={({ onChange, onBlur, value }) => (
           <RadioOrSelect
@@ -220,7 +220,7 @@ const SelectNonIndividualOwner = ({
       <CardLabel>{t("TL_DATE_OF_BIRTH_LABEL")}</CardLabel>
       <Controller
         name="DOB"
-        rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+        rules={{ required: true }}
         control={control}
         render={({ onChange, onBlur, value }) => (
           <DatePicker onChange={onChange} date={value} />
@@ -230,7 +230,7 @@ const SelectNonIndividualOwner = ({
       <CardLabel>{t("TL_CORRESPONDENCE_ADDRESS_LABEL")}</CardLabel>
       <Controller
         name="correspondenceAddress"
-        rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+        rules={{ required: true }}
         control={control}
         render={({ onChange, onBlur, value }) => (
           <div className="field-container">
