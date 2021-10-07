@@ -22,7 +22,7 @@ const SelectOwnerShipDetails = ({
   setError,
   clearErrors,
 }) => {
-  const selectedValue = formData?.[config.key]?.ownership;
+  const selectedValue = formData?.[config.key]?.code;
 
   const stateId = window.Digit.ULBService.getStateId();
 
@@ -80,7 +80,7 @@ const SelectOwnerShipDetails = ({
   console.log(selectedValue, ownership, subOwnerShipMenu, "selectedValue");
 
   const goNext = (data) => {
-    onSelect(config.key, { ownership: ownership?.code });
+    onSelect(config.key, { code: ownership?.code });
   };
 
   return (
