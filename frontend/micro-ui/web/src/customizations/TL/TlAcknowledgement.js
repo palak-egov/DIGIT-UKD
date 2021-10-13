@@ -65,7 +65,7 @@ const TLAcknowledgement = ({ data, onSuccess, t = (a) => a }) => {
     };
     let formData = formatFormDataToCreateTLApiObject(data)
     console.log(formData, "API Data");
-    mutationCreate.mutate(formData, { onSuccess });
+    mutationCreate.mutate(formData, { onSuccess : ()=>{} });
   }, [fydata]);
 
 

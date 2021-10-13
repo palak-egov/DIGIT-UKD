@@ -941,15 +941,19 @@ export const formatFormDataToCreateTLApiObject = (formData) => {
         identificationMark: null,
         tenantId: window.Digit.ULBService.getCurrentTenantId(),
         dob: convertDateToEpoch(e.DOB),
-        relationship: e?.relationship,
+        relationship: e?.relationship?.code,
       })),
       applicationDocuments: getwfdocuments(formData),
-      tradeName: formData?.TradeDetails?.TradeName,
-      applicationType: "NEW",
-      workflowCode: "NewTL",
-      action: "INITIATE",
     },
+    tradeName: formData?.TradeDetails?.TradeName,
+    applicationType: "NEW",
+    workflowCode: "NewTL",
+    action: "INITIATE",
+    commencementDate: convertDateToEpoch(
+      formData?.TradeDetails?.CommencementDate
+    ),
   };
+
   
   return { Licenses: [obj] };
 };
