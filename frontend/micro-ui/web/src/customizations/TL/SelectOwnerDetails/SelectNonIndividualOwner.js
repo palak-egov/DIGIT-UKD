@@ -28,16 +28,16 @@ const SelectNonIndividualOwner = ({
   );
 
   const defaultValues = {
-    mobileNumber: "",
-    authorisedPersonName: "",
-    fatherHusbandName: "",
-    gender: "",
-    tradeRelationship: "",
-    email: "",
-    designation: "",
-    relationship: "",
-    DOB: "",
-    correspondenceAddress: "",
+    mobileNumber: formData?.[config.key]?.mobileNumber,
+    authorisedPersonName: formData?.[config.key]?.authorisedPersonName,
+    fatherHusbandName: formData?.[config.key]?.fatherHusbandName,
+    gender: formData?.[config.key]?.gender,
+    tradeRelationship: formData?.[config.key]?.tradeRelationship,
+    email: formData?.[config.key]?.email,
+    designation: formData?.[config.key]?.designation,
+    relationship: formData?.[config.key]?.relationship,
+    DOB: formData?.[config.key]?.DOB,
+    correspondenceAddress: formData?.[config.key]?.correspondenceAddress,
   };
 
   const [_formValue, setFormValue] = useState(defaultValues);

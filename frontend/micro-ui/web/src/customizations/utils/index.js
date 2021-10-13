@@ -876,3 +876,80 @@ export const convertEpochToDateDMY = (dateEpoch) => {
   day = (day > 9 ? "" : "0") + day;
   return `${day}/${month}/${year}`;
 };
+
+
+
+
+export const formatFormDataToCreateTLApiObject = (formData) => {
+  console.log(formData);
+  const obj = {
+    licenseType: "PERMANENT",
+    tradeLicenseDetail: {
+      address: {
+        city: formData?.address?.city?.code,
+        doorNo: formData?.address?.doorNo,
+
+        street: formData?.address?.street,
+        locality: { code: formData?.address?.locality?.code },
+        pincode: formData?.address?.pincode,
+      },
+
+      structureType: formData?.TradeDetails?.StructureType?.code?.includes(
+        "IMMOVABLE"
+      )
+        ? formData?.TradeDetails?.BuildingType?.code
+        : formData?.TradeDetails?.VehicleType?.code,
+      additionalDetail: {
+        occupancyType: formData?.TradeDetails?.OccupancyType?.code,
+        gstNo: formData?.TradeDetails?.gstNo,
+        electricityConnectionNo: formData?.address?.electricityConnectionNo,
+        relationType: `RELATIONTYPE.${formData?.owners?.owners[0]?.tradeRelationship?.code}`, //to be validated from formdata?.owners
+      },
+      operationalArea: "50", // to be added
+      noOfEmployees: "5", // to be added
+      tradeUnits: formData?.TradeDetails?.units?.map((e) => ({
+        tradeType: e?.tradesubtype?.code,
+        uom: e.uom,
+        uomValue: e.unit,
+        rate: 5000, //needs to be added
+      })),
+      subOwnerShipCategory: formData?.ownershipCategory?.code,
+      owners: formData?.owners?.owners?.map((e) => ({
+        userName: e.ownerName, //to be checked
+        name: e.ownerName,
+        gender: e?.gender?.code,
+        mobileNumber: e?.mobileNumber,
+        emailId: e?.email,
+        altContactNumber: null, // to be added
+        pan: e?.pan, // to be added
+        aadhaarNumber: null, // to be added
+        permanentAddress: e.correspondenceAddress, // to be validated
+        permanentCity: null,
+        permanentPinCode: null,
+        correspondenceAddress: null,
+        correspondenceCity: null,
+        correspondencePinCode: null,
+        active: true,
+        locale: null,
+        type: "CITIZEN",
+        accountLocked: false,
+        accountLockedDate: 0,
+        fatherOrHusbandName: e.fatherHusbandName,
+        signature: null,
+        bloodGroup: null,
+        photo: null,
+        identificationMark: null,
+        tenantId: window.Digit.ULBService.getCurrentTenantId(),
+        dob: convertDateToEpoch(e.DOB),
+        relationship: e?.relationship,
+      })),
+      applicationDocuments: getwfdocuments(formData),
+      tradeName: formData?.TradeDetails?.TradeName,
+      applicationType: "NEW",
+      workflowCode: "NewTL",
+      action: "INITIATE",
+    },
+  };
+  
+  return { Licenses: [obj] };
+};

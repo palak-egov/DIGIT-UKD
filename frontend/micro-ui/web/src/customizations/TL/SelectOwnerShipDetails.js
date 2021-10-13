@@ -48,7 +48,8 @@ const SelectOwnerShipDetails = ({
   }, [Menu]);
 
   const subOwnerShipMenu = useMemo(
-    () => Menu?.filter((e) => e.code.split(".")[0] === mainOwnerShipType?.code),
+    () =>
+      Menu?.filter((e) => e.code?.split(".")[0] === mainOwnerShipType?.code),
     [mainOwnerShipType]
   );
 
@@ -72,7 +73,7 @@ const SelectOwnerShipDetails = ({
   useEffect(() => {
     if (Menu?.length) {
       setMainOwnership(
-        ownserShipTypeMenu.find((o) => selectedValue.split(".")[0] === o?.code)
+        ownserShipTypeMenu.find((o) => selectedValue?.split(".")[0] === o?.code)
       );
     }
   }, [Menu]);

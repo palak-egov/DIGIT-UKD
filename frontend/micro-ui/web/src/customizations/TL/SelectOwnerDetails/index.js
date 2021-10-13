@@ -9,7 +9,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
 
   return (
     <React.Fragment>
-      {formData?.ownershipCategory.ownership?.includes("INDIVIDUAL") ? (
+      {formData?.ownershipCategory?.code?.includes("INDIVIDUAL") ? (
         <IndividualOwnerDetails
           {...{ t, config, onSelect, userType, formData }}
         />

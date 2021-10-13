@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   FormStep,
   TextInput,
@@ -12,12 +12,108 @@ import { useForm, Controller } from "react-hook-form";
 
 import _ from "lodash";
 
-const SelectNonIndividualOwner = ({
+const newOwner = {
+  mobileNumber: "",
+  ownerName: "",
+  fatherHusbandName: "",
+  relationship: "",
+  gender: "",
+  DOB: "",
+  email: "",
+  panNo: "",
+  correspondenceAddress: "",
+  tradeRelationship: "",
+};
+
+const SelectIndividualOwner = ({ t, config, onSelect, userType, formData }) => {
+  let ismultiple = formData?.ownershipCategory?.code.includes("SINGLEOWNER")
+    ? false
+    : true;
+
+  const [owners, setOwners] = useState(() => {
+    return formData?.[config.key]?.owners?.length
+      ? formData?.[config.key]?.owners
+      : [newOwner];
+    // return Object.keys(formData?.[config.key]).length
+    //   ? Object.keys(formData?.[config.key])
+    //       .sort()
+    //       .map((key) => formData?.[config.key][key])
+    //   : [newOwner];
+  });
+
+  useEffect(() => {
+    console.log(owners, formData, "Form Value");
+  }, [owners]);
+
+  const setOwner = (index, owner) => {
+    setOwners(owners?.map((e, i) => (index === i ? owner : e)));
+  };
+
+  const addOwner = () => {
+    setOwners([...owners, newOwner]);
+  };
+
+  const goNext = () => {
+    onSelect(config.key, {
+      owners: owners?.map((e) => {
+        const { errors, ...o } = e;
+        return o;
+      }),
+    });
+  };
+
+  return (
+    <FormStep
+      config={config}
+      onSelect={goNext}
+      // isDisabled={
+      //   owners?.filter?.((e) => Object.keys(e?.errors || {}).length)?.length
+      // }
+      t={t}
+    >
+      {owners?.map((_owner, i) => {
+        const { ...owner } = _owner;
+        return (
+          <IndividualOwnerForm
+            {...{ t, config, onSelect, userType, formData, setOwner, owner }}
+            ownerIndex={i}
+          />
+        );
+      })}
+      {ismultiple && (
+        <div>
+          {/* <hr color="#d6d5d4" className="break-line"></hr> */}
+          <div
+            style={{
+              justifyContent: "center",
+              display: "flex",
+              paddingBottom: "15px",
+              color: "#FF8C00",
+            }}
+          >
+            <button
+              type="button"
+              style={{ paddingTop: "10px" }}
+              onClick={() => addOwner()}
+            >
+              {t("TL_ADD_OWNER_LABEL")}
+            </button>
+          </div>
+        </div>
+      )}
+    </FormStep>
+  );
+};
+
+const IndividualOwnerForm = ({
   t,
   config,
   onSelect,
   userType,
   formData,
+  owner,
+  setOwner,
+  ownerIndex,
 }) => {
   const stateId = window.Digit.ULBService.getStateId();
   const { data: genderMenu } = window.Digit.Hooks.tl.useTLGenderMDMS(
@@ -27,24 +123,24 @@ const SelectNonIndividualOwner = ({
     {}
   );
 
+  let ismultiple = formData?.ownershipCategory?.code.includes("SINGLEOWNER")
+    ? false
+    : true;
+
   const defaultValues = {
-    mobileNumber: "",
-    name: "",
-    fatherHusbandName: "",
-    relationship: "",
-    gender: "",
-    DOB: "",
-    email: "",
-    panNo: "",
-    correspondenceAddress: "",
-    tradeRelationship: "",
+    mobileNumber: owner?.mobileNumber,
+    ownerName: owner?.ownerName,
+    fatherHusbandName: owner?.fatherHusbandName,
+    relationship: owner?.relationship,
+    gender: owner?.gender,
+    DOB: owner?.DOB,
+    email: owner?.email,
+    panNo: owner?.panNo,
+    correspondenceAddress: owner?.correspondenceAddress,
+    tradeRelationship: owner?.tradeRelationship,
   };
 
   const [_formValue, setFormValue] = useState(defaultValues);
-
-  useEffect(() => {
-    trigger();
-  }, []);
 
   const TradeRelationshipMenu = [
     { i18nKey: "TL_PROPRIETOR", code: "PROPRIETOR" },
@@ -66,10 +162,6 @@ const SelectNonIndividualOwner = ({
 
   const formValue = watch();
 
-  const goNext = () => {
-    onSelect(config.key, { ...formData?.[config.key], ...formValue });
-  };
-
   useEffect(() => {
     const keys = Object.keys(formValue);
     const part = {};
@@ -77,15 +169,33 @@ const SelectNonIndividualOwner = ({
     if (!_.isEqual(formValue, part)) {
       trigger();
       setFormValue(formValue);
+      setOwner(ownerIndex, { ...formValue, errors });
     }
   }, [formValue]);
 
+  useEffect(() => {
+    trigger();
+  }, []);
+
+  useEffect(() => {
+    setOwner(ownerIndex, { ...formValue, errors });
+  }, [errors]);
+
   return (
-    <FormStep
-      config={config}
-      onSelect={goNext}
-      isDisabled={Object.keys(errors).length > 0}
-      t={t}
+    <div
+      style={
+        ismultiple
+          ? {
+              border: "solid",
+              borderRadius: "5px",
+              padding: "10px",
+              paddingTop: "20px",
+              marginTop: "10px",
+              borderColor: "#f3f3f3",
+              background: "#FAFAFA",
+            }
+          : {}
+      }
     >
       <CardLabel>{t("TL_MOBILE_NUMBER_LABEL")}</CardLabel>
       <Controller
@@ -129,14 +239,14 @@ const SelectNonIndividualOwner = ({
         />
       </div>
 
-      <CardLabel>{t("TL_GENDER_LABEL")}</CardLabel>
+      <CardLabel>{t("TL_RELATIONSHIP")}</CardLabel>
       <Controller
-        name="gender"
+        name="relationship"
         rules={{ required: true }}
         control={control}
         render={({ onChange, onBlur, value }) => (
           <RadioOrSelect
-            options={genderMenu || []}
+            options={relationshipMenu || []}
             onSelect={onChange}
             selectedOption={value}
             optionKey={"i18nKey"}
@@ -146,14 +256,14 @@ const SelectNonIndividualOwner = ({
         )}
       />
 
-      <CardLabel>{t("TL_RELATIONSHIP")}</CardLabel>
+      <CardLabel>{t("TL_GENDER_LABEL")}</CardLabel>
       <Controller
-        name="relationship"
+        name="gender"
         rules={{ required: true }}
         control={control}
         render={({ onChange, onBlur, value }) => (
           <RadioOrSelect
-            options={relationshipMenu || []}
+            options={genderMenu || []}
             onSelect={onChange}
             selectedOption={value}
             optionKey={"i18nKey"}
@@ -178,7 +288,7 @@ const SelectNonIndividualOwner = ({
         )}
       />
 
-      <CardLabel>{t("TL_RELATIONSHIP_LABEL")}</CardLabel>
+      {/* <CardLabel>{t("TL_RELATIONSHIP_LABEL")}</CardLabel>
       <Controller
         name="relationship"
         rules={{ required: true }}
@@ -192,7 +302,7 @@ const SelectNonIndividualOwner = ({
             t={t}
           />
         )}
-      />
+      /> */}
 
       <CardLabel>{t("TL_DATE_OF_BIRTH_LABEL")}</CardLabel>
       <Controller
@@ -235,8 +345,8 @@ const SelectNonIndividualOwner = ({
           />
         )}
       />
-    </FormStep>
+    </div>
   );
 };
 
-export default SelectNonIndividualOwner;
+export default SelectIndividualOwner;
