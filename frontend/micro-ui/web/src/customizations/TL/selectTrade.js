@@ -35,22 +35,22 @@ const SelectTradeName = ({
       "FinancialYear"
     );
 
-  console.log("formData", formData);
-
-  let mdmsFinancialYear = fydata["egf-master"]
+    
+    let mdmsFinancialYear = fydata["egf-master"]
     ? fydata["egf-master"].FinancialYear.filter((y) => y.module === "TL")
     : [];
-  let FY =
+    let FY =
     mdmsFinancialYear &&
     mdmsFinancialYear.length > 0 &&
     mdmsFinancialYear.sort((x, y) => y.endingDate - x.endingDate)[0]?.code;
-  function setSelectTradeName(e) {
-    setTradeName(e.target.value);
-  }
-
+    function setSelectTradeName(e) {
+      setTradeName(e.target.value);
+    }
+    console.log(mdmsFinancialYear,config.key, "financial years");
+    
   const goNext = () => {
     sessionStorage.setItem("CurrentFinancialYear", FY);
-    onSelect(config.key, { TradeName });
+    onSelect(config.key, {...formData?.[config.key], TradeName, FY });
   };
 
   if (isLoading) {
@@ -83,6 +83,9 @@ const SelectTradeName = ({
             title: t("TL_INVALID_TRADE_NAME"),
           })}
         />
+
+        
+
       </FormStep>
       {
         <CitizenInfoLabel

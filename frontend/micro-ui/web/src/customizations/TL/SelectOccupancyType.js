@@ -42,7 +42,7 @@ const SelectOccupancyType = ({ t, config, onSelect, userType, formData }) => {
       <RadioButtons
         t={t}
         optionsKey="i18nKey"
-        isMandatory={config.isMandatory}
+        isMandatory={config.isMandatory} 
         options={menu}
         selectedOption={OccupancyType}
         onSelect={SelectOccupancyType}

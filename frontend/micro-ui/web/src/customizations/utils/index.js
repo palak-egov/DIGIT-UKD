@@ -878,8 +878,6 @@ export const convertEpochToDateDMY = (dateEpoch) => {
 };
 
 
-
-
 export const formatFormDataToCreateTLApiObject = (formData) => {
   console.log(formData);
   const obj = {
@@ -888,9 +886,8 @@ export const formatFormDataToCreateTLApiObject = (formData) => {
       address: {
         city: formData?.address?.city?.code,
         doorNo: formData?.address?.doorNo,
-
         street: formData?.address?.street,
-        locality: { code: formData?.address?.locality?.code },
+        locality: { ...formData?.address?.locality },
         pincode: formData?.address?.pincode,
       },
 
@@ -902,6 +899,7 @@ export const formatFormDataToCreateTLApiObject = (formData) => {
       additionalDetail: {
         occupancyType: formData?.TradeDetails?.OccupancyType?.code,
         gstNo: formData?.TradeDetails?.gstNo,
+
         electricityConnectionNo: formData?.address?.electricityConnectionNo,
         relationType: `RELATIONTYPE.${formData?.owners?.owners[0]?.tradeRelationship?.code}`, //to be validated from formdata?.owners
       },
@@ -911,7 +909,7 @@ export const formatFormDataToCreateTLApiObject = (formData) => {
         tradeType: e?.tradesubtype?.code,
         uom: e.uom,
         uomValue: e.unit,
-        rate: 5000, //needs to be added
+        rate: 5000, //needs to be added // billing slab service
       })),
       subOwnerShipCategory: formData?.ownershipCategory?.code,
       owners: formData?.owners?.owners?.map((e) => ({
@@ -920,9 +918,9 @@ export const formatFormDataToCreateTLApiObject = (formData) => {
         gender: e?.gender?.code,
         mobileNumber: e?.mobileNumber,
         emailId: e?.email,
-        altContactNumber: null, // to be added
+        altContactNumber: null,
         pan: e?.pan, // to be added
-        aadhaarNumber: null, // to be added
+        aadhaarNumber: null,
         permanentAddress: e.correspondenceAddress, // to be validated
         permanentCity: null,
         permanentPinCode: null,
@@ -939,7 +937,9 @@ export const formatFormDataToCreateTLApiObject = (formData) => {
         bloodGroup: null,
         photo: null,
         identificationMark: null,
-        tenantId: window.Digit.ULBService.getCurrentTenantId(),
+        tenantId:
+          formData?.address?.city?.code ||
+          window.Digit.ULBService.getCurrentTenantId(),
         dob: convertDateToEpoch(e.DOB),
         relationship: e?.relationship?.code,
       })),
@@ -952,6 +952,10 @@ export const formatFormDataToCreateTLApiObject = (formData) => {
     commencementDate: convertDateToEpoch(
       formData?.TradeDetails?.CommencementDate
     ),
+    tenantId:
+      formData?.address?.city?.code ||
+      window.Digit.ULBService.getCurrentTenantId(),
+    financialYear: formData?.TradeDetails?.FY,
   };
 
   

@@ -4,7 +4,9 @@ import React, { useState } from "react";
 const TLSelectPropertyID = ({ t, config, onSelect, value, userType, formData }) => {
   let validation = {};
   const onSkip = () => onSelect();
-  const [propertyId, setpropertyId] = useState(formData.TradeDetails?.propertyId);
+  const [propertyId, setpropertyId] = useState(
+    formData?.[config.key]?.propertyId
+  );
   const tenantId = window.Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
   const isEdit = window.location.href.includes("/edit-application/") || window.location.href.includes("renew-trade");

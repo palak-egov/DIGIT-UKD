@@ -6,6 +6,7 @@ import {
   RadioOrSelect,
   MobileNumber,
   DatePicker,
+  LinkButton
 } from "@egovernments/digit-ui-react-components";
 
 import { useForm, Controller } from "react-hook-form";
@@ -34,15 +35,10 @@ const SelectIndividualOwner = ({ t, config, onSelect, userType, formData }) => {
     return formData?.[config.key]?.owners?.length
       ? formData?.[config.key]?.owners
       : [newOwner];
-    // return Object.keys(formData?.[config.key]).length
-    //   ? Object.keys(formData?.[config.key])
-    //       .sort()
-    //       .map((key) => formData?.[config.key][key])
-    //   : [newOwner];
   });
 
   useEffect(() => {
-    console.log(owners, formData, "Form Value");
+    console.log(owners, "index");
   }, [owners]);
 
   const setOwner = (index, owner) => {
@@ -51,6 +47,15 @@ const SelectIndividualOwner = ({ t, config, onSelect, userType, formData }) => {
 
   const addOwner = () => {
     setOwners([...owners, newOwner]);
+  };
+
+  const deleteOwner = (index) => {
+    setOwners(
+      owners.filter((e, i) => {
+        console.log(index, i, e, index == i ? "deleted" : "", "index");
+        return index != i;
+      })
+    );
   };
 
   const goNext = () => {
@@ -66,17 +71,28 @@ const SelectIndividualOwner = ({ t, config, onSelect, userType, formData }) => {
     <FormStep
       config={config}
       onSelect={goNext}
-      // isDisabled={
-      //   owners?.filter?.((e) => Object.keys(e?.errors || {}).length)?.length
-      // }
+      isDisabled={
+        owners?.filter?.((e) => Object.keys(e?.errors || {}).length)?.length
+      }
       t={t}
     >
       {owners?.map((_owner, i) => {
         const { ...owner } = _owner;
         return (
           <IndividualOwnerForm
-            {...{ t, config, onSelect, userType, formData, setOwner, owner }}
+            {...{
+              t,
+              config,
+              onSelect,
+              userType,
+              formData,
+              setOwner,
+              owner,
+              owners,
+              deleteOwner,
+            }}
             ownerIndex={i}
+            key={i}
           />
         );
       })}
@@ -114,6 +130,8 @@ const IndividualOwnerForm = ({
   owner,
   setOwner,
   ownerIndex,
+  owners,
+  deleteOwner,
 }) => {
   const stateId = window.Digit.ULBService.getStateId();
   const { data: genderMenu } = window.Digit.Hooks.tl.useTLGenderMDMS(
@@ -162,6 +180,8 @@ const IndividualOwnerForm = ({
 
   const formValue = watch();
 
+
+
   useEffect(() => {
     const keys = Object.keys(formValue);
     const part = {};
@@ -172,6 +192,14 @@ const IndividualOwnerForm = ({
       setOwner(ownerIndex, { ...formValue, errors });
     }
   }, [formValue]);
+
+
+  useEffect(() => {
+    console.log(owners[ownerIndex], ownerIndex, "owner changed index");
+     Object.keys(owners[ownerIndex])?.forEach((key) => {
+       if (key !== "errors") setValue(key, owners[ownerIndex]?.[key]);
+     });
+  }, [owner]);
 
   useEffect(() => {
     trigger();
@@ -197,6 +225,35 @@ const IndividualOwnerForm = ({
           : {}
       }
     >
+      {ismultiple && (
+        <LinkButton
+          label={
+            <div>
+              <span>
+                <svg
+                  style={{
+                    float: "right",
+                    position: "relative",
+                    bottom: "5px",
+                  }}
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z"
+                    fill={!(owners.length == 1) ? "#494848" : "#FAFAFA"}
+                  />
+                </svg>
+              </span>
+            </div>
+          }
+          style={{ width: "100px", display: "inline" }}
+          onClick={(e) => deleteOwner(ownerIndex)}
+        />
+      )}
       <CardLabel>{t("TL_MOBILE_NUMBER_LABEL")}</CardLabel>
       <Controller
         name="mobileNumber"
