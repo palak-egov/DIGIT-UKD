@@ -903,8 +903,8 @@ export const formatFormDataToCreateTLApiObject = (formData) => {
         electricityConnectionNo: formData?.address?.electricityConnectionNo,
         relationType: `RELATIONTYPE.${formData?.owners?.owners[0]?.tradeRelationship?.code}`, //to be validated from formdata?.owners
       },
-      operationalArea: "50", // to be added
-      noOfEmployees: "5", // to be added
+      operationalArea: formData?.operationalarea?.operationalarea, // to be added
+      noOfEmployees: formData?.noofemployees?.noofemployees, // to be added
       tradeUnits: formData?.TradeDetails?.units?.map((e) => ({
         tradeType: e?.tradesubtype?.code,
         uom: e.uom,

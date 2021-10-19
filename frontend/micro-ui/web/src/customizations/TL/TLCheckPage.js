@@ -311,11 +311,11 @@ const CheckPage = ({ onSubmit, value }) => {
           </div>
         </StatusTable>
         <SubmitBar label={t("CS_COMMON_SUBMIT")} onSubmit={onSubmit} />
+        <CitizenInfoLabel
+          info={t("CS_CHECKPAGE_INFO_LABEL")}
+          text={t("TL_CHECKPAGE_CONFIRMATION_INFO_MSG")}
+        />
       </Card>
-      <CitizenInfoLabel
-        info={t("CS_CHECKPAGE_INFO_LABEL")}
-        text={t("TL_CHECKPAGE_CONFIRMATION_INFO_MSG")}
-      />
     </React.Fragment>
   );
 };
