@@ -12,6 +12,7 @@ import {
 import { useForm, Controller } from "react-hook-form";
 
 import _ from "lodash";
+import { getPattern } from "../../utils";
 
 const newOwner = {
   mobileNumber: "",
@@ -24,6 +25,7 @@ const newOwner = {
   panNo: "",
   correspondenceAddress: "",
   tradeRelationship: "",
+
 };
 
 const SelectIndividualOwner = ({ t, config, onSelect, userType, formData }) => {
@@ -267,7 +269,7 @@ const IndividualOwnerForm = ({
       <div className="field-container">
         <Controller
           name="ownerName"
-          rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+          rules={{ required: true, pattern: getPattern("Name") }}
           control={control}
           render={({ onChange, onBlur, value }) => (
             <TextInput
@@ -285,7 +287,7 @@ const IndividualOwnerForm = ({
       <div className="field-container">
         <Controller
           name="fatherHusbandName"
-          rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+          rules={{ required: true, pattern: getPattern("Name") }}
           control={control}
           render={({ onChange, onBlur, value }) => (
             <TextInput
@@ -333,7 +335,7 @@ const IndividualOwnerForm = ({
       <CardLabel>{t("TL_EMAIL_LABEL")}</CardLabel>
       <Controller
         name="email"
-        rules={{ required: true }}
+        rules={{ required: true, pattern: getPattern("Email") }}
         control={control}
         render={({ onChange, onBlur, value }) => (
           <div className="field-container">
@@ -345,21 +347,15 @@ const IndividualOwnerForm = ({
         )}
       />
 
-      {/* <CardLabel>{t("TL_RELATIONSHIP_LABEL")}</CardLabel>
+      <CardLabel>{t("TL_PAN_NO_LABEL")}</CardLabel>
       <Controller
-        name="relationship"
-        rules={{ required: true }}
+        name="panNo"
+        rules={{ required: true, pattern: getPattern("PAN") }}
         control={control}
         render={({ onChange, onBlur, value }) => (
-          <RadioOrSelect
-            options={relationshipMenu}
-            selectedOption={value}
-            onSelect={onChange}
-            optionKey={"i18nKey"}
-            t={t}
-          />
+          <TextInput value={value} onChange={(e) => onChange(e.target.value)} />
         )}
-      /> */}
+      />
 
       <CardLabel>{t("TL_DATE_OF_BIRTH_LABEL")}</CardLabel>
       <Controller
@@ -374,7 +370,7 @@ const IndividualOwnerForm = ({
       <CardLabel>{t("TL_CORRESPONDENCE_ADDRESS_LABEL")}</CardLabel>
       <Controller
         name="correspondenceAddress"
-        rules={{ required: true }}
+        rules={{ required: true, pattern: getPattern("Address") }}
         control={control}
         render={({ onChange, onBlur, value }) => (
           <div className="field-container">

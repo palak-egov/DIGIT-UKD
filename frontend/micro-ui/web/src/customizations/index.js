@@ -6,6 +6,7 @@ import SelectOwnerDetails from "./TL/SelectOwnerDetails";
 import TlAcknowledgement from "./TL/TlAcknowledgement";
 import TLGSTNumber from "./TL/TLGSTNumber"
 import SelectTradeUnits from "./TL/SelectTradeUnits";
+import TLCheckPage from "./TL/TLCheckPage"
 
 export const customizations = [
   SelectTradeLicenceCustomization,
@@ -15,4 +16,5 @@ export const customizations = [
   TlAcknowledgement,
   TLGSTNumber,
   SelectTradeUnits,
+  TLCheckPage,
 ];

@@ -919,7 +919,7 @@ export const formatFormDataToCreateTLApiObject = (formData) => {
         mobileNumber: e?.mobileNumber,
         emailId: e?.email,
         altContactNumber: null,
-        pan: e?.pan, // to be added
+        pan: e?.panNo, // to be added
         aadhaarNumber: null,
         permanentAddress: e.correspondenceAddress, // to be validated
         permanentCity: null,

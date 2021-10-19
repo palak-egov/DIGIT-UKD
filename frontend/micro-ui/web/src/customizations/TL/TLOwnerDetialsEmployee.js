@@ -102,9 +102,6 @@ const TLOwnerDetailsEmployee = ({ config, onSelect, userType, formData, setError
 
   }, [formData?.tradeUnits?.[0]?.tradeCategory?.code]);
 
-
-
-
   const commonProps = {
     focusIndex,
     allOwners: owners,
