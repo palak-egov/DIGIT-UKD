@@ -5,6 +5,7 @@ import SelectOwnerShipDetails from "./TL/SelectOwnerShipDetails";
 import SelectOwnerDetails from "./TL/SelectOwnerDetails";
 import TlAcknowledgement from "./TL/TlAcknowledgement";
 import TLGSTNumber from "./TL/TLGSTNumber"
+import SelectTradeUnits from "./TL/SelectTradeUnits";
 
 export const customizations = [
   SelectTradeLicenceCustomization,
@@ -13,4 +14,5 @@ export const customizations = [
   SelectOwnerDetails,
   TlAcknowledgement,
   TLGSTNumber,
+  SelectTradeUnits,
 ];
