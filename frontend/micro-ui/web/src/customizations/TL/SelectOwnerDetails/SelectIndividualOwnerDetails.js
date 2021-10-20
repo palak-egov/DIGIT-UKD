@@ -74,9 +74,9 @@ const SelectIndividualOwner = ({ t, config, onSelect, userType, formData }) => {
     <FormStep
       config={config}
       onSelect={goNext}
-      // isDisabled={
-      //   owners?.filter?.((e) => Object.keys(e?.errors || {}).length)?.length
-      // }
+      isDisabled={
+        owners?.filter?.((e) => Object.keys(e?.errors || {}).length)?.length
+      }
       t={t}
     >
       {owners?.map((_owner, i) => {

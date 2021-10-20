@@ -8,6 +8,7 @@ import {
   Row,
   StatusTable,
   SubmitBar,
+  CheckBox
 } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -17,6 +18,8 @@ import { Loader } from "@egovernments/digit-ui-react-components";
 
 
 import { pdfDocumentName, pdfDownloadLink } from "../utils";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const PDFSvg = ({ width = 20, height = 20, style }) => (
   <svg style={style} xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 20 20" fill="gray">
@@ -108,6 +111,13 @@ const CheckPage = ({ onSubmit, value }) => {
     pitDetail,
     isEditProperty,
   } = value;
+
+  const [declaration, setDeclaration] = useState(false)
+
+  useEffect(() => {
+    console.log(declaration, "declaration")
+   },[declaration])
+
   function getdate(date) {
     let newdate = Date.parse(date);
     return `${
@@ -310,10 +320,19 @@ const CheckPage = ({ onSubmit, value }) => {
             )}
           </div>
         </StatusTable>
-        <SubmitBar label={t("CS_COMMON_SUBMIT")} onSubmit={onSubmit} />
-        <CitizenInfoLabel
-          info={t("CS_CHECKPAGE_INFO_LABEL")}
-          text={t("TL_CHECKPAGE_CONFIRMATION_INFO_MSG")}
+
+        <div style={{ display: "flex" , padding: "36px 0"}}>
+          <CheckBox
+            checked={declaration}
+            onChange={(e) => setDeclaration(e.target.checked)}
+            label={t("TL_DECLARARTION_MESSAGE")}
+          />
+        </div>
+
+        <SubmitBar
+          label={t("CS_COMMON_SUBMIT")}
+          onSubmit={onSubmit}
+          disabled={!declaration}
         />
       </Card>
     </React.Fragment>
