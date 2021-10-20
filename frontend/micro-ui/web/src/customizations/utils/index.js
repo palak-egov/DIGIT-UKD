@@ -955,7 +955,7 @@ export const formatFormDataToCreateTLApiObject = (formData) => {
     tenantId:
       formData?.address?.city?.code ||
       window.Digit.ULBService.getCurrentTenantId(),
-    financialYear: formData?.TradeDetails?.FY,
+    financialYear: formData?.TradeDetails?.FY?.code,
   };
 
   

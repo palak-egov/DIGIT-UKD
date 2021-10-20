@@ -4,6 +4,7 @@ import {
   FormStep,
   Loader,
   TextInput,
+  Dropdown
 } from "@egovernments/digit-ui-react-components";
 import React, { useState } from "react";
 // import SelectOwnerDetails from "./SelectOwnerDetails";
@@ -23,6 +24,7 @@ const SelectTradeName = ({
   let validation = {};
   const onSkip = () => onSelect();
   const [TradeName, setTradeName] = useState(formData.TradeDetails?.TradeName);
+  const [FY,setFY] = useState(formData?.[config.key]?.FY)
   const tenantId = window.Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
   const isEdit =
@@ -39,18 +41,22 @@ const SelectTradeName = ({
     let mdmsFinancialYear = fydata["egf-master"]
     ? fydata["egf-master"].FinancialYear.filter((y) => y.module === "TL")
     : [];
-    let FY =
-    mdmsFinancialYear &&
-    mdmsFinancialYear.length > 0 &&
-    mdmsFinancialYear.sort((x, y) => y.endingDate - x.endingDate)[0]?.code;
+  
+  
+    // let FY =
+    // mdmsFinancialYear &&
+    // mdmsFinancialYear.length > 0 &&
+    // mdmsFinancialYear.sort((x, y) => y.endingDate - x.endingDate)[0]?.code;
+  
     function setSelectTradeName(e) {
       setTradeName(e.target.value);
-    }
-    console.log(mdmsFinancialYear,config.key, "financial years");
+  }
+  
+    console.log(mdmsFinancialYear, config.key, formData, "financial years");
     
   const goNext = () => {
-    sessionStorage.setItem("CurrentFinancialYear", FY);
-    onSelect(config.key, {...formData?.[config.key], TradeName, FY });
+    sessionStorage.setItem("CurrentFinancialYear",FY?.code);
+    onSelect(config.key, { ...formData?.[config.key], TradeName, FY });
   };
 
   if (isLoading) {
@@ -62,10 +68,13 @@ const SelectTradeName = ({
       <FormStep
         config={config}
         onSelect={goNext}
-        onSkip={onSkip}
         t={t}
+        onSkip={onSkip}
         isDisabled={!TradeName}
       >
+        <CardLabel>{t("TL_SELECT_FINANCIAL_YEAR")}</CardLabel>
+        <Dropdown selected={FY} option={mdmsFinancialYear} optionKey="code" select={setFY} />
+
         <CardLabel>{`${t("new Name After Cusomization")}`}</CardLabel>
         <TextInput
           t={t}
@@ -83,9 +92,6 @@ const SelectTradeName = ({
             title: t("TL_INVALID_TRADE_NAME"),
           })}
         />
-
-        
-
       </FormStep>
       {
         <CitizenInfoLabel
