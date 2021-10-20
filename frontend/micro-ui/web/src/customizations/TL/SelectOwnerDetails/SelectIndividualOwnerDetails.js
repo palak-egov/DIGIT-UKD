@@ -6,7 +6,7 @@ import {
   RadioOrSelect,
   MobileNumber,
   DatePicker,
-  LinkButton
+  LinkButton,
 } from "@egovernments/digit-ui-react-components";
 
 import { useForm, Controller } from "react-hook-form";
@@ -25,7 +25,6 @@ const newOwner = {
   panNo: "",
   correspondenceAddress: "",
   tradeRelationship: "",
-
 };
 
 const SelectIndividualOwner = ({ t, config, onSelect, userType, formData }) => {
@@ -40,7 +39,9 @@ const SelectIndividualOwner = ({ t, config, onSelect, userType, formData }) => {
   });
 
   useEffect(() => {
-    console.log(owners, "index");
+    if (!ismultiple && owners.length > 1) {
+      setOwners([owners[0]]);
+    }
   }, [owners]);
 
   const setOwner = (index, owner) => {
@@ -73,9 +74,9 @@ const SelectIndividualOwner = ({ t, config, onSelect, userType, formData }) => {
     <FormStep
       config={config}
       onSelect={goNext}
-      isDisabled={
-        owners?.filter?.((e) => Object.keys(e?.errors || {}).length)?.length
-      }
+      // isDisabled={
+      //   owners?.filter?.((e) => Object.keys(e?.errors || {}).length)?.length
+      // }
       t={t}
     >
       {owners?.map((_owner, i) => {
@@ -181,9 +182,7 @@ const IndividualOwnerForm = ({
   const { errors } = formState;
 
   const formValue = watch();
-
-
-
+debugger
   useEffect(() => {
     const keys = Object.keys(formValue);
     const part = {};
@@ -195,12 +194,12 @@ const IndividualOwnerForm = ({
     }
   }, [formValue]);
 
-
   useEffect(() => {
-    console.log(owners[ownerIndex], ownerIndex, "owner changed index");
-     Object.keys(owners[ownerIndex])?.forEach((key) => {
-       if (key !== "errors") setValue(key, owners[ownerIndex]?.[key]);
-     });
+    if (owner) {
+      Object.keys(owners[ownerIndex])?.forEach((key) => {
+        if (key !== "errors") setValue(key, owners[ownerIndex]?.[key]);
+      });
+    }
   }, [owner]);
 
   useEffect(() => {
@@ -256,7 +255,7 @@ const IndividualOwnerForm = ({
           onClick={(e) => deleteOwner(ownerIndex)}
         />
       )}
-      <CardLabel>{t("TL_MOBILE_NUMBER_LABEL")}</CardLabel>
+      <CardLabel>{t("TL_MOBILE_NUMBER_LABEL") + "*"}</CardLabel>
       <Controller
         name="mobileNumber"
         rules={{ required: true }}
@@ -265,7 +264,7 @@ const IndividualOwnerForm = ({
           <MobileNumber onChange={onChange} value={value} />
         )}
       />
-      <CardLabel>{t("TL_OWNER_NAME")}</CardLabel>
+      <CardLabel>{t("TL_OWNER_NAME") + "*"}</CardLabel>
       <div className="field-container">
         <Controller
           name="ownerName"
@@ -283,7 +282,7 @@ const IndividualOwnerForm = ({
         />
       </div>
 
-      <CardLabel>{t("TL_FATHER_HUSBAND_NAME_LABEL")}</CardLabel>
+      <CardLabel>{t("TL_FATHER_HUSBAND_NAME_LABEL") + "*"}</CardLabel>
       <div className="field-container">
         <Controller
           name="fatherHusbandName"
@@ -298,7 +297,7 @@ const IndividualOwnerForm = ({
         />
       </div>
 
-      <CardLabel>{t("TL_RELATIONSHIP")}</CardLabel>
+      <CardLabel>{t("TL_RELATIONSHIP") + "*"}</CardLabel>
       <Controller
         name="relationship"
         rules={{ required: true }}
@@ -315,7 +314,7 @@ const IndividualOwnerForm = ({
         )}
       />
 
-      <CardLabel>{t("TL_GENDER_LABEL")}</CardLabel>
+      <CardLabel>{t("TL_GENDER_LABEL") + "*"}</CardLabel>
       <Controller
         name="gender"
         rules={{ required: true }}
@@ -335,7 +334,7 @@ const IndividualOwnerForm = ({
       <CardLabel>{t("TL_EMAIL_LABEL")}</CardLabel>
       <Controller
         name="email"
-        rules={{ required: true, pattern: getPattern("Email") }}
+        rules={{ pattern: getPattern("Email") }}
         control={control}
         render={({ onChange, onBlur, value }) => (
           <div className="field-container">
@@ -350,14 +349,14 @@ const IndividualOwnerForm = ({
       <CardLabel>{t("TL_PAN_NO_LABEL")}</CardLabel>
       <Controller
         name="panNo"
-        rules={{ required: true, pattern: getPattern("PAN") }}
+        rules={{ pattern: getPattern("PAN") }}
         control={control}
         render={({ onChange, onBlur, value }) => (
           <TextInput value={value} onChange={(e) => onChange(e.target.value)} />
         )}
       />
 
-      <CardLabel>{t("TL_DATE_OF_BIRTH_LABEL")}</CardLabel>
+      <CardLabel>{t("TL_DATE_OF_BIRTH_LABEL") + "*"}</CardLabel>
       <Controller
         name="DOB"
         rules={{ required: true }}
@@ -367,7 +366,7 @@ const IndividualOwnerForm = ({
         )}
       />
 
-      <CardLabel>{t("TL_CORRESPONDENCE_ADDRESS_LABEL")}</CardLabel>
+      <CardLabel>{t("TL_CORRESPONDENCE_ADDRESS_LABEL") + "*"}</CardLabel>
       <Controller
         name="correspondenceAddress"
         rules={{ required: true, pattern: getPattern("Address") }}
@@ -385,7 +384,7 @@ const IndividualOwnerForm = ({
       <CardLabel>{t("TL_TRADE_RELATIONSHIP")}</CardLabel>
       <Controller
         name="tradeRelationship"
-        rules={{ required: true }}
+        rules={{}}
         control={control}
         render={({ onChange, onBlur, value }) => (
           <RadioOrSelect
