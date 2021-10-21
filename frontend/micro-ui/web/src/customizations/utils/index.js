@@ -943,7 +943,7 @@ export const formatFormDataToCreateTLApiObject = (formData) => {
         dob: convertDateToEpoch(e.DOB),
         relationship: e?.relationship?.code,
       })),
-      applicationDocuments: getwfdocuments(formData),
+      applicationDocuments: null,
     },
     tradeName: formData?.TradeDetails?.TradeName,
     applicationType: "NEW",
@@ -960,4 +960,10 @@ export const formatFormDataToCreateTLApiObject = (formData) => {
 
   
   return { Licenses: [obj] };
+};
+
+export const formatResponseDataToCreateTLApiObject = (data, formData) => {
+  data.tradeLicenseDetail.applicationDocuments = getwfdocuments(formData);
+  data.action = "INITIATED";
+  return { Licenses: [data] };
 };

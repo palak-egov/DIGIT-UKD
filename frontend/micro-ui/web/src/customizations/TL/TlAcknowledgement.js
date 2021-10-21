@@ -7,7 +7,7 @@ import {
   SubmitBar,
 } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
-import { stringToBoolean, formatFormDataToCreateTLApiObject } from "../utils";
+import { stringToBoolean, formatFormDataToCreateTLApiObject, formatResponseDataToCreateTLApiObject } from "../utils";
 import {useTranslation } from "react-i18next"
 
 const GetActionMessage = (props) => {
@@ -50,6 +50,11 @@ const TLAcknowledgement = ({ data, onSuccess, t = (a) => a }) => {
     true
   );
 
+  const mutationUpdate = window.Digit.Hooks.tl.useTradeLicenseAPI(
+    data?.address?.city ? data.address?.city?.code : tenantId,
+    false
+  );
+
   const { data: storeData } = window.Digit.Hooks.useStore.getInitData();
   const { tenants } = storeData || {};
   const stateId = tenantId.split(".")[0];
@@ -63,9 +68,19 @@ const TLAcknowledgement = ({ data, onSuccess, t = (a) => a }) => {
     const onSuccessedit = () => {
       setMutationHappened(true);
     };
-    let formData = formatFormDataToCreateTLApiObject(data);
-    console.log(formData, "API Data");
-    mutationCreate.mutate(formData, { onSuccess });
+    if (fydata) {
+      let formData = formatFormDataToCreateTLApiObject(data);
+      mutationCreate.mutate(formData, {
+        onSuccess: (d) => {
+          console.log(d.Licenses, ">>>>>>>");
+          const updateData = formatResponseDataToCreateTLApiObject(
+            d.Licenses[0],
+            data
+          );
+          mutationUpdate.mutate(updateData, { onSuccess });
+        },
+      });
+    }
   }, [fydata]);
 
 
@@ -79,15 +94,23 @@ const TLAcknowledgement = ({ data, onSuccess, t = (a) => a }) => {
     }
   }, [mutationCreate.isSuccess]);
 
-  return mutationCreate.isLoading || mutationCreate.isIdle ? (
+  return mutationCreate.isLoading ||
+    mutationCreate.isIdle ||
+    mutationUpdate.isLoading ||
+    mutationUpdate?.isIdle ? (
     <Loader />
   ) : (
     <Card>
       <BannerPicker
         t={t}
-        data={mutationCreate.data}
-        isSuccess={mutationCreate.isSuccess}
-        isLoading={mutationCreate.isLoading || mutationCreate.isIdle}
+        data={mutationUpdate.data}
+        isSuccess={mutationUpdate.isSuccess}
+        isLoading={
+          mutationCreate.isLoading ||
+          mutationCreate.isIdle ||
+          mutationUpdate.isLoading ||
+          mutationUpdate.isIdle
+        }
       />
     </Card>
   );
