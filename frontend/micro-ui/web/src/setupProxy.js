@@ -25,5 +25,6 @@ module.exports = function (app) {
     "/fsm-calculator/v1/billingSlab/_search",
     "/tl-services",
     "/tl-calculator",
+    "/egov-user-event",
   ].forEach((location) => app.use(location, createProxy));
 };

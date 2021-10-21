@@ -909,7 +909,7 @@ export const formatFormDataToCreateTLApiObject = (formData) => {
         tradeType: e?.tradesubtype?.code,
         uom: e.uom,
         uomValue: e.unit,
-        rate: 5000, //needs to be added // billing slab service
+        rate: e.rate, //needs to be added // billing slab service
       })),
       subOwnerShipCategory: formData?.ownershipCategory?.code,
       owners: formData?.owners?.owners?.map((e) => ({

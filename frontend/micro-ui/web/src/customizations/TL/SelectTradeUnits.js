@@ -61,10 +61,10 @@ const SelectTradeUnits = ({ t, config, onSelect, userType, formData }) => {
     
     useEffect(() => {
       console.log(
-        billingSlabData?.map((e) => e.tradeType),
+        billingSlabData,
         "billslab"
       );
-    }, [billingSlabData]);
+    }, [billingSlabData]); 
 
   const tenantId = window.Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
@@ -224,7 +224,15 @@ const SelectTradeUnits = ({ t, config, onSelect, userType, formData }) => {
     let units = formData.TradeDetails.Units;
     let unitsdata;
 
-    unitsdata = { ...units, units: fields };
+    unitsdata = {
+      ...units,
+      units: fields.map((e) => ({
+        ...e,
+        rate: billingSlabData?.find(
+          (f) => f.tradeType === e?.tradesubtype?.code
+        ).rate,
+      })),
+    };
     onSelect(config.key, unitsdata);
   };
 
