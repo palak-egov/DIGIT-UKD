@@ -126,7 +126,7 @@ export const formwizardThirdStep = {
       transferorInstitutionSummary: { ...transferorInstitutionSummary },
       transfereeSummary: transfereeSummary,
       transfereeInstitutionSummary: transfereeInstitutionSummary,
-      mutationSummary: mutationSummary,
+//      mutationSummary: mutationSummary,
       registrationSummary: registrationSummary,
       documentsSummary: documentsSummary,
       declarationSummary: declarationSummary
