@@ -97,7 +97,7 @@ export const formwizardFirstStep = {
     transferorDetails: { ...ts1 },
     transferorInstitutionDetails: { ...ti1 },
     transfereeDetails,
-    mutationDetails,
+   // mutationDetails,
     registrationDetails
   }
 };
