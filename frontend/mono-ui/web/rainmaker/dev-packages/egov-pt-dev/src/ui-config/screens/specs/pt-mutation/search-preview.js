@@ -385,7 +385,7 @@ const getPropertyConfigurationMDMSData = async (action, state, dispatch) => {
     );
     let propertyConfiguation = get(payload, "MdmsRes.PropertyTax.PropertyConfiguration");
     dispatch(prepareFinalObject("PropertyConfiguration", propertyConfiguation));
-    showHideMutationDetailsCard(action, state, dispatch);
+    //showHideMutationDetailsCard(action, state, dispatch);
   } catch (e) {
     console.log(e);
   }

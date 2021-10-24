@@ -133,7 +133,7 @@ const getIndexofActive = (item) => {
   {
     for(let i=0;i<item.owners.length;i++)
     {
-      if(item.owners[i].status=='INACTIVE')
+      if(item.owners[i].status=='ACTIVE')
       return i;
     }
   }

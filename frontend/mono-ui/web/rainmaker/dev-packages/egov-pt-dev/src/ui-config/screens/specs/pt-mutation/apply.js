@@ -97,7 +97,7 @@ export const formwizardFirstStep = {
     transferorDetails: { ...ts1 },
     transferorInstitutionDetails: { ...ti1 },
     transfereeDetails,
-    mutationDetails,
+   // mutationDetails,
     registrationDetails
   }
 };
@@ -126,7 +126,7 @@ export const formwizardThirdStep = {
       transferorInstitutionSummary: { ...transferorInstitutionSummary },
       transfereeSummary: transfereeSummary,
       transfereeInstitutionSummary: transfereeInstitutionSummary,
-      mutationSummary: mutationSummary,
+//      mutationSummary: mutationSummary,
       registrationSummary: registrationSummary,
       documentsSummary: documentsSummary,
       declarationSummary: declarationSummary
