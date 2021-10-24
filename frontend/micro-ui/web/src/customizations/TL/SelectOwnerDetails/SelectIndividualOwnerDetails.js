@@ -28,7 +28,7 @@ const newOwner = {
 };
 
 const SelectIndividualOwner = ({ t, config, onSelect, userType, formData }) => {
-  let ismultiple = formData?.ownershipCategory?.code.includes("SINGLEOWNER")
+  let ismultiple = formData?.ownershipCategory?.code?.includes("SINGLEOWNER")
     ? false
     : true;
 
@@ -144,7 +144,7 @@ const IndividualOwnerForm = ({
     {}
   );
 
-  let ismultiple = formData?.ownershipCategory?.code.includes("SINGLEOWNER")
+  let ismultiple = formData?.ownershipCategory?.code?.includes("SINGLEOWNER")
     ? false
     : true;
 

@@ -207,7 +207,7 @@ const OwnerForm = (_props) => {
     [genderFilterTypeMenu]
   );
 
-  const isIndividualTypeOwner = useMemo(() => formData?.ownershipCategory?.code.includes("INDIVIDUAL"), [formData?.ownershipCategory?.code]);
+  const isIndividualTypeOwner = useMemo(() => formData?.ownershipCategory?.code?.includes("INDIVIDUAL"), [formData?.ownershipCategory?.code]);
 
   useEffect(() => {
     trigger();

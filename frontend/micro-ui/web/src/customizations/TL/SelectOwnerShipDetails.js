@@ -78,11 +78,54 @@ const SelectOwnerShipDetails = ({
     }
   }, [Menu]);
 
-  console.log(selectedValue, ownership, subOwnerShipMenu, "selectedValue");
+  useEffect(() => {
+    if (userType === "employee")
+      onSelect(config.key, { code: ownership?.code });
+  }, [ownership]);
+
+  console.log(selectedValue, ownership, subOwnerShipMenu, formData,"selectedValue");
 
   const goNext = (data) => {
     onSelect(config.key, { code: ownership?.code });
   };
+
+  if (userType === "employee") {
+    return (
+      <React.Fragment>
+        <LabelFieldPair>
+          <CardLabel
+            className="card-label-smaller"
+            style={{ color: "#B1B4B6" }}
+          >
+            {`${t("TL_NEW_OWNER_DETAILS_OWNERSHIP_TYPE_LABEL")} * :`}
+          </CardLabel>
+          <div className="field">
+            <RadioOrSelect
+              options={ownserShipTypeMenu || []}
+              onSelect={setMainOwnership}
+              optionKey={"code"}
+              selectedOption={mainOwnerShipType}
+              t={t}
+              isDependent={false}
+              disabled={false}
+            />
+          </div>
+        </LabelFieldPair>
+        <LabelFieldPair>
+            <CardLabel>{t("TL_SUBOWNERSHIP_TYPE")}</CardLabel>
+          <div className="field">
+            <Dropdown
+              option={subOwnerShipMenu || []}
+              select={setOwnerShip}
+              optionKey={"code"}
+              selected={ownership}
+              t={t}
+            />
+          </div>
+        </LabelFieldPair>
+      </React.Fragment>
+    );
+  }
 
   return (
     <FormStep
