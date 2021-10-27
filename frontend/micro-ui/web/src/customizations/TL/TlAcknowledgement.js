@@ -44,6 +44,8 @@ const TLAcknowledgement = ({ data, onSuccess, t = (a) => a }) => {
   const [mutationHappened, setMutationHappened, clear] =
     window.Digit.Hooks.useSessionStorage("CITIZEN_TL_MUTATION_HAPPENED", false);
 
+  const isEdit = window.location.href.includes("edit-application");
+
   const tenantId = window.Digit.ULBService.getCurrentTenantId();
   const mutationCreate = window.Digit.Hooks.tl.useTradeLicenseAPI(
     data?.address?.city ? data.address?.city?.code : tenantId,
@@ -70,16 +72,21 @@ const TLAcknowledgement = ({ data, onSuccess, t = (a) => a }) => {
     };
     if (fydata) {
       let formData = formatFormDataToCreateTLApiObject(data);
-      mutationCreate.mutate(formData, {
-        onSuccess: (d) => {
-          console.log(d.Licenses, ">>>>>>>");
-          const updateData = formatResponseDataToCreateTLApiObject(
-            d.Licenses[0],
-            data
-          );
-          mutationUpdate.mutate(updateData, { onSuccess });
-        },
-      });
+      if (!isEdit) {
+        mutationCreate.mutate(formData, {
+          onSuccess: (d) => {
+            console.log(d.Licenses, ">>>>>>>");
+            const updateData = formatResponseDataToCreateTLApiObject(
+              d.Licenses[0],
+              data
+            );
+            mutationUpdate.mutate(updateData, { onSuccess });
+          },
+        });
+      } else {
+        console.log(data, "here is edit Data");
+        // mutationUpdate.mutate(updateData, { onSuccess });
+      }
     }
   }, [fydata]);
 
