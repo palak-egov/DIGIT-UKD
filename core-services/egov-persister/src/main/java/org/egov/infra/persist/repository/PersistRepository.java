@@ -67,10 +67,11 @@ public class PersistRepository {
     public List<Object[]> getRows(List<JsonMap> jsonMaps, Object jsonObj, String baseJsonPath) {
 
         List<LinkedHashMap<String, Object>> dataSource = extractData(baseJsonPath, jsonObj);
-
+       
         List<Object[]> rows = new ArrayList<>();
 
         for (int i = 0; i < dataSource.size(); i++) {
+        	log.info("Testing Persister",dataSource);
             LinkedHashMap<String, Object> rawDataRecord = dataSource.get(i);
 
             if (rawDataRecord == null)
@@ -200,13 +201,16 @@ public class PersistRepository {
      */
     private List<LinkedHashMap<String, Object>> extractData(String baseJsonPath, Object document) {
         List<LinkedHashMap<String, Object>> list = null;
+        log.info("Testing Persister",baseJsonPath + document);
         if(baseJsonPath.contains("*")) {
             String arrayBasePath = baseJsonPath.substring(0, baseJsonPath.lastIndexOf(".*") + 2);
             list = JsonPath.read(document, arrayBasePath);
+            log.info("Testing Persister",baseJsonPath + document, list);
         }
         else {
             LinkedHashMap<String, Object> map = JsonPath.read(document, baseJsonPath);
             list = Collections.singletonList(map);
+            log.info("Testing Persister",baseJsonPath + document, list);
         }
         return list;
     }
