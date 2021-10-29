@@ -964,6 +964,6 @@ export const formatFormDataToCreateTLApiObject = (formData) => {
 
 export const formatResponseDataToCreateTLApiObject = (data, formData) => {
   data.tradeLicenseDetail.applicationDocuments = getwfdocuments(formData);
-  data.action = "INITIATED";
+  data.action = "APPLY";
   return { Licenses: [data] };
 };
