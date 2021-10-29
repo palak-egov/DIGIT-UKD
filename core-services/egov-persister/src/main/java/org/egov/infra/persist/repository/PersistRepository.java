@@ -201,16 +201,16 @@ public class PersistRepository {
      */
     private List<LinkedHashMap<String, Object>> extractData(String baseJsonPath, Object document) {
         List<LinkedHashMap<String, Object>> list = null;
-        log.info("Testing Persister",baseJsonPath + document);
+        log.info("Testing Persister " + baseJsonPath + document.toString());
         if(baseJsonPath.contains("*")) {
             String arrayBasePath = baseJsonPath.substring(0, baseJsonPath.lastIndexOf(".*") + 2);
             list = JsonPath.read(document, arrayBasePath);
-            log.info("Testing Persister",baseJsonPath + document, list);
+            log.info("Testing Persister "+baseJsonPath + document.toString() + list.toString());
         }
         else {
             LinkedHashMap<String, Object> map = JsonPath.read(document, baseJsonPath);
             list = Collections.singletonList(map);
-            log.info("Testing Persister",baseJsonPath + document, list);
+            log.info("Testing Persister" +baseJsonPath + document.toString() + list.toString());
         }
         return list;
     }
