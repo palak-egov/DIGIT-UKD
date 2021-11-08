@@ -115,7 +115,49 @@ export const payeeDetails = getCommonContainer({
     required: true
   })
 });
-
+export const onlineDetails = getCommonContainer({
+  txnNo: getTextField({
+    label: {
+      labelName: "Transaction No.",
+      labelKey: "PAYMENT_TXN_NO_LABEL"
+    },
+    placeholder: {
+      labelName: "Enter Transaction  no.",
+      labelKey: "PAYMENT_TXN_NO_PLACEHOLDER"
+    },
+    //Pattern validation for Cheque number
+    jsonPath: "ReceiptTemp[0].instrument.transactionNumber",
+    required: true
+  }),
+  transactionDate: getDateField({
+    label: {
+      labelName: "Cheque Date",
+      labelKey: "NOC_PAYMENT_TRANSACTION_DATE_LABEL"
+    },
+    placeholder: {
+      labelName: "dd/mm/yy",
+      labelKey: "NOC_PAYMENT_TRANSACTION_DATE_PLACEHOLDER"
+    },
+    required: true,
+    jsonPath: "ReceiptTemp[0].instrument.transactionDateInput"
+  })
+});
+export const posDetails = getCommonContainer({
+  txnNo: getTextField({
+    label: {
+      labelName: "Transaction No.",
+      labelKey: "PAYMENT_TXN_NO_LABEL"
+    },
+    placeholder: {
+      labelName: "Enter Transaction  no.",
+      labelKey: "PAYMENT_TXN_NO_PLACEHOLDER"
+    },
+    //Pattern validation for Cheque number
+    jsonPath: "ReceiptTemp[0].instrument.transactionNumber",
+    required: true
+  })
+ 
+});
 export const chequeDetails = getCommonContainer({
   chequeNo: getTextField({
     label: {
@@ -152,6 +194,7 @@ export const chequeDetails = getCommonContainer({
       labelKey: "NOC_PAYMENT_IFSC_CODE_PLACEHOLDER"
     },
     required: true,
+    pattern:"^[A-Z]{4}0[A-Z0-9]{6}$",
     jsonPath: "ReceiptTemp[0].instrument.ifscCode",
     iconObj: {
       iconName: "search",
@@ -160,7 +203,7 @@ export const chequeDetails = getCommonContainer({
       onClickDefination: {
         action: "condition",
         callBack: (state, dispatch) => {
-          onIconClick(state, dispatch, 1);
+          onIconClick(state, dispatch, 4);
         }
       }
     }
@@ -234,7 +277,7 @@ export const demandDraftDetails = getCommonContainer({
       labelName: "Enter bank IFSC",
       labelKey: "NOC_PAYMENT_IFSC_CODE_PLACEHOLDER"
     },
-    required: true,
+    required: false,
     jsonPath: "ReceiptTemp[0].instrument.ifscCode",
     iconObj: {
       iconName: "search",
@@ -257,7 +300,7 @@ export const demandDraftDetails = getCommonContainer({
       labelName: "Enter bank name",
       labelKey: "NOC_PAYMENT_BANK_NAME_PLACEHOLDER"
     },
-    required: true,
+    required: false,
     props: {
       disabled: true
     },
@@ -272,7 +315,7 @@ export const demandDraftDetails = getCommonContainer({
       labelName: "Enter bank branch",
       labelKey: "NOC_PAYMENT_BANK_BRANCH_PLACEHOLDER"
     },
-    required: true,
+    required: false,
     props: {
       disabled: true
     },
@@ -336,3 +379,17 @@ export const card = getCommonContainer({
 export const cash = getCommonContainer({
   payeeDetails
 });
+
+export const pos = getCommonContainer({
+  payeeDetails,
+  posDetails
+  
+});
+export const offline_rtgs = getCommonContainer({
+  payeeDetails,
+  onlineDetails
+});
+
+
+
+
