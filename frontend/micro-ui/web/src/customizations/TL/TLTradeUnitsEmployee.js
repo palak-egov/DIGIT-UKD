@@ -402,7 +402,7 @@ const TradeUnitForm = (_props) => {
                 <Dropdown
                   className="form-field"
                   selected={props.value}
-                  disable={false}
+                  disable={isRenewal}
                   option={tradeCategoryValues}
                   errorStyle={
                     localFormState.touched.tradeCategory &&
@@ -441,7 +441,7 @@ const TradeUnitForm = (_props) => {
                 <Dropdown
                   className="form-field"
                   selected={getValues("tradeType")}
-                  disable={false}
+                  disable={isRenewal}
                   option={
                     unit?.tradeCategory
                       ? getTradeTypeMenu(unit?.tradeCategory)
@@ -479,7 +479,7 @@ const TradeUnitForm = (_props) => {
                 <Dropdown
                   className="form-field"
                   selected={getValues("tradeSubType")}
-                  disable={false}
+                  disable={isRenewal}
                   option={
                     unit?.tradeType
                       ? sortDropdownNames(
@@ -540,7 +540,7 @@ const TradeUnitForm = (_props) => {
                       props.onChange(e);
                       setFocusIndex({ index: unit.key, type: "uom" });
                     }}
-                    disable={true}
+                    disable={isRenewal}
                     onBlur={props.onBlur}
                     style={{ background: "#FAFAFA" }}
                   />
@@ -595,7 +595,7 @@ const TradeUnitForm = (_props) => {
                       props.onChange(e);
                       setFocusIndex({ index: unit.key, type: "uomValue" });
                     }}
-                    disable={!unit?.tradeSubType?.uom}
+                    disable={!unit?.tradeSubType?.uom || isRenewal}
                     onBlur={props.onBlur}
                     style={{ background: "#FAFAFA" }}
                   />
