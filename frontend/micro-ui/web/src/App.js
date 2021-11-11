@@ -38,6 +38,7 @@ import {
 } from "@egovernments/digit-ui-module-receipts";
 
 import { customizations } from "./customizations";
+import { useLocalities } from "./customizations/utils";
 
 initLibraries();
 
@@ -93,6 +94,7 @@ function App() {
   if (!stateCode) {
     return <h1>stateCode is not defined</h1>;
   }
+window.Digit.Hooks.useBoundaryLocalities = useLocalities;
   return (
     <DigitUI
       stateCode={stateCode}
