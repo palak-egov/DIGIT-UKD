@@ -229,6 +229,9 @@ public class PropertyService {
 		if(isNumberDifferent) {
 			userService.updateUserMobileNumber(request, uuidToMobileNumber);
 		}
+		else {
+			request.getProperty().setOwners(util.getCopyOfOwners(propertyFromSearch.getOwners()));
+		}
 
 
 
