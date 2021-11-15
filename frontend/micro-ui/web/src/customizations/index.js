@@ -12,6 +12,7 @@ import TLNoOfEmployees from "./TL/TLNoOfEmployees";
 import TLOperationalArea from "./TL/TLOperationalArea";
 import ApplicationDetails from "./TL/ApplicationDetails"
 import TLTradeUnitsEmployee from "./TL/TLTradeUnitsEmployee"
+import TLDocumentsEmployee from "./TL/TLDocumentsEmployee"
 
 export const customizations = [
   SelectTradeLicenceCustomization,
@@ -26,4 +27,5 @@ export const customizations = [
   TLNoOfEmployees,
   ApplicationDetails,
   TLTradeUnitsEmployee,
+  TLDocumentsEmployee,
 ];
