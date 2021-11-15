@@ -47,6 +47,9 @@ public class PropertyService {
 	private Producer producer;
 
 	@Autowired
+    	private NotificationService notifService;
+
+	@Autowired
 	private PropertyConfiguration config;
 
 	@Autowired
@@ -228,6 +231,7 @@ public class PropertyService {
 
 		if(isNumberDifferent) {
 			userService.updateUserMobileNumber(request, uuidToMobileNumber);
+			notifService.sendNotificationForMobileNumberUpdate(request, propertyFromSearch);
 		}
 		else {
 			request.getProperty().setOwners(util.getCopyOfOwners(propertyFromSearch.getOwners()));
