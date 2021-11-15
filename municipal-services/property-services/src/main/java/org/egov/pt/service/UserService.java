@@ -427,6 +427,9 @@ public class UserService {
 				.build();
     }
 
+     /*
+		Method to update user mobile number
+	*/
     public void updateUserMobileNumber(PropertyRequest request,Map <String, String> uuidToMobileNumber) {
 
 		Property property = request.getProperty();
@@ -434,7 +437,7 @@ public class UserService {
 
 		property.getOwners().forEach(owner -> {
 
-			UserDetailResponse userDetailResponse = searchedUserExists(owner, requestInfo, uuidToMobileNumber);
+			UserDetailResponse userDetailResponse = searchedSingleUserExists(owner, requestInfo);
 			StringBuilder uri = new StringBuilder(userHost);
 
 				owner.setId(userDetailResponse.getUser().get(0).getId());
@@ -448,13 +451,17 @@ public class UserService {
 	}
 
 
-	private UserDetailResponse searchedUserExists(OwnerInfo owner, RequestInfo requestInfo,
-			Map<String, String> uuidToMobileNumber) {
+	/*
+	 	Method to check if the searched user exists
+	*/
+    private UserDetailResponse searchedSingleUserExists(OwnerInfo owner, RequestInfo requestInfo) {
 
 		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(owner.getTenantId(), requestInfo);
-		userSearchRequest.setMobileNumber(uuidToMobileNumber.get(owner.getUuid()));
+		
 		userSearchRequest.setUserType(owner.getType());
-		userSearchRequest.setName(owner.getName());
+		Set <String> uuids = new HashSet<String>();
+		uuids.add(owner.getUuid());
+		userSearchRequest.setUuid(uuids);
 
         StringBuilder uri = new StringBuilder(userHost).append(userSearchEndpoint);
         return userCall(userSearchRequest,uri);

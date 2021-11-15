@@ -391,6 +391,9 @@ public class NotificationService {
         }
     }
 
+     /*
+	 Method to send notification while updating owner mobile number	 
+	*/
     public void sendNotificationForMobileNumberUpdate(PropertyRequest propertyRequest, Property propertyFromSearch) {
 		Property property = propertyRequest.getProperty();
 		ProcessInstance wf = property.getWorkflow();
@@ -409,6 +412,9 @@ public class NotificationService {
 
 	}
 
+	/*
+	 Method to get the message template for owner mobile number update notification
+	*/
 	private String getMsgForMobileNumberUpdate(Property property, String msgCode, String completeMsgs, String createUpdateReplaceString) {
 
 		String url = configs.getUiAppHost().concat(configs.getViewPropertyLink().replace(NOTIFICATION_PROPERTYID, property.getPropertyId()).replace(NOTIFICATION_TENANTID, property.getTenantId()));
@@ -419,6 +425,9 @@ public class NotificationService {
 
 	}
 
+	/*
+	 Method to send notifications to both (old and new) owner mobile number while updation.
+	*/
 	private void prepareMsgAndSendToBothNumbers(PropertyRequest request, Property propertyFromSearch,
 			String msg) {
 
