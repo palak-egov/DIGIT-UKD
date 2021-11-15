@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -160,8 +161,7 @@ public class PropertyService {
 
 				request.getProperty().setOwners(util.getCopyOfOwners(collectedOwners));
 			} else
-				request.getProperty().setOwners(util.getCopyOfOwners(propertyFromSearch.getOwners()));
-
+				updateOwnerMobileNumbers(request, propertyFromSearch);
 		}
 		enrichmentService.enrichAssignes(request.getProperty());
 		enrichmentService.enrichUpdateRequest(request, propertyFromSearch);
@@ -204,6 +204,34 @@ public class PropertyService {
 			 */
 			producer.push(config.getUpdatePropertyTopic(), request);
 		}
+	}
+
+	private void updateOwnerMobileNumbers(PropertyRequest request, Property propertyFromSearch) {
+
+		Map <String, String> uuidToMobileNumber = new HashMap <String, String>();
+		List <OwnerInfo> owners = propertyFromSearch.getOwners();
+
+		for(OwnerInfo owner : owners) {
+			uuidToMobileNumber.put(owner.getUuid(), owner.getMobileNumber());
+		}
+
+		List <OwnerInfo> ownersFromRequest = request.getProperty().getOwners();
+
+		Boolean isNumberDifferent = false;
+
+		for(OwnerInfo owner : ownersFromRequest) {
+			if(!uuidToMobileNumber.get(owner.getUuid()).equals(owner.getMobileNumber())) {
+				isNumberDifferent = true;
+				break;
+			}
+		}
+
+		if(isNumberDifferent) {
+			userService.updateUserMobileNumber(request, uuidToMobileNumber);
+		}
+
+
+
 	}
 
 	/**
