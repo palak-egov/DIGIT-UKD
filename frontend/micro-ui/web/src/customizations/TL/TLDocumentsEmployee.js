@@ -217,6 +217,7 @@ function SelectDocument({
       }
     }
   }, [doc])
+  const istlRenewal = window.location.href.includes("renew-application-details");
   return (
     <div style={{ marginBottom: "24px" }}>
       <LabelFieldPair>
@@ -231,7 +232,7 @@ function SelectDocument({
             onDelete={() => {
               setUploadedFile(null);
             }}
-            disabled={doc?.documentType != "OLDLICENCENO" }
+            disabled={doc?.documentType != "OLDLICENCENO" && istlRenewal}
             message={uploadedFile ? `1 ${t(`CS_ACTION_FILEUPLOADED`)}` : t(`CS_ACTION_NO_FILEUPLOADED`)}
             textStyles={{ width: "100%" }}
             inputStyles={{ width: "280px" }}
