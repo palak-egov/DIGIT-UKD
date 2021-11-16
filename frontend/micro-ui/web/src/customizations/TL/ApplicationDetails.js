@@ -348,7 +348,7 @@ const ApplicationDetails = () => {
                   <SubmitBar label={t("COMMON_MAKE_PAYMENT")} />
                 </Link>
               ) : null}
-              {/* APPROVED */}
+              {/* APPROVED 
               {application?.status == "APPROVED" ? (
                 <Link
                   to={{
@@ -358,7 +358,7 @@ const ApplicationDetails = () => {
                 >
                   <SubmitBar label={t("COMMON_MAKE_PAYMENT")} />
                 </Link>
-              ) : null}
+              ) : null} */}
             </div>
           );
         })}
