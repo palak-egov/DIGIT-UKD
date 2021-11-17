@@ -12,6 +12,9 @@ import ApplicationHistory from "./components/ApplicationHistory";
 import DocumentsInfo from "../../../Property/components/DocumentsInfo";
 import get from "lodash/get";
 import "./index.css"
+import { httpRequest } from "egov-ui-kit/utils/api";
+import { businessServiceInfo, fetchConsumerBill, searchConsumer } from "egov-ui-kit/utils/commons";
+import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 
 // const PTInformation = ({
 //   items,
@@ -107,7 +110,8 @@ class PTInformation extends React.Component {
       documentsUploaded,
       toggleSnackbarAndSetText,
       cities,
-      citywiseconfig
+      citywiseconfig,
+      updateNumberConfig
     } = this.props;
     let logoUrl = ""; 
     let corpCity = "";
@@ -141,7 +145,7 @@ class PTInformation extends React.Component {
           <Card
             textChildren={
               <div id="property-review-form" className="col-sm-12 col-xs-12" style={{ alignItems: "center" }}>
-                {(
+                {
                   <Card
                     textChildren={
                       <TotalDues
@@ -154,7 +158,7 @@ class PTInformation extends React.Component {
                     }
                     style={{ backgroundColor: "rgb(242,242,242)", boxShadow: "none" }}
                   />
-                )}
+                }
                 <div className="pdf-header" id="pdf-header">
                   <Card
                     style={{ display : "flex" , backgroundColor : "rgb(242, 242, 242)" , minHeight: "120px" , alignItems: "center" ,paddingLeft :"10px"}}
@@ -214,12 +218,13 @@ class PTInformation extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+  const { screenConfiguration = {} } = state;
   const { cities } = state.common || [];
-  return { cities  };
-}
 
+  const { preparedFinalObject } = screenConfiguration;
+  let { propertiesAudit = [] } = preparedFinalObject;
+  const updateNumberConfig = get(preparedFinalObject, "updateNumberConfig", []);
+  return { cities, propertiesAudit, updateNumberConfig };
+};
 
-export default connect(
-  mapStateToProps,
-  null
-)(PTInformation);
+export default connect(mapStateToProps, null)(PTInformation);

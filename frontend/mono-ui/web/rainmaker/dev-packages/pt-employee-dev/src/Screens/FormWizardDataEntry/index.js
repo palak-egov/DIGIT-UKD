@@ -1425,6 +1425,12 @@ class FormWizardDataEntry extends Component {
     const propertyMethodAction = !!propertyId ? "_update" : "_create";
     let prepareFormData = { ...this.props.prepareFormData };
 
+    set(
+      prepareFormData,
+      "Properties[0].additionalDetails.isMobileNumberUpdate",
+      false
+    );
+
     if (
       get(
         prepareFormData,
