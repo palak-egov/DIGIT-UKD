@@ -450,8 +450,6 @@ public class NotificationService {
 		notifUtil.sendSMS(smsRequests);
 
 		Boolean isActionReq = false;
-		if(state.equalsIgnoreCase(PT_CORRECTION_PENDING))
-			isActionReq = true;
 
 		List<Event> events = notifUtil.enrichEvent(smsRequests, requestInfo, property.getTenantId(), property, isActionReq);
 		notifUtil.sendEventNotification(new EventRequest(requestInfo, events));
