@@ -75,7 +75,7 @@ const SelectTradeName = ({
         <CardLabel>{t("TL_SELECT_FINANCIAL_YEAR")}</CardLabel>
         <Dropdown selected={FY} option={mdmsFinancialYear} optionKey="code" select={setFY} />
 
-        <CardLabel>{`${t("new Name After Cusomization")}`}</CardLabel>
+        <CardLabel>{`${t("TRADE_NAME")}`}</CardLabel>
         <TextInput
           t={t}
           isMandatory={false}

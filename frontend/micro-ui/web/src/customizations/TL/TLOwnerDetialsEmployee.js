@@ -279,6 +279,7 @@ const OwnerForm = (_props) => {
                       // props.onChange(e);
                       setFocusIndex({ index: owner.key, type: "name" });
                     }}
+                    disable ={isRenewal}
                     onBlur={(e) => {
                       setFocusIndex({ index: -1 });
                       props.onBlur(e);

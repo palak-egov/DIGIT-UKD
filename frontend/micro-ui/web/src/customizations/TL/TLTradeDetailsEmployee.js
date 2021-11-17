@@ -423,7 +423,7 @@ const OwnerForm1 = (_props) => {
                 <Dropdown
                   className="form-field"
                   selected={props.value}
-                  disable={isRenewal}
+                  disable={false}
                   option={selectedOccupancyTypeOptions}
                   errorStyle={(localFormState.touched.occupancyType && errors?.occupancyType?.message) ? true : false}
                   select={(e) => {
@@ -450,7 +450,7 @@ const OwnerForm1 = (_props) => {
                 <Dropdown
                   className="form-field"
                   selected={getValues("structureSubType")}
-                  disable={false}
+                  disable={isRenewal}
                   option={structureSubTypeOptions}
                   select={(e) => {
                     if(e?.code != tradedetail?.structureSubType?.code && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
@@ -505,7 +505,7 @@ const OwnerForm1 = (_props) => {
                     }}
                     labelStyle={{ marginTop: "unset" }}
                     onBlur={props.onBlur}
-                    disable={isRenewal}
+                    disable={false}
                   />
                 )}
               />
@@ -530,7 +530,7 @@ const OwnerForm1 = (_props) => {
                     autoFocus={focusIndex.index === tradedetail?.key && focusIndex.type === "operationalArea"}
                     errorStyle={(localFormState.touched.operationalArea && errors?.operationalArea?.message) ? true : false}
                     onBlur={props.onBlur}
-                    disable={isRenewal}
+                    disable={false}
                   />
                 )}
               />
@@ -555,7 +555,7 @@ const OwnerForm1 = (_props) => {
                     autoFocus={focusIndex.index === tradedetail?.key && focusIndex.type === "noOfEmployees"}
                     errorStyle={(localFormState.touched.noOfEmployees && errors?.noOfEmployees?.message) ? true : false}
                     onBlur={props.onBlur}
-                    disable={isRenewal}
+                    disable={false}
                   />
                 )}
               />

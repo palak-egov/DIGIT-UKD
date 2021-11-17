@@ -1,5 +1,6 @@
 import get from "lodash/get";
 import set from "lodash/set";
+import { useQuery } from "react-query";
 
 
 /*   method to check not null  if not returns false*/
@@ -11,6 +12,28 @@ export const convertDotValues = (value = "") => {
   return (
     (checkForNotNull(value) && ((value.replaceAll && value.replaceAll(".", "_")) || (value.replace && stringReplaceAll(value, ".", "_")))) || "NA"
   );
+};
+
+export const getLocalities = {
+  admin: async (tenant) => {
+    return (await window.Digit.LocationService.getLocalities(tenant)).TenantBoundary[0];
+  },
+  revenue: async (tenant) => {
+    // console.log(“find me here”, tenant)
+    return (await window.Digit.LocationService.getRevenueLocalities(tenant)).TenantBoundary[0];
+  },
+};
+export const useLocalities = (tenant, boundaryType = "revenue", config, t) => {
+  // console.log(“find boundary type here”,boundaryType)
+  return useQuery(["BOUNDARY_DATA", tenant, boundaryType], () => getLocalities[boundaryType.toLowerCase()](tenant), {
+    select: (data) => {
+      return window.Digit.LocalityService.get(data).map((key) => {
+        return { ...key, i18nkey: t(key.i18nkey) };
+      });
+    },
+    staleTime: Infinity,
+    ...config,
+  });
 };
 
 export const sortDropdownNames = (options, optionkey, locilizationkey) => {
