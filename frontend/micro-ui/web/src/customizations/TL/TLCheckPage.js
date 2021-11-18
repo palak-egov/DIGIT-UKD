@@ -110,9 +110,11 @@ const CheckPage = ({ onSubmit, value }) => {
     pitType,
     pitDetail,
     isEditProperty,
+    noofemployees,
+    operationalarea
   } = value;
 
-  const [declaration, setDeclaration] = useState(false)
+   const [declaration, setDeclaration] = useState(false)
 
   useEffect(() => {
     console.log(declaration, "declaration")
@@ -154,6 +156,26 @@ const CheckPage = ({ onSubmit, value }) => {
             label={t("TL_LOCALIZATION_TRADE_NAME")}
             text={t(TradeDetails?.TradeName)}
             actionButton={<ActionButton jumpTo={`${routeLink}/TradeName`} />}
+          />
+          <Row
+            label={t("TL_OCCUPANCY_TYPE")}
+            text={t(TradeDetails?.OccupancyType?.code)}
+            actionButton={<ActionButton jumpTo={`${routeLink}/OccupancyType`} />}
+          />
+           <Row
+            label={t("TL_GST_NO")}
+            text={t(TradeDetails?.gstNo)}
+            actionButton={<ActionButton jumpTo={`${routeLink}/gst-no`} />}
+          />
+          <Row
+            label={t("TL_NO_OF_EMPLOYEES")}
+            text={t(noofemployees?.noofemployees)}
+            actionButton={<ActionButton jumpTo={`${routeLink}/noofemployees`} />}
+          />
+           <Row
+            label={t("TL_OPERATIONAL_AREA")}
+            text={t(operationalarea?.operationalarea)}
+            actionButton={<ActionButton jumpTo={`${routeLink}/operationalarea`} />}
           />
           <Row
             label={t("TL_STRUCTURE_TYPE")}
@@ -287,7 +309,7 @@ const CheckPage = ({ onSubmit, value }) => {
                 </CardSubHeader>
                 <Row
                   label={t("TL_COMMON_TABLE_COL_OWN_NAME")}
-                  text={t(owner?.name)}
+                  text={t(owner?.ownerName)}
                   actionButton={
                     <ActionButton jumpTo={`${routeLink}/owner-details`} />
                   }
@@ -301,7 +323,35 @@ const CheckPage = ({ onSubmit, value }) => {
                 />
                 <Row
                   label={t("TL_MOBILE_NUMBER_LABEL")}
-                  text={t(owner?.mobilenumber)}
+                  text={t(owner?.mobileNumber)}
+                  actionButton={
+                    <ActionButton jumpTo={`${routeLink}/owner-details`} />
+                  }
+                />
+                <Row
+                  label={t("TL_FATHER_OR_HUSBAND_LABEL")}
+                  text={t(owner?.fatherHusbandName)}
+                  actionButton={
+                    <ActionButton jumpTo={`${routeLink}/owner-details`} />
+                  }
+                />
+                <Row
+                  label={t("TL_RELAIONSHIP_LABEL")}
+                  text={t(owner?.relationship?.code)}
+                  actionButton={
+                    <ActionButton jumpTo={`${routeLink}/owner-details`} />
+                  }
+                />                
+                <Row
+                  label={t("TL_TRADE_RELAIONSHIP_LABEL")}
+                  text={t(owner?.tradeRelationship?.code)}
+                  actionButton={
+                    <ActionButton jumpTo={`${routeLink}/owner-details`} />
+                  }
+                />
+                 <Row
+                  label={t("TL_PANCARD_LABEL")}
+                  text={t(owner?.panNo)}
                   actionButton={
                     <ActionButton jumpTo={`${routeLink}/owner-details`} />
                   }
