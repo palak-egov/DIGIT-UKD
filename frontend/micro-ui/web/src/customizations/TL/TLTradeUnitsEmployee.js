@@ -220,12 +220,12 @@ const TradeUnitForm = (_props) => {
       }
     });
 
-    console.log(TradeTypeMenu, "TradeTypeMenu");
+    //console.log(TradeTypeMenu, "TradeTypeMenu");
       
     TradeTypeMenu = TradeTypeMenu.filter((e) =>
       billingSlabData?.some((f) => f?.tradeType?.includes(e.code))
     );
-    console.log(TradeTypeMenu, "TradeTypeMenu");
+    //console.log(TradeTypeMenu, "TradeTypeMenu");
     return TradeTypeMenu;
   };
 
@@ -248,7 +248,7 @@ const TradeUnitForm = (_props) => {
     TradeSubTypeMenu = TradeSubTypeMenu.filter((e) =>
       billingSlabData?.some((f) => f?.tradeType === e.code)
     );
-    console.log(TradeSubTypeMenu, "TradeSubTypeMenu");
+    //console.log(TradeSubTypeMenu, "TradeSubTypeMenu");
 
     return TradeSubTypeMenu;
   }

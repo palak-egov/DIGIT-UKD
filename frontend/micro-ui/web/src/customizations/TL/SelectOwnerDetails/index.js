@@ -5,7 +5,7 @@ import IndividualOwnerDetails from "./SelectIndividualOwnerDetails";
 import SelectNonIndividualOwner from "./SelectNonIndividualOwner";
 
 const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
-  console.log(formData?.ownershipCategory, ">>>>>>>");
+  //console.log(formData?.ownershipCategory, ">>>>>>>");
 
   return (
     <React.Fragment>

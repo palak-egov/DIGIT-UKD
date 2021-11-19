@@ -24,6 +24,12 @@ export const getLocalities = {
   },
 };
 export const useLocalities = (tenant, boundaryType = "revenue", config, t) => {
+  
+ /*  const moduleCode = "MCS";
+  const stateCode = "uk";
+  const language = window.Digit.StoreData.getCurrentLanguage();
+  const { isLoading, data: store } = window.Digit.Services.useStore({ stateCode, moduleCode, language });
+ */
   // console.log(“find boundary type here”,boundaryType)
   return useQuery(["BOUNDARY_DATA", tenant, boundaryType], () => getLocalities[boundaryType.toLowerCase()](tenant), {
     select: (data) => {
@@ -900,9 +906,92 @@ export const convertEpochToDateDMY = (dateEpoch) => {
   return `${day}/${month}/${year}`;
 };
 
+export const customiseCreateFormData = (formData) => {
+
+  const obj = {
+    licenseType: "PERMANENT",
+    tradeLicenseDetail: {
+      address: {
+        city: formData?.address?.city?.code,
+        doorNo: formData?.address?.doorNo,
+        street: formData?.address?.street,
+        building: formData?.address?.buildingName,
+        locality: { ...formData?.address?.locality },
+        pincode: formData?.address?.pincode,
+      },
+     // structureType: isDirectrenewal ? data.tradeLicenseDetail.structureType : 
+     //(data?.TradeDetails?.VehicleType ? data?.TradeDetails?.VehicleType.code :
+     // data?.TradeDetails?.BuildingType.code),
+
+
+      structureType: formData?.tradedetils?.[0]?.structureSubType?.code,
+      additionalDetail: {
+        occupancyType: formData?.tradedetils?.[0]?.occupancyType?.code,
+        gstNo: formData?.tradedetils?.[0]?.gstNo,
+        electricityConnectionNo: formData?.address?.electricityConnectionNo,
+      },
+      operationalArea: formData?.tradedetils?.[0]?.operationalArea, // to be added
+      noOfEmployees: formData?.tradedetils?.[0]?.noOfEmployees, // to be added
+      tradeUnits: formData?.tradeUnits?.map((e) => ({
+        tradeType: e?.tradeSubType?.code,
+        uom: e.uom,
+        uomValue: e.unit,
+        rate: e.rate, //needs to be added // billing slab service
+      })),
+      subOwnerShipCategory: formData?.ownershipCategory?.code,
+      owners: formData?.owners?.map((e) => ({
+        userName: e.name, //to be checked
+        name: e.name,
+        gender: e?.gender?.code,
+        mobileNumber: e?.mobileNumber,
+        emailId: e?.email,
+        altContactNumber: null,
+        pan: e?.pan, // to be added
+        aadhaarNumber: null,
+        permanentAddress: e.correspondenceAddress, // to be validated
+        permanentCity: null,
+        permanentPinCode: null,
+        correspondenceAddress: null,
+        correspondenceCity: null,
+        correspondencePinCode: null,
+        active: true,
+        locale: null,
+        type: "CITIZEN",
+        accountLocked: false,
+        accountLockedDate: 0,
+        fatherOrHusbandName: e.fatherHusbandName,
+        signature: null,
+        bloodGroup: null,
+        photo: null,
+        identificationMark: null,
+        tenantId:
+          formData?.address?.city?.code ||
+          window.Digit.ULBService.getCurrentTenantId(),
+        dob: convertDateToEpoch(e.DOB),
+        relationship: e?.relationship?.code,
+      })),
+      applicationDocuments: null,
+    },
+    tradeName: formData?.tradedetils?.[0]?.tradeName,
+    applicationType: "NEW",
+    workflowCode: "NewTL",
+    action: "INITIATE",
+
+    commencementDate: convertDateToEpoch(
+      formData?.TradeDetails?.CommencementDate
+    ),
+    tenantId:
+      formData?.address?.city?.code ||
+      window.Digit.ULBService.getCurrentTenantId(),
+    financialYear: formData?.tradedetils?.[0]?.financialYear?.code,
+  };
+
+  
+  return obj ;
+};
+
 
 export const formatFormDataToCreateTLApiObject = (formData) => {
-  console.log(formData);
   const obj = {
     licenseType: "PERMANENT",
     tradeLicenseDetail: {

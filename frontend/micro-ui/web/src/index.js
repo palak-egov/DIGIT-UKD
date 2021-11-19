@@ -4,10 +4,14 @@ import { initLibraries } from "@egovernments/digit-ui-libraries";
 // import "@egovernments/digit-ui-css/dist/index.css";
 import "./index.css";
 import App from "./App";
+//import { TLCustomisations } from './customizations/TL/TLCustomisations';
+import { customiseCreateFormData } from "./customizations/utils/index"
+
+
 
 initLibraries();
 
-window.Digit.Customizations = { PGR: {} };
+window.Digit.Customizations = { PGR: {} ,TL:{customiseCreateFormData}};
 
 const user = window.Digit.SessionStorage.get("User");
 

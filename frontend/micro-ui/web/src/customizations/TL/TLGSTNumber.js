@@ -16,7 +16,7 @@ const TLGSTNumber = ({ t, config, onSelect, value, userType, formData }) => {
     const [gstNo, setGstNo] = useState(formData?.[config.key]?.gstNo);
 
     useEffect(() => {
-        console.log(gstNo,"this is gst no")
+      //console.log(gstNo,"this is gst no");
      },[gstNo])
 
 
