@@ -95,6 +95,12 @@ function App() {
     return <h1>stateCode is not defined</h1>;
   }
 window.Digit.Hooks.useBoundaryLocalities = useLocalities;
+window.Digit.LocalizationService.getLocale({
+  modules: [`rainmaker-${window.Digit.ULBService.getCurrentTenantId()}`],
+   locale: window.Digit.StoreData.getCurrentLanguage(),
+   tenantId: window.Digit.ULBService.getCurrentTenantId()
+  })
+
   return (
     <DigitUI
       stateCode={stateCode}
