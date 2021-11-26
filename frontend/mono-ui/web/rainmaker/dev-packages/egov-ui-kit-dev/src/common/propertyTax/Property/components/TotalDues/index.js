@@ -42,19 +42,19 @@ class TotalDues extends React.Component {
 
   checkValidProeprty = () => {
     const { properties, updateNumberConfig } = this.props;
-    let { owners = [] } = properties;
+    let owners = properties && properties[0] && properties[0].owners;
     let returnValue = true;
     owners = owners && owners.filter((owner) => owner.status == "ACTIVE");
     owners &&
       owners.map((owner) => {
         if (process.env.REACT_APP_NAME !== "Citizen") {
-          if (owner.mobileNumber == updateNumberConfig.invalidNumber || !owner.mobileNumber.match(updateNumberConfig["invalidPattern"])) {
+          if (owner.mobileNumber == updateNumberConfig && updateNumberConfig.invalidNumber || !owner.mobileNumber.match(updateNumberConfig["invalidPattern"])) {
             this.setState({ showWarning: true, invalidNumber: owner.mobileNumber });
             returnValue = false;
           }
         } else {
           if (
-            owner.mobileNumber == updateNumberConfig.invalidNumber ||
+            owner.mobileNumber == updateNumberConfig && updateNumberConfig.invalidNumber ||
             (!owner.mobileNumber.match(updateNumberConfig["invalidPattern"]) && owner.mobileNumber == JSON.parse(getUserInfo()).mobileNumber)
           ) {
             this.setState({ showWarning: true, invalidNumber: owner.mobileNumber });
