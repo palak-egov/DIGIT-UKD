@@ -76,12 +76,12 @@ export const getOwnerInformation = (latestPropertyDetails, generalMDMSDataById) 
   let { institution = {}, owners: ownerDetails = [], subOwnershipCategory, ownershipCategory } = latestPropertyDetails || {};
   let owner = [];
   // ownerDetails = ownerDetails && Array.isArray(ownerDetails) && ownerDetails.sort((owner1, owner2) => owner1.name.localeCompare(owner2.name));
-  /*if (ownerDetails && ownerDetails.length > 0) {
+/*   if (ownerDetails && ownerDetails.length > 0) {
     ownerDetails = ownerDetails.sort(function (item1, item2) {
       return ownerDetails.indexOf(item2) - ownerDetails.indexOf(item1);
     });
     owner = ownerDetails[0];
-  }*/
+  } */
   // if (oldPropertydetails && oldPropertydetails.owners) {
   //   oldPropertydetails.owners =
   //     oldPropertydetails &&
@@ -256,37 +256,37 @@ class OwnerInfo extends Component {
       let owner = {};
       if (institution) {
         owner = {
-          PT_OWNERSHIP_INFO_NAME_INSTI: institution.name || "NA",
-          PT_OWNERSHIP_INFO_DESIGNATION: institution.designation || "NA",
-          PT_OWNERSHIP_INFO_TYPE_INSTI: institution.type || "NA",
-          PT_FORM3_OWNERSHIP_TYPE: getTranslatedLabel(`PROPERTYTAX_BILLING_SLAB_${ownershipCategory.split(".")[0]}`) || "NA",
-          PT_OWNERSHIP_INFO_NAME_OF_AUTH: institution.nameOfAuthorizedPerson || "NA",
-          PT_OWNERSHIP_INFO_TEL_NO: item.altContactNumber || "NA",
-          PT_MUTATION_AUTHORISED_EMAIL: item.emailId || "NA",
-          PT_OWNER_MOBILE_NO: item.mobileNumber || "NA",
-          PT_OWNERSHIP_INFO_CORR_ADDR: item.correspondenceAddress || "NA",
-        };
+          "PT_OWNERSHIP_INFO_NAME_INSTI": institution.name || "NA",
+          "PT_OWNERSHIP_INFO_DESIGNATION": institution.designation || "NA",
+          "PT_OWNERSHIP_INFO_TYPE_INSTI": institution.type || "NA",
+          "PT_FORM3_OWNERSHIP_TYPE": getTranslatedLabel(`PROPERTYTAX_BILLING_SLAB_${ownershipCategory.split(".")[0]}`) || "NA",
+          "PT_OWNERSHIP_INFO_NAME_OF_AUTH": institution.nameOfAuthorizedPerson || "NA",
+          "PT_OWNERSHIP_INFO_TEL_NO": item.altContactNumber || "NA",
+          "PT_MUTATION_AUTHORISED_EMAIL": item.emailId || "NA",
+          "PT_OWNER_MOBILE_NO": item.mobileNumber || "NA",
+          "PT_OWNERSHIP_INFO_CORR_ADDR": item.correspondenceAddress || "NA"
+        }
       } else {
         owner = {
-          PT_OWNER_NAME: item.name || "NA",
-          PT_GUARDIANS_NAME: item.fatherOrHusbandName || "NA",
-          PT_GENDER: item.gender || "NA",
-          PT_OWNERSHIP_INFO_DOB: convertEpochToDate(item.dob) || "NA",
-          PT_OWNER_MOBILE_NO: item.mobileNumber || "NA",
-          PT_MUTATION_AUTHORISED_EMAIL: item.emailId || "NA",
-          PT_MUTATION_TRANSFEROR_SPECIAL_CATEGORY: item.ownerType || "NA",
-          PT_OWNERSHIP_INFO_CORR_ADDR: item.permanentAddress || "NA",
+          "PT_OWNER_NAME": item.name || "NA",
+          "PT_GUARDIANS_NAME": item.fatherOrHusbandName || "NA",
+          "PT_GENDER": item.gender || "NA",
+          "PT_OWNERSHIP_INFO_DOB": convertEpochToDate(item.dob) || "NA",
+          "PT_OWNER_MOBILE_NO": item.mobileNumber || "NA",
+          "PT_MUTATION_AUTHORISED_EMAIL": item.emailId || "NA",
+          "PT_MUTATION_TRANSFEROR_SPECIAL_CATEGORY": item.ownerType || "NA",
+          "PT_OWNERSHIP_INFO_CORR_ADDR": item.permanentAddress || "NA",
         };
         const document = this.checkDocument(item);
         if (document) {
-          owner["PT_OWNERSHIP_DOCUMENT_TYPE"] = getTranslatedLabel("PT_" + document.documentType.toUpperCase(), localizationLabelsData);
-          owner["PT_OWNERSHIP_DOCUMENT_ID"] = document.documentUid;
+          owner['PT_OWNERSHIP_DOCUMENT_TYPE'] = getTranslatedLabel("PT_" + (document.documentType).toUpperCase(), localizationLabelsData);
+          owner['PT_OWNERSHIP_DOCUMENT_ID'] = document.documentUid;
         }
       }
       itemKey.push(owner);
     });
     return itemKey;
-  };
+  }
 
   getUniqueList = (list = []) => {
     let newList = [];
@@ -363,19 +363,19 @@ class OwnerInfo extends Component {
     } else {
       return false;
     }
-  };
+  }
 
   getOwnerInfo = (latestPropertyDetails, generalMDMSDataById) => {
     const isInstitution =
       latestPropertyDetails.ownershipCategory === "INSTITUTIONALPRIVATE" || latestPropertyDetails.ownershipCategory === "INSTITUTIONALGOVERNMENT";
     let { institution = {}, owners: ownerDetails = [], subOwnershipCategory, ownershipCategory } = latestPropertyDetails || {};
     let owner = [];
-    if (ownerDetails && ownerDetails.length > 0) {
+    /* if (ownerDetails && ownerDetails.length > 0) {
       ownerDetails = ownerDetails.sort(function (item1, item2) {
         return ownerDetails.indexOf(item2) - ownerDetails.indexOf(item1);
       });
       owner = ownerDetails[0];
-    }
+    } */
     return (
       ownerDetails &&
       ownerDetails.map((owner) => {
@@ -508,6 +508,7 @@ class OwnerInfo extends Component {
     } = this.props;
     let ownerInfo = [];
     let multipleOwner = false;
+    let mutationCheck = process.env.REACT_APP_NAME === "Citizen" ? false : true;
     const header = "PT_OWNERSHIP_INFO_SUB_HEADER";
     // let oldPropertydetails = "";
     // if (OldProperty && Object.keys(OldProperty).length > 0) {
@@ -517,20 +518,20 @@ class OwnerInfo extends Component {
     if (properties) {
       const { propertyDetails } = properties;
       if (propertyDetails && propertyDetails.length > 0) {
-        ownerInfo = this.getOwnerInfo(propertyDetails[0], generalMDMSDataById);
-        // if (ownerInfo.length > 1) {
-        //   multipleOwner = true;
-        // }
-        // let owner = [];
-        // if (ownerInfo && ownerInfo.length > 0) {
-        //   ownerInfo = ownerInfo.sort(function (item1, item2) {
-        //     return ownerInfo.indexOf(item2) - ownerInfo.indexOf(item1);
-        //   });
-        //   owner = ownerInfo[0];
-        // }
-        // ownerInfo = ownerInfo.sort();
-      }
+         ownerInfo = this.getOwnerInfo(propertyDetails[0], generalMDMSDataById);
+       /* if (ownerInfo.length > 1) {
+          multipleOwner = true;
+        }
+        let owner = [];
+        if (ownerInfo && ownerInfo.length > 0) {
+          ownerInfo = ownerInfo.sort(function(item1,item2){
+            return ownerInfo.indexOf(item2)-ownerInfo.indexOf(item1)
+          })
+          owner = ownerInfo[0];
+      } */
+      //ownerInfo = ownerInfo.sort();
     }
+  }
     return (
       <div>
         {ownerInfo && (
@@ -559,7 +560,7 @@ class OwnerInfo extends Component {
                   {(viewHistory || ownershipTransfer) && (
                     <div id="pt-header-button-container" className="header-button-container">
                       <ViewHistory viewHistory={viewHistory} openDialog={this.openDialog} />
-                      <TransferOwnership ownershipTransfer={ownershipTransfer} openDialog={this.openDialog} />
+                      {mutationCheck && <TransferOwnership ownershipTransfer={ownershipTransfer} openDialog={this.openDialog} />}
                     </div>
                   )}
                   {/* ------------------------- */}
@@ -587,8 +588,8 @@ class OwnerInfo extends Component {
                             items={ownerItem.items}
                             additionalKey={{
                               key: getTranslatedLabel("PT_OWNERSHIP_INFO_MOBILE_NO", localizationLabelsData),
-                              tenantId: properties.tenantId,
-                              propertyId: properties.propertyId,
+                              tenantId: properties && properties.tenantId,
+                              propertyId:  properties && properties.propertyId,
                               updateNumberConfig: updateNumberConfig,
                             }}
                             ownerInfo={ownerInfo}
@@ -625,8 +626,8 @@ class OwnerInfo extends Component {
           <PendingAmountDialog
             open={this.state.pendingAmountDue}
             amount={totalBillAmountDue}
-            tenantId={properties.tenantId}
-            consumerCode={properties.propertyId}
+            tenantId={properties && properties.tenantId}
+            consumerCode={properties && properties.propertyId}
             closeDialogue={() => this.closeDialogue("pendingAmountDue")}
           ></PendingAmountDialog>
         )}

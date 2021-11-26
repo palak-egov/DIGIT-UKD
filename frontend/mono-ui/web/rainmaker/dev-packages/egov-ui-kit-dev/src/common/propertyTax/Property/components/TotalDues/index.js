@@ -115,8 +115,8 @@ class TotalDues extends React.Component {
               type={"WARNING"}
               showWarning={this.state.showWarning}
               key={getTranslatedLabel("PT_OWNERSHIP_INFO_MOBILE_NO", localizationLabelsData)}
-              tenantId={properties.tenantId}
-              propertyId={properties.propertyId}
+              tenantId={properties && properties.tenantId}
+              propertyId={properties && properties.propertyId}
               updateNumberConfig={updateNumberConfig}
             ></UpdateMobile>
           </div>
