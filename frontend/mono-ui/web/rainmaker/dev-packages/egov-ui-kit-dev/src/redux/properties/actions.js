@@ -648,15 +648,7 @@ export const fetchReceipt = (fetchReceiptQueryObject) => {
     if (fetchReceiptQueryObject) {
       dispatch(fetchReceiptPending());
       try {
-        let businessService = '';
-        fetchReceiptQueryObject && Array.isArray(fetchReceiptQueryObject) && fetchReceiptQueryObject.map(query => {
-          if (query.key == "businessService") {
-            businessService = query.value;
-          }
-        })
-        fetchReceiptQueryObject = fetchReceiptQueryObject && Array.isArray(fetchReceiptQueryObject) && fetchReceiptQueryObject.filter(query => query.key != "businessService")
-       
-        const payloadProperty = await httpRequest(getPaymentSearchAPI(businessService), FETCHRECEIPT.GET.ACTION, fetchReceiptQueryObject);
+        const payloadProperty = await httpRequest(FETCHRECEIPT.GET.URL, FETCHRECEIPT.GET.ACTION, fetchReceiptQueryObject);
         dispatch(fetchReceiptComplete(payloadProperty));
       } catch (error) {
         dispatch(fetchReceiptError(error.message));
