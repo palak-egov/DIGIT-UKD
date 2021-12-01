@@ -265,7 +265,8 @@ public class TradeLicenseService {
         List<TradeLicense> licenceResponse = null;
         if(applicationType != null && (applicationType).toString().equals(TLConstants.APPLICATION_TYPE_RENEWAL ) &&
                 licence.getAction().equalsIgnoreCase(TLConstants.TL_ACTION_INITIATE) && licence.getStatus().equals(TLConstants.STATUS_APPROVED)){
-            List<TradeLicense> createResponse = create(tradeLicenseRequest, businessServicefromPath);
+            validateForNullUsers(licence);
+        	List<TradeLicense> createResponse = create(tradeLicenseRequest, businessServicefromPath);
             licenceResponse =  createResponse;
         }
         else{
@@ -336,7 +337,21 @@ public class TradeLicenseService {
         
     }
 
-    public List<TradeLicense> plainSearch(TradeLicenseSearchCriteria criteria, RequestInfo requestInfo){
+    private void validateForNullUsers(TradeLicense licence) {
+		List<OwnerInfo> owners = licence.getTradeLicenseDetail().getOwners();
+		List<OwnerInfo> modOwners = new ArrayList<OwnerInfo>();
+		for(OwnerInfo owner : owners){
+			if(owner.getId() != null && owner.getName() != null && owner.getMobileNumber() != null)
+				modOwners.add(owner);
+		}
+		licence.getTradeLicenseDetail().setOwners(modOwners);
+	}
+
+
+
+
+
+	public List<TradeLicense> plainSearch(TradeLicenseSearchCriteria criteria, RequestInfo requestInfo){
         List<TradeLicense> licenses;
         List<String> ids = repository.fetchTradeLicenseIds(criteria);
         if(ids.isEmpty())
