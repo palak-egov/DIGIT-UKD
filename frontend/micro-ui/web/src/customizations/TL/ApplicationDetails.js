@@ -97,7 +97,7 @@ const ApplicationDetails = () => {
       const newResponse = await window.Digit.PaymentService.generatePdf(
         tenantId,
         { Payments: [paymentsHistory.Payments[0]] },
-        "tradelicense-receipt"
+        "tl-receipt"
       );
       const fileStore = await window.Digit.PaymentService.printReciept(tenantId, {
         fileStoreIds: newResponse.filestoreIds[0],
