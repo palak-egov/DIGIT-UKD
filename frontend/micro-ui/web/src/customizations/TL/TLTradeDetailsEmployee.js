@@ -417,7 +417,7 @@ const OwnerForm1 = (_props) => {
             <Controller
               name="occupancyType"
               rules={{ required: t("REQUIRED_FIELD") }}
-              defaultValue={tradedetail?.occupancyType}
+              defaultValue={tradedetail?.additionalDetail?.occupancyType}
               control={control}
               render={(props) => (
                 <Dropdown
@@ -476,8 +476,8 @@ const OwnerForm1 = (_props) => {
                 render={(props) => (
                   <DatePicker
                     date={props.value}
-                    // date={CommencementDate} 
-                    name="CommencementDate"
+                    // date={commencementDate} 
+                    name="commencementDate"
                     onChange={props.onChange}
                     disabled={isRenewal}
                   />

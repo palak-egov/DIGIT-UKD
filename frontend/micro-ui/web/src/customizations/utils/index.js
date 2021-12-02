@@ -31,6 +31,7 @@ export const useLocalities = (tenant, boundaryType = "revenue", config, t) => {
   const { isLoading, data: store } = window.Digit.Services.useStore({ stateCode, moduleCode, language });
  */
   // console.log(“find boundary type here”,boundaryType)
+  // window.Digit.Services.useStore({ stateCode, moduleCode, language });  
   return useQuery(["BOUNDARY_DATA", tenant, boundaryType], () => getLocalities[boundaryType.toLowerCase()](tenant), {
     select: (data) => {
       return window.Digit.LocalityService.get(data).map((key) => {
@@ -915,7 +916,7 @@ export const customiseCreateFormData = (formData) => {
         city: formData?.address?.city?.code,
         doorNo: formData?.address?.doorNo,
         street: formData?.address?.street,
-        building: formData?.address?.buildingName,
+        buildingName: formData?.address?.buildingName,
         locality: { ...formData?.address?.locality },
         pincode: formData?.address?.pincode,
       },
@@ -978,7 +979,7 @@ export const customiseCreateFormData = (formData) => {
     action: "INITIATE",
 
     commencementDate: convertDateToEpoch(
-      formData?.TradeDetails?.CommencementDate
+      formData?.tradedetils?.[0]?.commencementDate
     ),
     tenantId:
       formData?.address?.city?.code ||
@@ -1062,7 +1063,7 @@ export const formatFormDataToCreateTLApiObject = (formData) => {
     workflowCode: "NewTL",
     action: "INITIATE",
     commencementDate: convertDateToEpoch(
-      formData?.TradeDetails?.CommencementDate
+      formData?.TradeDetails?.commencementDate
     ),
     tenantId:
       formData?.address?.city?.code ||

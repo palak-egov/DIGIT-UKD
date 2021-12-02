@@ -45,7 +45,7 @@ const SelectStreet = ({ t, config, onSelect, userType, formData, formState, setE
       {
         label: "PT_PROPERTY_PRASAD_ELECTICITY_NO",
         type: "text",
-        name: "electricityno",
+        name: "electricityConnectionNo",
         validation: {
           pattern: "[A-Za-z0-9#,/ -]{1,63}",
           // maxlength: 256,
