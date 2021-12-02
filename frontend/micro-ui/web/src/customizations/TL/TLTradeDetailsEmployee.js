@@ -476,8 +476,8 @@ const OwnerForm1 = (_props) => {
                 render={(props) => (
                   <DatePicker
                     date={props.value}
-                    // date={CommencementDate} 
-                    name="CommencementDate"
+                    // date={commencementDate} 
+                    name="commencementDate"
                     onChange={props.onChange}
                     disabled={isRenewal}
                   />

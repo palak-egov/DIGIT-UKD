@@ -203,7 +203,7 @@ const CheckPage = ({ onSubmit, value }) => {
           />
           <Row
             label={t("TL_NEW_TRADE_DETAILS_TRADE_COMM_DATE_LABEL")}
-            text={t(getdate(TradeDetails?.CommencementDate))}
+            text={t(getdate(TradeDetails?.commencementDate))}
             actionButton={
               <ActionButton jumpTo={`${routeLink}/commencement-date`} />
             }

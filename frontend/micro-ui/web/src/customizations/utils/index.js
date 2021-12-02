@@ -979,7 +979,7 @@ export const customiseCreateFormData = (formData) => {
     action: "INITIATE",
 
     commencementDate: convertDateToEpoch(
-      formData?.tradedetils?.CommencementDate
+      formData?.tradedetils?.[0]?.commencementDate
     ),
     tenantId:
       formData?.address?.city?.code ||
@@ -1063,7 +1063,7 @@ export const formatFormDataToCreateTLApiObject = (formData) => {
     workflowCode: "NewTL",
     action: "INITIATE",
     commencementDate: convertDateToEpoch(
-      formData?.TradeDetails?.CommencementDate
+      formData?.TradeDetails?.commencementDate
     ),
     tenantId:
       formData?.address?.city?.code ||
