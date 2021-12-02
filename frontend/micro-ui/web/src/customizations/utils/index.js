@@ -979,7 +979,7 @@ export const customiseCreateFormData = (formData) => {
     action: "INITIATE",
 
     commencementDate: convertDateToEpoch(
-      formData?.TradeDetails?.CommencementDate
+      formData?.tradedetils?.CommencementDate
     ),
     tenantId:
       formData?.address?.city?.code ||
