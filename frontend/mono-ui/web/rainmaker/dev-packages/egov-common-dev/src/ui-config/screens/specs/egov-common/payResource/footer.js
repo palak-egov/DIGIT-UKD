@@ -230,7 +230,7 @@ const getSelectedTabIndex = paymentType => {
     case "OFFLINE_RTGS":
       return {
         selectedPaymentMode: "offline_rtgs",
-        selectedTabIndex: 3,
+        selectedTabIndex: 2,
         fieldsToValidate: ["payeeDetails", "onlineDetails"],
       };
     case "CHEQUE":
@@ -239,32 +239,18 @@ const getSelectedTabIndex = paymentType => {
         selectedTabIndex: 1,
         fieldsToValidate: ["payeeDetails", "chequeDetails"],
       };
-
-    case "CARD":
-      return {
-        selectedPaymentMode: "card",
-        selectedTabIndex: 5,
-        fieldsToValidate: ["payeeDetails", "cardDetails"],
-      };
-    case "OFFLINE_RTGS":
-      return {
-        selectedPaymentMode: "offline_rtgs",
-        selectedTabIndex: 3,
-        fieldsToValidate: ["payeeDetails", "onlineDetails"],
-      };
-    // case "POSTAL_ORDER":
-    //   return {
-    //     selectedPaymentMode: "postal_order",
-    //     selectedTabIndex: 5,
-    //     fieldsToValidate: ["payeeDetails", "poDetails"],
-    //   };
     case "DD":
       return {
         selectedPaymentMode: "demandDraft",
-        selectedTabIndex: 4,
+        selectedTabIndex: 5,
         fieldsToValidate: ["payeeDetails", "demandDraftDetails"],
       };
-
+    // case "CARD":
+    //   return {
+    //     selectedPaymentMode: "card",
+    //     selectedTabIndex: 6,
+    //     fieldsToValidate: ["payeeDetails", "cardDetails"],
+    //   };
     default:
       return {
         selectedPaymentMode: "cash",
