@@ -372,10 +372,10 @@ export const cardDetails = getCommonContainer({
   })
 });
 
-export const card = getCommonContainer({
-  payeeDetails,
-  cardDetails
-});
+// export const card = getCommonContainer({
+//   payeeDetails,
+//   cardDetails
+// });
 
 export const cash = getCommonContainer({
   payeeDetails
