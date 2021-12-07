@@ -131,9 +131,51 @@ class MultiItem extends React.Component {
     const objectJsonPath = "components.div.children.formwizardFirstStep.children.paymentDetails.children.cardContent.children.capturePaymentDetails.children.cardContent.children.tabSection.props.tabs";
     const instrumentTypes = get(state.screenConfiguration.screenConfig["pay"], objectJsonPath);
 
-    instrumentTypes.forEach(item => {
-      const tabContent = get(item, "tabContent");
-      const children = Object.values(tabContent)[0].children;
+    const keyToIndexMapping = [	
+      {	
+        index: 0,	
+        key: "cash"	
+      },	
+      {	
+        index: 1,	
+        key: "cheque"	
+      },	
+      	
+      {	
+        index: 2,	
+        key: "offline_neft"	
+      },	
+      {	
+        index: 3,	
+        key: "offline_rtgs"	
+      },	
+      {	
+        index: 4,	
+        key: "pos"	
+      },	
+      {	
+        index: 5,	
+        key: "demandDraft"	
+      },	
+      {	
+        index: 6,	
+        key: "card"	
+      }	
+    ];	
+    keyToIndexMapping.forEach(item => {	
+      const objectJsonPath = `components.div.children.formwizardFirstStep.children.paymentDetails.children.cardContent.children.capturePaymentDetails.children.cardContent.children.tabSection.props.tabs[${	
+        item.index	
+      }].tabContent[${item.key}].children`;	
+      const children = get(	
+        state.screenConfiguration.screenConfig["pay"],	
+        objectJsonPath,	
+        {}	
+      );
+
+
+    // instrumentTypes.forEach(item => {
+    //   const tabContent = get(item, "tabContent");
+    //   const children = Object.values(tabContent)[0].children;
       this.resetAllFields(children, dispatch, state);
     })
   };
@@ -149,6 +191,31 @@ class MultiItem extends React.Component {
     this.resetFields(dispatch, state);
     this.setInstrumentType(get(tabs[tabIndex], "code"), dispatch);
     this.setPayernameAndMobile(tabIndex);
+    switch (tabIndex) {
+      case 0:
+        this.setInstrumentType("Cash", dispatch);
+        break;
+      case 1:
+        this.setInstrumentType("Cheque", dispatch);
+        break;
+
+      case 2:
+        this.setInstrumentType("OFFLINE_RTGS", dispatch);
+        break;
+      case 3:
+        this.setInstrumentType("POS", dispatch);
+        break;
+
+      case 4:
+        this.setInstrumentType("DD", dispatch);
+        break;
+      case 5:
+        this.setInstrumentType("Card", dispatch);
+        break;
+      default:
+        this.setInstrumentType("Cash", dispatch);
+        break;
+    }
   };
 
   onTabClick = tabIndex => {

@@ -176,6 +176,7 @@ var {
             inpData,
             requestinfo
           );
+          console.log(echallanDtls);
         } catch (ex) {
           console.log("error",ex.stack);
           if (ex.response && ex.response.data) console.log(ex.response.data);
@@ -195,11 +196,12 @@ var {
           sortedObj.sort(compareAmount);
           echallansBill.Bills[0].billDetails[0].billAccountDetails =  sortedObj;
           challanObj = echallansBill.Bills;
-            //console.log("final obj--",challanObj);
+            console.log("final obj--",challanObj);
             var finalObj = {Bill :challanObj};
             tenantId = tenantId.split('.')[0];
             var pdfResponse;
             var pdfkey = config.pdf.mcollect_bill_template;
+            console.log("Pdf Key: ",pdfkey);
             try {
               pdfResponse = await create_pdf(
                 tenantId,
@@ -208,7 +210,7 @@ var {
                 requestinfo
               );
             } catch (ex) {
-              
+              console.log(ex);
               if (ex.response && ex.response.data) console.log(ex.response.data);
               return renderError(
                 res,

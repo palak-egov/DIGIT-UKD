@@ -8,40 +8,40 @@
 # -
 # - 
 config:
-  - name: "builds/utilities/egov-weekly-impact-notifier"
+  - name: "builds/digit-ukd/utilities/egov-weekly-impact-notifier"
     build:
       - work-dir: "egov-weekly-impact-notifier"
         image-name: "egov-weekly-impact-notifier"
         dockerfile: "build/maven/Dockerfile"
         
-  - name: "builds/utilities/zuul-kubernetes-discovery"
+  - name: "builds/digit-ukd/utilities/zuul-kubernetes-discovery"
     build:
       - work-dir: "zuul-kubernetes-discovery"
         image-name: "zuul-kubernetes-discovery"  
 
-  - name: "builds/utilities/egov-api-cron-job"
+  - name: "builds/digit-ukd/utilities/egov-api-cron-job"
     build:
       - work-dir: "egov-api-cron-job"
         image-name: "egov-api-cron-job"
         dockerfile: "build/python/Dockerfile"
 
-  - name: "builds/utilities/kuberhealthy-checks"
+  - name: "builds/digit-ukd/utilities/kuberhealthy-checks"
     build:
       - work-dir: "kuberhealthy-checks"
         image-name: "kuberhealthy-checks"
 
-  - name: "builds/utilities/egov-pdf"
+  - name: "builds/digit-ukd/utilities/egov-pdf"
     build:
       - work-dir: "egov-pdf"
         image-name: "egov-pdf"  
 
-  - name: "builds/utilities/epass-chatbot"
+  - name: "builds/digit-ukd/utilities/epass-chatbot"
     build:
       - work-dir: "epass-chatbot"
         image-name: "epass-chatbot"
         dockerfile: "build/maven/Dockerfile"
 
-  - name: "builds/utilities/case-management"
+  - name: "builds/digit-ukd/utilities/case-management"
     build:
       - work-dir: "case-management"
         image-name: "case-management"
@@ -49,25 +49,25 @@ config:
       - work-dir: "case-management/src/main/resources/db"
         image-name: "case-management-db"
 
-  - name: "builds/utilities/data-upload"
+  - name: "builds/digit-ukd/utilities/data-upload"
     build:
       - work-dir: "data-upload"
         image-name: "data-upload"
         dockerfile: "build/maven/Dockerfile"
 
-  - name: "builds/utilities/egov-custom-consumer"
+  - name: "builds/digit-ukd/utilities/egov-custom-consumer"
     build:
       - work-dir: "egov-custom-consumer"
         image-name: "egov-custom-consumer"
         dockerfile: "build/maven/Dockerfile"
 
 
-  - name: "builds/utilities/certificate_signer"
+  - name: "builds/digit-ukd/utilities/certificate_signer"
     build:
       - work-dir: "certificate_signer"
         image-name: "certificate_signer"
 
-  - name: "builds/utilities/certificate-verification"
+  - name: "builds/digit-ukd/utilities/certificate-verification"
     build:
       - work-dir: "certificate-verification"
         image-name: "certificate-verification"
