@@ -9,13 +9,14 @@ import { getPattern } from "../utils";
 const createOwnerDetails = () => ({
   name: "",
   mobileNumber: "",
-  // fatherOrHusbandName: "",
+  fatherOrHusbandName: "",
   emailId: "",
   permanentAddress: "",
-  // relationship: "",
+  relationship: "",
+  relationType:"",
   ownerType: "",
   gender: "",
-  // correspondenceAddress: "",
+  correspondenceAddress: "",
   key: Date.now(),
 });
 
@@ -244,6 +245,8 @@ const OwnerForm = (_props) => {
 
   const errorStyle = { width: "70%", marginLeft: "30%", fontSize: "12px", marginTop: "-21px" };
   let isMulitpleOwners = false;
+  const tradedetils1 = formData?.tradedetils1;
+  //console.log("prasad tradedetils1", tradedetils1)
   if (formData?.ownershipCategory?.code === "INDIVIDUAL.MULTIPLEOWNERS") isMulitpleOwners = true;
   return (
     <React.Fragment>
@@ -379,8 +382,10 @@ const OwnerForm = (_props) => {
             <Controller
               control={control}
               name={"relationship"}
-              defaultValue={owner?.relationship}
-              rules={{ required: "RelationShip Required" }}
+              //defaultValue={owner?.relationship}
+               defaultValue= {{code: owner?.relationship, 
+                i18nKey: owner?.relationship &&  `TL_${owner?.relationship}`}}
+               rules={{ required: "RelationShip Required" }}
               render={(props) => (
                 <Dropdown
                   className="form-field"
@@ -461,7 +466,9 @@ const OwnerForm = (_props) => {
               control={control}
               name={"ownerType"}
               defaultValue={owner?.ownerType}
-              // rules={}
+              /* defaultValue= {{code: owner?.ownerType,
+                i18nKey: owner?.ownerType &&  `TL_${owner?.ownerType}`}} 
+    */           // rules={}
               render={(props) => (
                 <Dropdown
                   className="form-field"

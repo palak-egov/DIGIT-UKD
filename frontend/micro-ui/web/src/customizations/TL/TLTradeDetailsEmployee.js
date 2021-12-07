@@ -297,6 +297,9 @@ const OwnerForm1 = (_props) => {
   }, [errors]);
 
   const errorStyle = { width: "70%", marginLeft: "30%", fontSize: "12px", marginTop: "-21px" };
+  const tradedetils1 = formData?.tradedetils1;
+  //console.log("prasad reddy tradedetils1", tradedetils1)
+  
   return (
     <React.Fragment>
       <div style={{ marginBottom: "16px" }}>
@@ -416,8 +419,9 @@ const OwnerForm1 = (_props) => {
             <CardLabel className="card-label-smaller">{`${t("TL_NEW_TRADE_DETAILS_OCCUPANCY_TYPE_LABEL")} * :`}</CardLabel>
             <Controller
               name="occupancyType"
-              rules={{ required: t("REQUIRED_FIELD") }}
-              defaultValue={tradedetail?.additionalDetail?.occupancyType}
+              rules={{ required: t("REQUIRED_FIELD") }} 
+              defaultValue= {{code: tradedetils1?.tradeLicenseDetail?.additionalDetail?.occupancyType,
+                  i18nKey: tradedetils1?.tradeLicenseDetail?.additionalDetail?.occupancyType &&  `TL_${tradedetils1?.tradeLicenseDetail?.additionalDetail?.occupancyType}`}} 
               control={control}
               render={(props) => (
                 <Dropdown
