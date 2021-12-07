@@ -273,6 +273,8 @@ const TradeUnitForm = (_props) => {
   );
 
   useEffect(() => {
+    //let seletedUnitType = formData?.["tradedetils"]?.[0]?.structureSubType?.code
+   // let unitRate = billingSlabData && billingSlabData.filter()
     console.log(
       billingSlabData,
       "tradedetils",
@@ -346,6 +348,20 @@ const TradeUnitForm = (_props) => {
     fontSize: "12px",
     marginTop: "-21px",
   };
+
+  let seletedUnitType = formData?.["tradeUnits"]?.[0]?.tradeSubType?.code
+  //console.log("prasad formData", formData);
+ // TradeTypeMenu = TradeTypeMenu.filter((e) => e.code?.split(".")[0] === mainOwnerShipType?.code);
+ //console.log("prasad seletedUnitType", seletedUnitType);
+
+ //const result = words.filter(word => word.length > 6);
+
+ 
+ let unitRate = billingSlabData && billingSlabData.filter(e =>e.tradeType=== seletedUnitType && seletedUnitType)
+ 
+ // console.log("prasad billingSlabData", billingSlabData);
+  // console.log("prasad unitRate", unitRate);
+
   return (
     <React.Fragment>
       <div style={{ marginBottom: "16px" }}>
@@ -599,6 +615,34 @@ const TradeUnitForm = (_props) => {
                     onBlur={props.onBlur}
                     style={{ background: "#FAFAFA" }}
                   />
+                )}
+              />
+            </div>
+          </LabelFieldPair>
+          <LabelFieldPair>
+             <CardLabel className="card-label-smaller">{`${t(
+              "TL_UNITRATE"
+            )}:`}</CardLabel>
+            <div className="field">
+              <Controller
+                control={control}
+                name={"uomValue"}
+                defaultValue={unit?.uomValue}
+                rules={
+                  unit?.tradeSubType?.uom && {
+                    required: t("REQUIRED_FIELD"),
+                    validate: {
+                      pattern: (val) =>
+                        /^(0)*[1-9][0-9]{0,5}$/.test(val)
+                          ? true
+                          : t("ERR_DEFAULT_INPUT_FIELD_MSG"),
+                    },
+                  }
+                }
+                render={(props) => (
+
+                  <CardLabel className="card-label-smaller">{unitRate?.[0]?.rate}</CardLabel>
+
                 )}
               />
             </div>
