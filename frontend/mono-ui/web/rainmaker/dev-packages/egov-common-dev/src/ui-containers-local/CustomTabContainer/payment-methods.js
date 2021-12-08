@@ -595,12 +595,12 @@ export const paymentMethods = [
     tabIcon: "Schedule",
     tabContent: { demandDraft },
   },
-  {
-    code: "CARD",
-    tabButton: "COMMON_CREDIT_DEBIT_CARD",
-    tabIcon: "Schedule",
-    tabContent: { card },
-  },
+  // {
+  //   code: "CARD",
+  //   tabButton: "COMMON_CREDIT_DEBIT_CARD",
+  //   tabIcon: "Schedule",
+  //   tabContent: { card },
+  // },
   // {
   //   code: "OFFLINE_NEFT",
   //   tabButton: "COMMON_NEFT",
