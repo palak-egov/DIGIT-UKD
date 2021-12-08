@@ -599,7 +599,7 @@ const screenConfig = {
           transferorInstitutionSummary: transferorInstitutionSummary,
           transfereeSummary: transfereeSummary,
           transfereeInstitutionSummary: transfereeInstitutionSummary,
-          mutationSummary: mutationSummary,
+          // mutationSummary: mutationSummary,
           registrationSummary: registrationSummary,
           documentsSummary: documentsSummary
         })
