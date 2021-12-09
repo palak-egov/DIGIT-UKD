@@ -293,24 +293,24 @@ const OwnerForm = (_props) => {
               />
             </div>
           </LabelFieldPair>
-          
+          <CardLabelError style={errorStyle}>{localFormState.touched.name ? errors?.name?.message : ""}</CardLabelError>
           <LabelFieldPair>
-            <CardLabel className="card-label-smaller">{`${t("TL_OWNER_PANCARD_LABEL")} * :`}</CardLabel>
+            <CardLabel className="card-label-smaller">{`${t("TL_OWNER_PANCARD_LABEL")}:`}</CardLabel>
             <div className="field">
               <Controller
                 control={control}
                 name={"pan"}
                 defaultValue={owner?.pan}
-                rules={{ required: t("REQUIRED_FIELD"), validate: { pattern: (val) => (/^[A-Za-z]{5}([0-9]){4}[A-Za-z]{1} *$/.test(val) ? true : t("TL_PANCARD_ERROR_MESSAGE")) } }}
+                rules={{validate: { pattern: (val) => (/^[A-Za-z]{5}([0-9]){4}[A-Za-z]{1} *$/.test(val) ? true : t("TL_PANCARD_ERROR_MESSAGE")) } }}
                 render={(props) => (
                   <TextInput
                     value={props.value}
                     autoFocus={focusIndex.index === owner?.key && focusIndex.type === "pan"}
                     errorStyle={(localFormState.touched.pan && errors?.pan?.message) ? true : false}
                     onChange={(e) => {
-                     // if(e.target.value != owner?.pan && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
-                      props.onChange(e.target.value);
-                      // props.onChange(e);
+                      if(e.target.value != owner?.pan && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
+                     // props.onChange(e.target.value);
+                       props.onChange(e);
                       setFocusIndex({ index: owner.key, type: "pan" });
                     }}
                     onBlur={(e) => {
@@ -323,7 +323,7 @@ const OwnerForm = (_props) => {
               />
             </div>
           </LabelFieldPair>
-          <CardLabelError style={errorStyle}>{localFormState.touched.name ? errors?.name?.message : ""}</CardLabelError>
+          <CardLabelError style={errorStyle}>{localFormState.touched.pan ? errors?.pan?.message : ""}</CardLabelError>
           <LabelFieldPair>
             <CardLabel className="card-label-smaller">{`${t("TL_OWNER_S_MOBILE_NUM_LABEL")} * :`}</CardLabel>
             <div className="field">
