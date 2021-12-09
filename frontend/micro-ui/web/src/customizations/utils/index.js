@@ -930,6 +930,7 @@ export const customiseCreateFormData = (formData) => {
         occupancyType: formData?.tradedetils?.[0]?.occupancyType?.code,
         gstNo: formData?.tradedetils?.[0]?.gstNo,
         electricityConnectionNo: formData?.address?.electricityConnectionNo,
+        relationType: formData?.owners?.[0]?.relationType?.code &&  `RELATIONTYPE.${formData?.owners?.[0]?.relationType?.code}`, //to be validated from formdata?.owner
       },
       operationalArea: formData?.tradedetils?.[0]?.operationalArea, // to be added
       noOfEmployees: formData?.tradedetils?.[0]?.noOfEmployees, // to be added
@@ -945,11 +946,12 @@ export const customiseCreateFormData = (formData) => {
         name: e.name,
         gender: e?.gender?.code,
         mobileNumber: e?.mobileNumber,
-        emailId: e?.email,
+        emailId: e?.emailId,
         altContactNumber: null,
         pan: e?.pan, // to be added
+        ownerType: e?.ownerType?.code,
         aadhaarNumber: null,
-        permanentAddress: e.correspondenceAddress, // to be validated
+        permanentAddress: e.permanentAddress, // to be validated
         permanentCity: null,
         permanentPinCode: null,
         correspondenceAddress: null,

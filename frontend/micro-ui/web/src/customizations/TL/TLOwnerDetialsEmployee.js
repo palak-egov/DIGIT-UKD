@@ -9,13 +9,14 @@ import { getPattern } from "../utils";
 const createOwnerDetails = () => ({
   name: "",
   mobileNumber: "",
-  // fatherOrHusbandName: "",
+  fatherOrHusbandName: "",
   emailId: "",
   permanentAddress: "",
-  // relationship: "",
+  relationship: "",
+  relationType:"",
   ownerType: "",
   gender: "",
-  // correspondenceAddress: "",
+  correspondenceAddress: "",
   key: Date.now(),
 });
 
@@ -244,6 +245,8 @@ const OwnerForm = (_props) => {
 
   const errorStyle = { width: "70%", marginLeft: "30%", fontSize: "12px", marginTop: "-21px" };
   let isMulitpleOwners = false;
+  const tradedetils1 = formData?.tradedetils1;
+  //console.log("prasad tradedetils1", tradedetils1)
   if (formData?.ownershipCategory?.code === "INDIVIDUAL.MULTIPLEOWNERS") isMulitpleOwners = true;
   return (
     <React.Fragment>
@@ -290,24 +293,24 @@ const OwnerForm = (_props) => {
               />
             </div>
           </LabelFieldPair>
-          
+          <CardLabelError style={errorStyle}>{localFormState.touched.name ? errors?.name?.message : ""}</CardLabelError>
           <LabelFieldPair>
-            <CardLabel className="card-label-smaller">{`${t("TL_OWNER_PANCARD_LABEL")} * :`}</CardLabel>
+            <CardLabel className="card-label-smaller">{`${t("TL_OWNER_PANCARD_LABEL")}:`}</CardLabel>
             <div className="field">
               <Controller
                 control={control}
                 name={"pan"}
                 defaultValue={owner?.pan}
-                rules={{ required: t("REQUIRED_FIELD"), validate: { pattern: (val) => (/^[A-Za-z]{5}([0-9]){4}[A-Za-z]{1} *$/.test(val) ? true : t("TL_PANCARD_ERROR_MESSAGE")) } }}
+                rules={{validate: { pattern: (val) => (/^[A-Za-z]{5}([0-9]){4}[A-Za-z]{1} *$/.test(val) ? true : t("TL_PANCARD_ERROR_MESSAGE")) } }}
                 render={(props) => (
                   <TextInput
                     value={props.value}
                     autoFocus={focusIndex.index === owner?.key && focusIndex.type === "pan"}
                     errorStyle={(localFormState.touched.pan && errors?.pan?.message) ? true : false}
                     onChange={(e) => {
-                     // if(e.target.value != owner?.pan && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
-                      props.onChange(e.target.value);
-                      // props.onChange(e);
+                      if(e.target.value != owner?.pan && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
+                     // props.onChange(e.target.value);
+                       props.onChange(e);
                       setFocusIndex({ index: owner.key, type: "pan" });
                     }}
                     onBlur={(e) => {
@@ -320,7 +323,7 @@ const OwnerForm = (_props) => {
               />
             </div>
           </LabelFieldPair>
-          <CardLabelError style={errorStyle}>{localFormState.touched.name ? errors?.name?.message : ""}</CardLabelError>
+          <CardLabelError style={errorStyle}>{localFormState.touched.pan ? errors?.pan?.message : ""}</CardLabelError>
           <LabelFieldPair>
             <CardLabel className="card-label-smaller">{`${t("TL_OWNER_S_MOBILE_NUM_LABEL")} * :`}</CardLabel>
             <div className="field">
@@ -379,8 +382,10 @@ const OwnerForm = (_props) => {
             <Controller
               control={control}
               name={"relationship"}
-              defaultValue={owner?.relationship}
-              rules={{ required: "RelationShip Required" }}
+              //defaultValue={owner?.relationship}
+               defaultValue= {{code: owner?.relationship, 
+                i18nKey: owner?.relationship &&  `TL_${owner?.relationship}`}}
+               rules={{ required: "RelationShip Required" }}
               render={(props) => (
                 <Dropdown
                   className="form-field"
@@ -461,7 +466,9 @@ const OwnerForm = (_props) => {
               control={control}
               name={"ownerType"}
               defaultValue={owner?.ownerType}
-              // rules={}
+              /* defaultValue= {{code: owner?.ownerType,
+                i18nKey: owner?.ownerType &&  `TL_${owner?.ownerType}`}} 
+    */           // rules={}
               render={(props) => (
                 <Dropdown
                   className="form-field"

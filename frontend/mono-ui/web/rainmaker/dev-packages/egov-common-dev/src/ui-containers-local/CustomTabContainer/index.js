@@ -157,10 +157,10 @@ class MultiItem extends React.Component {
         index: 5,	
         key: "demandDraft"	
       },	
-      {	
-        index: 6,	
-        key: "card"	
-      }	
+      // {	
+      //   index: 6,	
+      //   key: "card"	
+      // }	
     ];	
     keyToIndexMapping.forEach(item => {	
       const objectJsonPath = `components.div.children.formwizardFirstStep.children.paymentDetails.children.cardContent.children.capturePaymentDetails.children.cardContent.children.tabSection.props.tabs[${	
@@ -209,9 +209,9 @@ class MultiItem extends React.Component {
       case 4:
         this.setInstrumentType("DD", dispatch);
         break;
-      case 5:
-        this.setInstrumentType("Card", dispatch);
-        break;
+      // case 5:
+      //   this.setInstrumentType("Card", dispatch);
+      //   break;
       default:
         this.setInstrumentType("Cash", dispatch);
         break;
