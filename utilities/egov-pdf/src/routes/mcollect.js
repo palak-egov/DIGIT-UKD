@@ -106,7 +106,7 @@ var {
             challanObj.serviceType= challanObj.businessService.split(".")[0];
             console.log("final obj--",challanObj);
             var finalObj = {Challan :challanObj};
-            tenantId = tenantId.split('.')[0];
+            tenantId = tenantId;
             var pdfResponse;
             var pdfkey = config.pdf.mcollect_challan_template;
             try {
@@ -118,7 +118,7 @@ var {
               );
             } catch (ex) {
              // 
-             if (ex.response && ex.response.data) console.log(ex.response.data);
+             if (ex.response && ex.response.data) console.log(ex);
               return renderError(
                 res,
                 "Failed to generate PDF for mcollect-challan receipt",
