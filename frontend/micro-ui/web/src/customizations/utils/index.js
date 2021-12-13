@@ -940,6 +940,7 @@ export const customiseCreateFormData = (formData) => {
         uomValue: e.unit,
         rate: e.rate, //needs to be added // billing slab service
       })),
+      institution: formData?.owners?.[0]?.designation ?  {designation: formData?.owners?.[0]?.designation}:null,        
       subOwnerShipCategory: formData?.ownershipCategory?.code,
       owners: formData?.owners?.map((e) => ({
         userName: e.name, //to be checked
@@ -947,7 +948,7 @@ export const customiseCreateFormData = (formData) => {
         gender: e?.gender?.code,
         mobileNumber: e?.mobileNumber,
         emailId: e?.emailId,
-        altContactNumber: null,
+        altContactNumber: e?.altContactNumber,
         pan: e?.pan, // to be added
         ownerType: e?.ownerType?.code,
         aadhaarNumber: null,
@@ -970,7 +971,7 @@ export const customiseCreateFormData = (formData) => {
         tenantId:
           formData?.address?.city?.code ||
           window.Digit.ULBService.getCurrentTenantId(),
-        dob: convertDateToEpoch(e.DOB),
+        dob: convertDateToEpoch(e.dob),
         relationship: e?.relationship?.code,
       })),
       applicationDocuments: null,

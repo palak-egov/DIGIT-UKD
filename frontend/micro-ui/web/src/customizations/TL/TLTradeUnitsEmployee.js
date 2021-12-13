@@ -267,8 +267,8 @@ const TradeUnitForm = (_props) => {
   const formValue = watch();
   const { errors } = localFormState;
 
-  const isIndividualTypeOwner = useMemo(
-    () => formData?.ownershipCategory?.code.includes("INDIVIDUAL"),
+   const isIndividualTypeOwner = useMemo(
+    () => formData?.ownershipCategory?.code?.includes("INDIVIDUAL"),
     [formData?.ownershipCategory?.code]
   );
 
