@@ -27,6 +27,7 @@ module.exports = function (app) {
     "/tl-calculator",
     "/egov-user-event",
     "/echallan-services",
-    "/inbox"
+    "/inbox",
+    "/egov-pdf"
   ].forEach((location) => app.use(location, createProxy));
 };
