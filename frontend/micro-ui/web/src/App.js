@@ -39,6 +39,7 @@ import {
 
 import { customizations } from "./customizations";
 import { useLocalities } from "./customizations/utils";
+import { receipt_download } from "./customizations/utils";
 
 initLibraries();
 
@@ -95,6 +96,7 @@ function App() {
     return <h1>stateCode is not defined</h1>;
   }
 window.Digit.Hooks.useBoundaryLocalities = useLocalities;
+window.Digit.MCollectService.receipt_download = receipt_download;
 window.Digit.LocalizationService.getLocale({
   modules: [`rainmaker-${window.Digit.ULBService.getCurrentTenantId()}`],
    locale: window.Digit.StoreData.getCurrentLanguage(),
