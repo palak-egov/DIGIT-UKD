@@ -393,7 +393,7 @@ export default class UpdateMobileDialog extends React.Component {
     }
   };
   setDocFileDetails = (ind, file, fileStoreId) => {
-    ind = this.state.clickedElement != "IDENTITYPROOF" ? 0 : 1;
+    ind = this.state.clickedElement === "IDENTITYPROOF" ? 0 : 1;
     const documents = this.state.documents;
     documents[ind].fileName = file.name;
     documents[ind].fileStoreId = fileStoreId;
