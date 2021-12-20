@@ -23,6 +23,7 @@ const createUnitDetails = () => ({
   uom: "",
   uomValue: "",
   key: Date.now(),
+  unitRate:"",
 });
 
 const TLTradeUnitsEmployee = ({
@@ -155,13 +156,27 @@ const TLTradeUnitsEmployee = ({
     return <React.Fragment />;
   }
 
+  let tlUnits = units;
+   let seletedUnitType = formData && formData["tradeUnits"] &&  formData["tradeUnits"].map((e) => {
+    return e?.tradeSubType?.code;
+  });      
+
+  const lastIndex = formData && formData["tradeUnits"] && formData["tradeUnits"].length;
+  let unitRate = billingSlabData && billingSlabData.filter(e =>e.tradeType=== seletedUnitType?.[lastIndex-1])
+
+  if(tlUnits && lastIndex)
+  { 
+    tlUnits[lastIndex-1].unitRate = unitRate?.[0]?.rate
+  }
+
   return (
     <React.Fragment>
-      {units.map((unit, index) => (
+      {tlUnits.map((unit, index) => (
         <TradeUnitForm
           key={unit.key}
           index={index}
           unit={unit}
+          unitRate = {unit.unitRate}
           {...commonProps}
         />
       ))}
@@ -349,18 +364,9 @@ const TradeUnitForm = (_props) => {
     marginTop: "-21px",
   };
 
-  let seletedUnitType = formData?.["tradeUnits"]?.[0]?.tradeSubType?.code
-  //console.log("prasad formData", formData);
- // TradeTypeMenu = TradeTypeMenu.filter((e) => e.code?.split(".")[0] === mainOwnerShipType?.code);
- //console.log("prasad seletedUnitType", seletedUnitType);
-
- //const result = words.filter(word => word.length > 6);
-
  
- let unitRate = billingSlabData && billingSlabData.filter(e =>e.tradeType=== seletedUnitType && seletedUnitType)
- 
- // console.log("prasad billingSlabData", billingSlabData);
-  // console.log("prasad unitRate", unitRate);
+
+
 
   return (
     <React.Fragment>
@@ -641,7 +647,7 @@ const TradeUnitForm = (_props) => {
                 }
                 render={(props) => (
 
-                  <CardLabel className="card-label-smaller">{unitRate?.[0]?.rate}</CardLabel>
+                  <CardLabel className="card-label-smaller">{unit?.unitRate}</CardLabel>
 
                 )}
               />
