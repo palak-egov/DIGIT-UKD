@@ -164,7 +164,7 @@ const TLTradeUnitsEmployee = ({
   const lastIndex = formData && formData["tradeUnits"] && formData["tradeUnits"].length;
   let unitRate = billingSlabData && billingSlabData.filter(e =>e.tradeType=== seletedUnitType?.[lastIndex-1])
 
-  if(tlUnits && lastIndex)
+  if(lastIndex && tlUnits && tlUnits[lastIndex-1] )
   { 
     tlUnits[lastIndex-1].unitRate = unitRate?.[0]?.rate
   }
