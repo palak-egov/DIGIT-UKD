@@ -4,7 +4,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import _ from "lodash";
 import { useLocation } from "react-router-dom";
-import { getPattern } from "../utils";
+import { getPattern, convertEpochToDate } from "../utils";
 
 const createOwnerDetails = () => ({
   name: "",
@@ -438,7 +438,7 @@ const OwnerForm = (_props) => {
               <Controller
                 name="dob"
                 rules={{ required: t("REQUIRED_FIELD") }}
-                defaultValue={owner?.dob}
+                defaultValue={convertEpochToDate(owner?.dob)}
                 control={control}
                 render={(props) => (
                   <DatePicker
