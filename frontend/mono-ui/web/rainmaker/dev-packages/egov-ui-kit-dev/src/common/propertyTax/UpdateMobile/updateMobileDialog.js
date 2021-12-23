@@ -261,7 +261,7 @@ export default class UpdateMobileDialog extends React.Component {
     const tenant = commonConfig.tenantId;
     var myHeaders = new Headers();
     myHeaders.append("accept", "application/json, text/plain, */*");
-    myHeaders.append("authorization", "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0");
+    myHeaders.append("authorization", "Basic ZWdvdi11c2VyLWNsaWVudDo=");
     myHeaders.append("content-type", "application/x-www-form-urlencoded");
 
     var urlencoded = new URLSearchParams();
@@ -393,7 +393,7 @@ export default class UpdateMobileDialog extends React.Component {
     }
   };
   setDocFileDetails = (ind, file, fileStoreId) => {
-    ind = this.state.clickedElement != "IDENTITYPROOF" ? 0 : 1;
+    ind = this.state.clickedElement === "IDENTITYPROOF" ? 0 : 1;
     const documents = this.state.documents;
     documents[ind].fileName = file.name;
     documents[ind].fileStoreId = fileStoreId;

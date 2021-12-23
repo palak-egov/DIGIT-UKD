@@ -1,6 +1,7 @@
 import get from "lodash/get";
 import set from "lodash/set";
 import { useQuery } from "react-query";
+import { Request } from "./Request";
 
 
 /*   method to check not null  if not returns false*/
@@ -42,6 +43,20 @@ export const useLocalities = (tenant, boundaryType = "revenue", config, t) => {
     ...config,
   });
 };
+
+export const   receipt_download = (bussinessService, consumerCode, tenantId, pdfKey="misc-receipt") => {
+  Request({
+    url: "/egov-pdf/download/PAYMENT/consolidatedreceipt",
+    data: {},
+    useCache: true,
+    method: "POST",
+    params: { bussinessService, consumerCode, tenantId, pdfKey},
+    auth: true,
+    locale: true,
+    userService: true,
+    userDownload: true,
+  })
+  }
 
 export const sortDropdownNames = (options, optionkey, locilizationkey) => {
   return options.sort((a, b) => locilizationkey(a[optionkey]).localeCompare(locilizationkey(b[optionkey])));
@@ -940,6 +955,7 @@ export const customiseCreateFormData = (formData) => {
         uomValue: e.unit,
         rate: e.rate, //needs to be added // billing slab service
       })),
+      institution: formData?.owners?.[0]?.designation ?  {designation: formData?.owners?.[0]?.designation}:null,        
       subOwnerShipCategory: formData?.ownershipCategory?.code,
       owners: formData?.owners?.map((e) => ({
         userName: e.name, //to be checked
@@ -947,7 +963,7 @@ export const customiseCreateFormData = (formData) => {
         gender: e?.gender?.code,
         mobileNumber: e?.mobileNumber,
         emailId: e?.emailId,
-        altContactNumber: null,
+        altContactNumber: e?.altContactNumber,
         pan: e?.pan, // to be added
         ownerType: e?.ownerType?.code,
         aadhaarNumber: null,
@@ -970,7 +986,7 @@ export const customiseCreateFormData = (formData) => {
         tenantId:
           formData?.address?.city?.code ||
           window.Digit.ULBService.getCurrentTenantId(),
-        dob: convertDateToEpoch(e.DOB),
+        dob: convertDateToEpoch(e.dob),
         relationship: e?.relationship?.code,
       })),
       applicationDocuments: null,
