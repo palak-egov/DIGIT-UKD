@@ -41,7 +41,12 @@ class PaymentHistory extends Component {
             outline: "none",
             alignItems: "right",
         };
-        const { Payments = [] ,downloadReceipt} = this.props;
+        const { Payments = [], downloadReceipt, properties, workflowStatus } = this.props;
+        var finalStatus = workflowStatus && workflowStatus.ProcessInstances[0] && workflowStatus.ProcessInstances[0].action;
+        const workFlowLastModifiedDate =
+          workflowStatus && workflowStatus.ProcessInstances[0] && workflowStatus.ProcessInstances[0].auditDetails.lastModifiedTime;
+        const paymentDate = Payments && Payments[0] && Payments[0].transactionDate;
+        let IsDateValid = workFlowLastModifiedDate > paymentDate;
         const paymentHistoryItems = Payments.map((payment, index) => {
             const amount=payment.totalAmountPaid==0?'0':payment.totalAmountPaid;
             return (
@@ -53,7 +58,7 @@ class PaymentHistory extends Component {
                         {getFullRow("PT_HISTORY_BILL_PERIOD", this.getBillPeriod(payment.paymentDetails[0].bill.billDetails), 6)}
                         <div className="col-sm-6 col-xs-12" style={{ marginBottom: 10, marginTop: 5 }}>
                             <div className="assess-history" style={{ float: "right" }}>
-                            {payment.instrumentStatus!=="CANCELLED"? <Button
+                            {(this.props.properties.status!=="INWORKFLOW" && !IsDateValid && finalStatus !== "APPROVED" && payment.instrumentStatus!=="CANCELLED")? <Button
                                     label={<Label buttonLabel={true} label="PT_DOWNLOAD_RECEIPT" color="rgb(254, 122, 81)" fontSize="16px" height="35px" labelStyle={labelStyle} />}
                                     buttonStyle={buttonStyle}
                                     onClick={() => {
