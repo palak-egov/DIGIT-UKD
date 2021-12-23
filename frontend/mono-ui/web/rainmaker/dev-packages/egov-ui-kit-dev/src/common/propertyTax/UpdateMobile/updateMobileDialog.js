@@ -189,11 +189,12 @@ export default class UpdateMobileDialog extends React.Component {
   updateProperty = () => {
     var myHeaders = new Headers();
     let { property, propertyNumbers, isAlternate } = this.props;
+    let phonePattern = /^[6-9][0-9]{9}$/;
     const { mobileNumber } = this.state.fields;
 
     if (property && property.owners && property.owners.length > 0) {
       property.owners.map((owner) => {
-        if (owner.uuid == propertyNumbers.uuid) {
+        if (owner.uuid == propertyNumbers.uuid || !owner.mobileNumber.match(phonePattern)) {
           if (isAlternate) {
             owner.alternatemobilenumber = mobileNumber.value;
           } else {
