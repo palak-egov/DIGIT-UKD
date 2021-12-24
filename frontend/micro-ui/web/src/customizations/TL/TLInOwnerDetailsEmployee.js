@@ -381,9 +381,7 @@ const OwnerForm = (_props) => {
             <Controller
               control={control}
               name={"relationship"}
-              //defaultValue={owner?.relationship}
-               defaultValue= {{code: owner?.relationship, 
-                i18nKey: owner?.relationship &&  `TL_${owner?.relationship}`}}
+              defaultValue={owner?.relationship}
                rules={{ required: "RelationShip Required" }}
               render={(props) => (
                 <Dropdown
@@ -432,28 +430,7 @@ const OwnerForm = (_props) => {
             />
           </LabelFieldPair>
           <CardLabelError style={errorStyle}>{localFormState.touched.gender ? errors?.gender?.message : ""}</CardLabelError>
-          <LabelFieldPair>
-            <CardLabel className="card-label-smaller">{`${t("TL_NEW_TRADE_DETAILS_TRADE_DOB_LABEL")} * :`}</CardLabel>
-            <div className="field">
-              <Controller
-                name="dob"
-                rules={{ required: t("REQUIRED_FIELD") }}
-                defaultValue={convertEpochToDate(owner?.dob)}
-                control={control}
-                render={(props) => (
-                  <DatePicker
-                    date={props.value}
-                    // date={dob} 
-                    name="dob"
-                    onChange={props.onChange}
-                    disabled={isRenewal}
-                  />
-                )}
-              />
-            </div>
-          </LabelFieldPair>
-          <CardLabelError style={errorStyle}>{localFormState.touched.dob ? errors?.dob?.message : ""}</CardLabelError>          <LabelFieldPair>
-            <CardLabel className="card-label-smaller">{`${t("TL_NEW_OWNER_DETAILS_EMAIL_LABEL")} :`}</CardLabel>
+          <LabelFieldPair><CardLabel className="card-label-smaller">{`${t("TL_NEW_OWNER_DETAILS_EMAIL_LABEL")} :`}</CardLabel>
             <div className="field">
               <Controller
                 control={control}

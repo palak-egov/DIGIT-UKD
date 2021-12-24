@@ -978,7 +978,7 @@ export const customiseCreateFormData = (formData) => {
         type: "CITIZEN",
         accountLocked: false,
         accountLockedDate: 0,
-        fatherOrHusbandName: e.fatherHusbandName,
+        fatherOrHusbandName: e.fatherOrHusbandName,
         signature: null,
         bloodGroup: null,
         photo: null,
