@@ -295,7 +295,7 @@ class OwnerInfo extends Component {
         newList.push(element);
       }
     });
-    return newList && Array.isArray(newList) && newList.filter((element) => element.creationReason != "UPDATE");
+    return newList;
   };
   getPropertyResponse = async (propertyId, tenantId, dialogName) => {
     const queryObject = [
@@ -314,9 +314,14 @@ class OwnerInfo extends Component {
           if (!ownershipInfo[lastModifiedDate]) {
             ownershipInfo[lastModifiedDate] = [];
           }
-          item.owners = item.owners.filter((owner) => owner.status == "ACTIVE");
+          item.owners = item.owners.filter((owner) => owner.status == "INACTIVE");
           ownershipInfo[lastModifiedDate].push(...this.transformData(item));
         });
+         Object.filter = (obj, predicate) =>
+           Object.keys(obj)
+             .filter((key) => predicate(obj[key]))
+             .reduce((res, key) => ((res[key] = obj[key]), res), {});
+         ownershipInfo = Object.filter(ownershipInfo, (e) => e.length !== 0);
         this.setState({ [dialogName]: true, ownershipInfo });
         return true;
       }

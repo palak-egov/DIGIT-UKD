@@ -111,7 +111,8 @@ class PTInformation extends React.Component {
       toggleSnackbarAndSetText,
       cities,
       citywiseconfig,
-      updateNumberConfig
+      updateNumberConfig,
+      workflowStatus,
     } = this.props;
     let logoUrl = ""; 
     let corpCity = "";
@@ -153,7 +154,7 @@ class PTInformation extends React.Component {
                         tenantId={properties.tenantId}
                         consumerCode={properties.propertyId}
                         totalBillAmountDue={totalBillAmountDue}
-                        citywiseconfig={citywiseconfig}                        
+                        citywiseconfig={citywiseconfig}
                       />
                     }
                     style={{ backgroundColor: "rgb(242,242,242)", boxShadow: "none" }}
@@ -161,13 +162,19 @@ class PTInformation extends React.Component {
                 }
                 <div className="pdf-header" id="pdf-header">
                   <Card
-                    style={{ display : "flex" , backgroundColor : "rgb(242, 242, 242)" , minHeight: "120px" , alignItems: "center" ,paddingLeft :"10px"}}
+                    style={{ display: "flex", backgroundColor: "rgb(242, 242, 242)", minHeight: "120px", alignItems: "center", paddingLeft: "10px" }}
                     textChildren={
-                      <div style={{display : "flex" }}>
+                      <div style={{ display: "flex" }}>
                         {/* <Image  id="image-id" style={logoStyle} source={logoUrl} /> */}
-                        <div style={{marginLeft : 30}}> 
-                          <div style={{display:"flex" , marginBottom : 5}}>
-                            <Label label={corpCity} fontSize="20px" fontWeight="500" color="rgba(0, 0, 0, 0.87)" containerStyle={{marginRight : 10 ,textTransform: "uppercase"}}/>
+                        <div style={{ marginLeft: 30 }}>
+                          <div style={{ display: "flex", marginBottom: 5 }}>
+                            <Label
+                              label={corpCity}
+                              fontSize="20px"
+                              fontWeight="500"
+                              color="rgba(0, 0, 0, 0.87)"
+                              containerStyle={{ marginRight: 10, textTransform: "uppercase" }}
+                            />
                             <Label label={ulbGrade} fontSize="20px" fontWeight="500" color="rgba(0, 0, 0, 0.87)" />
                           </div>
                           <Label label={"PT_PDF_SUBHEADER"} fontSize="16px" fontWeight="500" />
@@ -175,10 +182,10 @@ class PTInformation extends React.Component {
                       </div>
                     }
                   />
-                  <div style={{display : "flex" , justifyContent : "space-between"}}>
-                    <div style={{display : "flex"}}>
-                      <Label label="PT_PROPERTY_ID" color="rgba(0, 0, 0, 0.87)" fontSize="20px" containerStyle={{marginRight : 10}}/>
-                      <Label label={`: ${get(properties,"propertyId")}`} fontSize="20px"/>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <div style={{ display: "flex" }}>
+                      <Label label="PT_PROPERTY_ID" color="rgba(0, 0, 0, 0.87)" fontSize="20px" containerStyle={{ marginRight: 10 }} />
+                      <Label label={`: ${get(properties, "propertyId")}`} fontSize="20px" />
                     </div>
                     {/* <div style={{display : "flex"}}>
                       <Label label="Property ID :" color="rgba(0, 0, 0, 0.87)" fontSize="20px"/>
@@ -190,7 +197,7 @@ class PTInformation extends React.Component {
                     </div> */}
                   </div>
                 </div>
-                
+
                 <PropertyAddressInfo properties={properties} generalMDMSDataById={generalMDMSDataById}></PropertyAddressInfo>
                 <AssessmentInfo properties={properties} generalMDMSDataById={generalMDMSDataById}></AssessmentInfo>
                 <OwnerInfo
@@ -201,11 +208,10 @@ class PTInformation extends React.Component {
                   ownershipTransfer={true}
                   viewHistory={true}
                 ></OwnerInfo>
-                        {!isLegary &&
-            <DocumentsInfo documentsUploaded={documentsUploaded}></DocumentsInfo> }
-           <div id="property-assess-form">
+                {!isLegary && <DocumentsInfo documentsUploaded={documentsUploaded}></DocumentsInfo>}
+                <div id="property-assess-form">
                   <AssessmentHistory></AssessmentHistory>
-                  <PaymentHistory></PaymentHistory>
+                  <PaymentHistory properties={properties} workflowStatus={workflowStatus}></PaymentHistory>
                   <ApplicationHistory></ApplicationHistory>
                 </div>
               </div>
