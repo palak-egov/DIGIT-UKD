@@ -44,10 +44,9 @@ import { receipt_download } from "./customizations/utils";
 initLibraries();
 
 const enabledModules = [
-  "PGR",
-  "FSM",
+  
   "Payment",
-  "PT",
+ 
   "QuickPayLinks",
   "DSS",
   "MCollect",
