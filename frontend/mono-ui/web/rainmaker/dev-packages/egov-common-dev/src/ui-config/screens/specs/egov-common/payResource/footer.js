@@ -9,6 +9,8 @@ import set from "lodash/set";
 import { httpRequest } from "../../../../../ui-utils/api";
 import { convertDateToEpoch, ifUserRoleExists, validateFields } from "../../utils";
 import { paybuttonJsonpath } from "./constants";
+import { posDetails } from "../../../../../ui-containers-local/CustomTabContainer/payment-methods";
+import { demandDraftDetails } from "../../../../../ui-containers-local/CustomTabContainer/payment-methods";
 import "./index.css";
 
 const checkAmount = (totalAmount, customAmount, businessService) => {
@@ -90,7 +92,7 @@ export const callPGService = async (state, dispatch) => {
     );
     return;
   }
-  const payerInfo=get(billPayload, "Bill[0].payer",'').replace("COMMON_",'');
+
   const user = {
     name: get(billPayload, "Bill[0].paidBy", get(billPayload, "Bill[0].payerName")),
     mobileNumber: get(billPayload, "Bill[0].payerMobileNumber", get(billPayload, "Bill[0].mobileNumber")),
@@ -116,12 +118,11 @@ export const callPGService = async (state, dispatch) => {
         billId: get(billPayload, "Bill[0].id"),
         consumerCode: consumerCode,
         productInfo: "Common Payment",
-        gateway: "AXIS",
+        gateway: "CCAVENUE",
         taxAndPayments,
         user,
         callbackUrl,
-        additionalDetails: { isWhatsapp: localStorage.getItem('pay-channel') == 'whatsapp' ? true : false,
-        paidBy:payerInfo }
+        additionalDetails: { isWhatsapp: localStorage.getItem('pay-channel') == 'whatsapp' ? true : false }
       }
     };
     const goToPaymentGateway = await httpRequest(
@@ -218,51 +219,43 @@ const getSelectedTabIndex = paymentType => {
       return {
         selectedPaymentMode: "cash",
         selectedTabIndex: 0,
-        fieldsToValidate: ["payeeDetails"]
+        fieldsToValidate: ["payeeDetails"],
+      };
+    case "POS":
+      return {
+        selectedPaymentMode: "pos",
+        selectedTabIndex: 3,
+        fieldsToValidate: ["payeeDetails", "posDetails"],
+      };
+    case "OFFLINE_RTGS":
+      return {
+        selectedPaymentMode: "offline_rtgs",
+        selectedTabIndex: 2,
+        fieldsToValidate: ["payeeDetails", "onlineDetails"],
       };
     case "CHEQUE":
       return {
         selectedPaymentMode: "cheque",
         selectedTabIndex: 1,
-        fieldsToValidate: ["payeeDetails", "chequeDetails"]
-      };
-
-    case "CARD":
-      return {
-        selectedPaymentMode: "card",
-        selectedTabIndex: 2,
-        fieldsToValidate: ["payeeDetails", "cardDetails"]
-      };
-    case "OFFLINE_NEFT":
-      return {
-        selectedPaymentMode: "offline_neft",
-        selectedTabIndex: 3,
-        fieldsToValidate: ["payeeDetails", "onlineDetails"]
-      };
-    case "OFFLINE_RTGS":
-      return {
-        selectedPaymentMode: "offline_rtgs",
-        selectedTabIndex: 4,
-        fieldsToValidate: ["payeeDetails", "onlineDetails"]
-      };
-    case "POSTAL_ORDER":
-      return {
-        selectedPaymentMode: "postal_order",
-        selectedTabIndex: 5,
-        fieldsToValidate: ["payeeDetails", "poDetails"]
+        fieldsToValidate: ["payeeDetails", "chequeDetails"],
       };
     case "DD":
       return {
         selectedPaymentMode: "demandDraft",
-        selectedTabIndex: 6,
-        fieldsToValidate: ["payeeDetails", "demandDraftDetails"]
+        selectedTabIndex: 5,
+        fieldsToValidate: ["payeeDetails", "demandDraftDetails"],
       };
-
+    // case "CARD":
+    //   return {
+    //     selectedPaymentMode: "card",
+    //     selectedTabIndex: 6,
+    //     fieldsToValidate: ["payeeDetails", "cardDetails"],
+    //   };
     default:
       return {
         selectedPaymentMode: "cash",
         selectedTabIndex: 0,
-        fieldsToValidate: ["payeeDetails"]
+        fieldsToValidate: ["payeeDetails"],
       };
   }
 };

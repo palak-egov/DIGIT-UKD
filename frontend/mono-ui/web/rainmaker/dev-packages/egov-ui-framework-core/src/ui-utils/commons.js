@@ -12,6 +12,7 @@ import orderBy from "lodash/orderBy";
 import set from "lodash/set";
 import { httpRequest, uploadFile } from "./api.js";
 
+
 export const addComponentJsonpath = (components, jsonPath = "components") => {
   for (var componentKey in components) {
     if (components.hasOwnProperty(componentKey)) {

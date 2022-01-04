@@ -1,4 +1,3 @@
-import React from "react";
 import {
   sortByEpoch,
   getEpochForDate,
@@ -14,17 +13,7 @@ export const searchResult = {
     columns: [
       {
         labelName: "Receipt No.",
-        labelKey: "UC_COMMON_TABLE_COL_RECEIPT_NO",
-        options: {
-          filter: false,
-          customBodyRender: (value, tableMeta) => (
-              <a href="javascript:void(0)" onClick={() => onRowClick(tableMeta.rowData)}>{value}</a>
-          )
-        }
-      },
-      {
-        labelName: "Consumer Code",
-        labelKey: "UC_COMMON_TABLE_COL_CONSUMERCODE"
+        labelKey: "UC_COMMON_TABLE_COL_RECEIPT_NO"
       },
       {
         labelName: "Payee Name",
@@ -44,18 +33,13 @@ export const searchResult = {
       },
       {
         labelName: "Status",
-        labelKey: "UC_COMMON_TABLE_COL_STATUS",
-        options: {
-          display: false,
-          viewColumns  :false
-        }
+        labelKey: "UC_COMMON_TABLE_COL_STATUS"
       },
       {
         labelName: "Tenant Id",
         labelKey: "TENANT_ID",
         options: {
-          display: false,
-          viewColumns  :false
+          display: false
         }
       }
     ],
@@ -70,7 +54,14 @@ export const searchResult = {
       responsive: "stacked",
       selectableRows: false,
       hover: true,
-      rowsPerPageOptions: [10, 15, 20]
+      rowsPerPageOptions: [10, 15, 20],
+      onRowClick: (row, index) => {
+        const receiptQueryString = [
+          { key: "receiptNumbers", value:  row[0]},
+          { key: "tenantId", value: row[6] }
+        ]
+        download(receiptQueryString);
+      }
     },
     customSortColumn: {
       column: "Date",
@@ -88,12 +79,4 @@ export const searchResult = {
       }
     }
   }
-};
-
-const onRowClick = rowData => {
-  const receiptQueryString = [
-    { key: "receiptNumbers", value:  rowData[0]},
-    { key: "tenantId", value: rowData[7] }
-  ]
-  download(receiptQueryString);
 };

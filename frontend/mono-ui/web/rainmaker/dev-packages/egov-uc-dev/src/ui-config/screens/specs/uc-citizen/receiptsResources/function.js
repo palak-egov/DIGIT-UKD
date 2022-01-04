@@ -1,19 +1,25 @@
+import get from "lodash/get";
 import {
   handleScreenConfigurationFieldChange as handleField,
   prepareFinalObject,
   toggleSnackbar
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import {
-  getTransformedLocale, transformById
-} from "egov-ui-framework/ui-utils/commons";
-import {
-  getLocalization, getTenantId
-} from "egov-ui-kit/utils/localStorageUtils";
-import get from "lodash/get";
 import { getSearchResults } from "../../../../../ui-utils/commons";
 import {
-  convertDateToEpoch, convertEpochToDate, getTextToLocalMapping, validateFields
+  validateFields,
+  getTextToLocalMapping,
+  convertEpochToDate,
+  convertDateToEpoch
 } from "../../utils";
+import {
+  getTenantId,
+  getLocalization
+} from "egov-ui-kit/utils/localStorageUtils";
+import {
+  getLocaleLabels,
+  transformById,
+  getTransformedLocale
+} from "egov-ui-framework/ui-utils/commons";
 
 const localizationLabels = JSON.parse(getLocalization("localization_en_IN"));
 const transfomedKeys = transformById(localizationLabels, "code");
@@ -60,8 +66,8 @@ export const searchApiCall = async (state, dispatch) => {
       toggleSnackbar(
         true,
         {
-          labelName: "Please fill valid fields to start search",
-          labelKey: "UC_SEARCH_SELECT_AT_LEAST_VALID_FIELD"
+          labelName: "Please fill at least one field to start search",
+          labelKey: "UC_SEARCH_SELECT_AT_LEAST_ONE_TOAST_MESSAGE"
         },
         "warning"
       )
@@ -99,9 +105,29 @@ export const searchApiCall = async (state, dispatch) => {
     }
 
     const responseFromAPI = await getSearchResults(queryObject);
+    const businessServices = get(searchScreenObject, 'businessServices', null);
+    const businessServiceDataList = get(
+      state.screenConfiguration.preparedFinalObject,
+      "applyScreenMdmsData.businessServiceDataList",
+      []
+    );
+    let responseFromFilter = [];
+    if(!businessServices) {
+      get(responseFromAPI, 'Payments', []).map(payment => {
+        if(businessServiceDataList.includes(get(payment, "paymentDetails[0].businessService", ""))) {
+          responseFromFilter.push(payment);
+        }
+      })
+    } else {
+      responseFromFilter = get(responseFromAPI, 'Payments', []).filter(payment => {
+        return get(payment, "paymentDetails[0].businessService", "") == businessServices
+      })
+    }
+    
     dispatch(prepareFinalObject("PaymentsSearchResponse", responseFromAPI));
 
-    const Payments = (responseFromAPI && responseFromAPI.Payments) || [];
+    // const Payments = (responseFromAPI && responseFromAPI.Payments) || [];
+    const Payments = responseFromFilter || [];
     const response = [];
     for (let i = 0; i < Payments.length; i++) {
       const serviceTypeLabel = getTransformedLocale(
@@ -109,20 +135,18 @@ export const searchApiCall = async (state, dispatch) => {
       );
       response[i] = {
         receiptNumber: get(Payments[i], `paymentDetails[0].receiptNumber`),
-        consumerCode: get(Payments[i], `paymentDetails[0].bill.consumerCode`),
-        payeeName: get(Payments[i], `paidBy`), // changed by DC
+        payeeName: get(Payments[i], `payerName`),
         serviceType: serviceTypeLabel,
         receiptdate: get(Payments[i], `paymentDetails[0].receiptDate`),
         amount: get(Payments[i], `paymentDetails[0].bill.totalAmount`),
         status: get(Payments[i], `paymentDetails[0].bill.status`),
-        tenantId: get(Payments[i], `tenantId`),
+        tenantId : get(Payments[i], `tenantId`),
       };
     }
 
     try {
       let data = response.map(item => ({
         ['UC_COMMON_TABLE_COL_RECEIPT_NO']: item.receiptNumber || "-",
-        ['UC_COMMON_TABLE_COL_CONSUMERCODE']: item.consumerCode || "-",
         ['UC_COMMON_TABLE_COL_PAYEE_NAME']: item.payeeName || "-",
         ['UC_SERVICE_TYPE_LABEL']: getTextToLocalMapping(`BILLINGSERVICE_BUSINESSSERVICE_${item.serviceType}`) || "-",
         ['UC_COMMON_TABLE_COL_DATE']: convertEpochToDate(item.receiptdate) || "-",

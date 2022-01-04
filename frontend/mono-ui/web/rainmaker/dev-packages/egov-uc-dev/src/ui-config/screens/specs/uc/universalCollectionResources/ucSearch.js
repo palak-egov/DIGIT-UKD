@@ -37,6 +37,22 @@ const resetFields = (state, dispatch) => {
         ""
       )
     );
+   dispatch(
+    handleField(
+      "search",
+      "components.div.children.UCSearchCard.children.cardContent.children.searchContainer.children.serviceType",
+      "props.error",
+      false
+    )
+  );
+  dispatch(
+    handleField(
+      "search",
+      "components.div.children.UCSearchCard.children.cardContent.children.searchContainer.children.serviceType",
+      "props.helperText",
+      ""
+    )
+  );
   dispatch(
     handleField(
       "search",
@@ -57,14 +73,6 @@ const resetFields = (state, dispatch) => {
     handleField(
       "search",
       "components.div.children.UCSearchCard.children.cardContent.children.searchContainer.children.toDate",
-      "props.value",
-      ""
-    )
-  );
-  dispatch(
-    handleField(
-      "search",
-      "components.div.children.UCSearchCard.children.cardContent.children.searchContainer.children.consumerCodes",
       "props.value",
       ""
     )
@@ -97,7 +105,8 @@ export const UCSearchCard = getCommonCard({
         xs: 12,
         sm: 4
       }
-    }),  serviceType: {
+    }),
+    serviceType: {
       uiFramework: "custom-containers-local",
       moduleName: "egov-uc",
       componentPath: "AutosuggestContainer",
@@ -116,8 +125,7 @@ export const UCSearchCard = getCommonCard({
           moduleName: "BillingService"
         },
         required: true,
-       
-        isClearable: true,
+        // isClearable: true,
         labelsFromLocalisation: true,
         sourceJsonPath: "applyScreenMdmsData.serviceCategories",
         jsonPath: "ucSearchScreen.businessServices",
@@ -147,24 +155,6 @@ export const UCSearchCard = getCommonCard({
         return action;
       }
     },
-    consumerCodes: getTextField({
-      label: {
-        labelName: "Consumer Code",
-        labelKey: "ABG_PT_CONSUMER_CODE_LABEL"
-      },
-      placeholder: {
-        labelName: "Enter Consumer code",
-        labelKey: "ABG_PT_CONSUMER_CODE_LABEL_PLACEHOLDER"
-      },
-      required: false,
-      visible: true,
-      jsonPath: "ucSearchScreen.consumerCodes",
-      gridDefination: {
-        xs: 12,
-        sm: 4
-      }
-    }),
-  
     mobileNumber: getTextField({
       label: {
         labelName: "Mobile No.",
@@ -225,9 +215,7 @@ export const UCSearchCard = getCommonCard({
         xs: 12,
         sm: 4
       }
-    }),
- 
-
+    })
   }),
 
   buttonContainer: getCommonContainer({

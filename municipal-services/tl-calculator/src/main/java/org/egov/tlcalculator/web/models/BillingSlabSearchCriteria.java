@@ -29,10 +29,10 @@ public class BillingSlabSearchCriteria {
 
 	@JsonProperty("licenseType")
 	private String licenseType;
-	
+
 	@JsonProperty("applicationType")
 	private String applicationType;
-
+	
 	@JsonProperty("structureType")
 	private String structureType;
 

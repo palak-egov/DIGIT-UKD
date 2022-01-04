@@ -117,6 +117,7 @@ class ServiceList extends React.Component {
                 <Card
                   className={`${classes.paper} service-module-style`}
                   onClick={(e) => {
+
                     if (service.navigationURL && service.navigationURL.includes('digit-ui')) {
                       window.location.href = service.navigationURL;
                       return;

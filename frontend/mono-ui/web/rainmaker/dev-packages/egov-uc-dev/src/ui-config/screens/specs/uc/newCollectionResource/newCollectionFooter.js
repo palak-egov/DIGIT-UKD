@@ -1,23 +1,18 @@
+import commonConfig from "config/common.js";
 import { getLabel } from "egov-ui-framework/ui-config/screens/specs/utils";
-import get from "lodash/get";
-import set from "lodash/set";
-import { httpRequest } from "egov-ui-framework/ui-utils/api";
-import { convertDateToEpoch } from "../../utils";
 import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
-import { ifUserRoleExists } from "../../utils";
-import { validateFields } from "../../utils";
-import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
-import cloneDeep from "lodash/cloneDeep";
 import {
   handleScreenConfigurationFieldChange as handleField,
   prepareFinalObject,
   toggleSnackbar
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import { toggleSpinner } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import "./index.css";
-import "../../../../../index.css";
+import { httpRequest } from "egov-ui-framework/ui-utils/api";
+import { getCommonPayUrl } from "egov-ui-framework/ui-utils/commons";
+import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
+import get from "lodash/get";
+import set from "lodash/set";
+import { convertDateToEpoch, ifUserRoleExists, validateFields } from "../../utils";
 
-import { confirmationDialog } from "../confirmationDialog";
 const tenantId = getTenantId();
 export const getRedirectionURL = () => {
   const redirectionURL = ifUserRoleExists("EMPLOYEE") ? "/uc/pay" : "/inbox";
@@ -34,29 +29,23 @@ const getCommonApplyFooter = children => {
     children
   };
 };
-//to show up confirmation dialog on click of cancel button
-export const showHideConfirmationPopup = (state, dispatch, screenKey) => {
-   let toggle = get(
-    state.screenConfiguration.screenConfig[screenKey],
-    "components.div.children.newCollectionFooter.children.cancelConfirmationDialog.props.open",
-    false
-  );
-  dispatch(
-    handleField(screenKey, "components.div.children.newCollectionFooter.children.cancelConfirmationDialog", "props.open", !toggle)
-  );
-};
+
 export const newCollectionFooter = getCommonApplyFooter({
   nextButton: {
     componentPath: "Button",
     props: {
       variant: "contained",
       color: "primary",
-      className:"gen-challan-btn",
+      style: {
+        minWidth: "200px",
+        height: "48px",
+        marginRight: "16px"
+      }
     },
     children: {
-      generateChallanButtonLabel: getLabel({
-        labelName: "Generate Challan",
-        labelKey: "UC_ECHALLAN"
+      downloadReceiptButtonLabel: getLabel({
+        labelName: "NEXT",
+        labelKey: "UC_BUTTON_NEXT"
       }),
       nextButtonIcon: {
         uiFramework: "custom-atoms",
@@ -68,40 +57,11 @@ export const newCollectionFooter = getCommonApplyFooter({
     },
     onClickDefination: {
       action: "condition",
-      callBack: (state, dispatch) => {      
-          processChallan(state, dispatch,"CREATE");
+      callBack: (state, dispatch) => {
+        processDemand(state, dispatch);
       }
-    },
-    visible: false
-  },
-  updateChallan: {
-    componentPath: "Button",
-    props: {
-      variant: "contained",
-      color: "primary",
-      className: "gen-challan-btn", 
-    },
-    children: {
-      submitButtonLabel: getLabel({
-        labelName: "Update RECEIPT",
-        labelKey: "UC_UPDATE_CHALLAN"
-      }),
-      submitButtonIcon: {
-        uiFramework: "custom-atoms",
-        componentPath: "Icon",
-        props: {
-          iconName: "keyboard_arrow_right"
-        }
-      }
-    },
-    onClickDefination: {
-      action: "condition",
-      callBack: (state, dispatch) => {      
-        processChallan(state, dispatch,"UPDATE");
-      }
-    },
-    visible: false
-  } 
+    }
+  }
 });
 
 const convertDateFieldToEpoch = (finalObj, jsonPath) => {
@@ -117,50 +77,52 @@ const allDateToEpoch = (finalObj, jsonPaths) => {
   });
 };
 
-
-export const processChallan = async (state, dispatch,applicationStatus) => {
-  let isFormValid = true;
-  const ucConsumerValid = validateFields(
-    "components.div.children.newCollectionConsumerDetailsCard.children.cardContent.children.ucConsumerContainer.children",
-    state,
-    dispatch,
-    "newCollection"
-  );  
-  const ucServiceDetailValid = validateFields(
-    "components.div.children.newCollectionServiceDetailsCard.children.cardContent.children.searchContainer.children",
+const processDemand = async (state, dispatch) => {
+  const isFormValid = validateFields(
+    "components.div.children.newCollectionDetailsCard.children.cardContent.children.searchContainer.children",
     state,
     dispatch,
     "newCollection"
   );
- 
-  if (
-    !ucConsumerValid ||
-    !ucServiceDetailValid 
-  ) {
-    isFormValid = false;
-  }
-
   if (isFormValid) {
     try {
-      dispatch(toggleSpinner());
-      let objToPush =prepareObj(state,dispatch);
-      switch (applicationStatus) {
-        case "CREATE": 
-          await createChallan(state, dispatch,objToPush);       
-          break;
-        case "CANCELLED":
-          objToPush.applicationStatus=applicationStatus;
-          await cancelChallan(state, dispatch,objToPush);  
-          break;
-        case "UPDATE":
-          await updateChallan(state, dispatch,objToPush);  
-          break;
-        
+      const mobileNumber = get(
+        state.screenConfiguration.preparedFinalObject,
+        "Demands[0].mobileNumber"
+      );
+      let payload = await httpRequest(
+        "post",
+        `/user/_search?tenantId=${commonConfig.tenantId}`,
+        "_search",
+        [],
+        {
+          tenantId: commonConfig.tenantId,
+          userName: mobileNumber
+        }
+      );
+      if (payload) {
+        const uuid = get(payload, "user[0].uuid");
+        dispatch(prepareFinalObject("Demands[0].payer.uuid", uuid));
+        await createDemand(state, dispatch);
+        allDateToEpoch(state.screenConfiguration.preparedFinalObject, [
+          "Demands[0].taxPeriodFrom",
+          "Demands[0].taxPeriodTo"
+        ]);
+        const applicationNumber = get(
+          state.screenConfiguration.preparedFinalObject,
+          "Demands[0].consumerCode"
+        );
+        const tenantId = get(
+          state.screenConfiguration.preparedFinalObject,
+          "Demands[0].tenantId"
+        );
+        const businessService = get(
+          state.screenConfiguration.preparedFinalObject,
+          "Demands[0].serviceType"
+        );
+        getCommonPayUrl(dispatch, applicationNumber, tenantId, businessService);
       }
-      dispatch(toggleSpinner());
-    } catch (error) {
-      dispatch(toggleSpinner());
-    }
+    } catch (error) { }
   } else {
     dispatch(
       toggleSnackbar(
@@ -169,147 +131,152 @@ export const processChallan = async (state, dispatch,applicationStatus) => {
           labelName: "Please fill the required fields.",
           labelKey: "UC_REQUIRED_FIELDS_ERROR_MSG"
         },
-        "warning"
+        "info"
       )
     );
   }
 };
- 
-const prepareObj =(state,dispatch) =>{
+
+const createDemand = async (state, dispatch) => {
   dispatch(prepareFinalObject("ReceiptTemp[0].Bill", []));
-  let eChallans =cloneDeep (get(state.screenConfiguration.preparedFinalObject, "Challan"));  
-  eChallans[0].amount &&
-    eChallans[0].amount.forEach(item => {
-      if (!item.amount) {
-        item.amount = 0;
+  let demands = JSON.parse(
+    JSON.stringify(
+      get(state.screenConfiguration.preparedFinalObject, "Demands")
+    )
+  );
+  // Making payer object as null if it is empty object, later will changge in component.
+  if (Object.keys(demands[0].payer).length === 0) {
+    demands[0].payer = null;
+  }
+  // set(demands[0], "consumerType", demands[0].businessService);
+  demands[0].demandDetails &&
+    demands[0].demandDetails.forEach(item => {
+      if (!item.taxAmount) {
+        item.taxAmount = 0;
       }
     });
-    set(eChallans[0],"taxPeriodFrom", convertDateToEpoch(eChallans[0].taxPeriodFrom));
-    set(eChallans[0], "taxPeriodTo", convertDateToEpoch(eChallans[0].taxPeriodTo));
-    // set(eChallans[0], "payer.mobileNumber", eChallans[0].citizen.mobileNumber);
-    // set(eChallans[0], "payer.name",  eChallans[0].citizen.name);
-
-    //Check if tax period fall between the tax periods coming from MDMS -- Not required as of now
-    const taxPeriodValid = isTaxPeriodValid(dispatch, eChallans[0], state);
-    if (taxPeriodValid) {
-      return eChallans[0];
-    }
-    return null;
-  
-};
- 
-const postUpdate=async(state,dispatch,payload,operation) =>{
-  const consumerCode = get(payload, "challans[0].challanNo");
-  const businessService = get(payload, "challans[0].businessService");
-  set(payload, "challans[0].mobileNumber", get(payload, "challans[0].citizen.mobileNumber"));
-  set(payload, "challans[0].consumerName", get(payload, "challans[0].citizen.name"));
-  //set(payload,"challans[0].businessService",businessService.split(".")[0]);
-  dispatch(prepareFinalObject("Challan", payload.challans[0]));         
-  let tenant=getTenantId(); 
-  await generateBill(consumerCode, tenant, businessService,operation, dispatch);
-}
-
-const createChallan = async(state,dispatch,challan) =>{
-  var operation="challan";
-  try{
-    if(challan!=null){
-      const payload = await httpRequest("post", "/echallan-services/eChallan/v1/_create", "", [], {
-        Challan: challan
+  demands[0].serviceType &&
+    set(demands[0], "businessService", demands[0].serviceType);
+  set(
+    demands[0],
+    "taxPeriodFrom",
+    convertDateToEpoch(demands[0].taxPeriodFrom)
+  );
+  set(demands[0], "taxPeriodTo", convertDateToEpoch(demands[0].taxPeriodTo));
+  const mobileNumber = demands[0].mobileNumber;
+  const consumerName = demands[0].consumerName;
+  set(demands[0], "payer.mobileNumber", mobileNumber);
+  set(demands[0], "payer.name", consumerName);
+  //Check if tax period fall between the tax periods coming from MDMS -- Not required as of now
+  const taxPeriodValid = isTaxPeriodValid(dispatch, demands[0], state);
+  const buttonJsonPath = "components.div.children.newCollectionFooter.children.nextButton";
+  if (taxPeriodValid) {
+    dispatch(
+      handleField(
+        "newCollection",
+        buttonJsonPath,
+        "props.disabled",
+        true
+      )
+    );
+    const url = get(
+      state.screenConfiguration.preparedFinalObject,
+      "Demands[0].id",
+      null
+    )
+      ? "/billing-service/demand/_update"
+      : "/billing-service/demand/_create";
+    try {
+      const payload = await httpRequest("post", url, "", [], {
+        Demands: demands
       });
-      if (payload.challans.length > 0) {
-        await postUpdate(state,dispatch,payload,operation);
+      if (payload.Demands.length > 0) {
+        //const consumerCode = get(payload, "Demands[0].consumerCode");
+        const businessService = get(payload, "Demands[0].businessService");
+        set(payload, "Demands[0].mobileNumber", mobileNumber);
+        set(payload, "Demands[0].consumerName", consumerName);
+        set(payload, "Demands[0].serviceType", businessService);
+        set(
+          payload,
+          "Demands[0].businessService",
+          businessService.split(".")[0]
+        );
+        dispatch(prepareFinalObject("Demands", payload.Demands));
+        //await generateBill(consumerCode, tenantId, businessService, dispatch);
       } else {
-        console.info("some error  happened while generating challan");
-        dispatch(setRoute(`/uc/acknowledgement?purpose=${operation}&status=failure`));
+        alert("Empty response!!");
+        dispatch(
+          handleField(
+            "newCollection",
+            buttonJsonPath,
+            "props.disabled",
+            false
+          )
+        );
       }
-    }
-  }catch(e){
-    console.info("error in challan creation==",e);
-    if(e.message){
+    } catch (e) {
+      console.log(e.message);
+      dispatch(
+        handleField(
+          "newCollection",
+          buttonJsonPath,
+          "props.disabled",
+          false
+        )
+      );
       dispatch(
         toggleSnackbar(
           true,
-          { labelName: e.message },
+          {
+            labelName: e.message,
+            labelKey: e.message
+          },
           "error"
         )
       );
+      throw e;
     }
-    else{
-      //Case some internal error happened, and not handled, then go to ackmt page
-      dispatch(setRoute(`/uc/acknowledgement?purpose=${operation}&status=failure`));
-    }
-   
-    
   }
-}
-
-const updateChallan = async(state,dispatch,challan) =>{
-  var operation="update";
-  try{
-    if(challan!=null){
-      const payload = await httpRequest("post", "/echallan-services/eChallan/v1/_update", "", [], {
-        Challan: challan
-      });
-      if (payload.challans.length > 0) {
-        await postUpdate(state,dispatch,payload,operation);
-      } else {
-        console.info("some error  happened while updating challan");
-        dispatch(setRoute(`/uc/acknowledgement?purpose=${operation}&status=failure`));
-      }
-    }
-  }catch(e){
-    dispatch(setRoute(`/uc/acknowledgement?purpose=${operation}&status=failure`));
-  }
-}
-
-const cancelChallan = async(state,dispatch,challan) =>{
-  var operation="cancel";
-  try{
-    if(challan!=null){
-      const payload = await httpRequest("post", "/echallan-services/eChallan/v1/_update", "", [], {
-        Challan: challan
-      });
-      if (payload.challans.length > 0) {
-        const consumerCode = get(payload, "challans[0].challanNo");
-        const businessService = get(payload, "challans[0].businessService");
-        dispatch(setRoute(`/uc/acknowledgement?purpose=${operation}&status=success&tenantId=${getTenantId()}&serviceCategory=${businessService}&challanNumber=${consumerCode}`));
-      } else {
-        console.info("some error  happened while cancelling challan");
-        dispatch(setRoute(`/uc/acknowledgement?purpose=${operation}&status=failure`));
-      }
-    }
-  }catch(e){
-    dispatch(setRoute(`/uc/acknowledgement?purpose=${operation}&status=failure`));
-  }
-}
- 
+};
 
 const generateBill = async (
   consumerCode,
   tenantId,
   businessService,
-  operation,
   dispatch
-  
 ) => {
   try {
     const payload = await httpRequest(
       "post",
-      `/billing-service/bill/v2/_fetchbill?consumerCode=${consumerCode}&businessService=${businessService}&tenantId=${tenantId}`,
-       "",
+      `/billing-service/bill/_generate?consumerCode=${consumerCode}&businessService=${businessService}&tenantId=${tenantId}`,
+      "",
       [],
       {}
     );
     if (payload && payload.Bill[0]) {
-      dispatch(prepareFinalObject("ReceiptTemp[0].Bill", payload.Bill));                
-      dispatch(setRoute(`/uc/acknowledgement?purpose=${operation}&status=success&tenantId=${tenantId}&billNumber=${payload.Bill[0].billNumber}&serviceCategory=${businessService}&challanNumber=${consumerCode}`));
-    }
-    else{     
-      dispatch(setRoute(`/uc/acknowledgement?purpose=${operation}&status=failure`));
+      dispatch(prepareFinalObject("ReceiptTemp[0].Bill", payload.Bill));
+      const estimateData = createEstimateData(payload.Bill[0]);
+      estimateData &&
+        estimateData.length &&
+        dispatch(
+          prepareFinalObject(
+            "applyScreenMdmsData.estimateCardData",
+            estimateData
+          )
+        );
+      dispatch(
+        prepareFinalObject("applyScreenMdmsData.consumerCode", consumerCode)
+      );
+      dispatch(
+        prepareFinalObject(
+          "applyScreenMdmsData.businessService",
+          businessService
+        )
+      );
+      dispatch(setRoute(`/uc/pay?tenantId=${tenantId}`));
     }
   } catch (e) {
     console.log(e);
-    dispatch(setRoute(`/uc/acknowledgement?purpose=${operation}&status=failure`));
   }
 };
 
@@ -328,14 +295,14 @@ const createEstimateData = billObject => {
   return fees;
 };
 
-const isTaxPeriodValid = (dispatch, challan, state) => {
+const isTaxPeriodValid = (dispatch, demand, state) => {
   const taxPeriods = get(
     state.screenConfiguration,
     "preparedFinalObject.applyScreenMdmsData.BillingService.TaxPeriod",
     []
   );
-  const selectedFrom = new Date(challan.taxPeriodFrom);
-  const selectedTo = new Date(challan.taxPeriodTo);
+  const selectedFrom = new Date(demand.taxPeriodFrom);
+  const selectedTo = new Date(demand.taxPeriodTo);
   if (selectedFrom <= selectedTo) {
     return true;
   } else {
@@ -351,5 +318,31 @@ const isTaxPeriodValid = (dispatch, challan, state) => {
     );
     return false;
   }
- 
+
+  //Validation against MDMS Tax periods not required as of now.
+  let found =
+    taxPeriods.length > 0 &&
+    taxPeriods.find(item => {
+      const fromDate = new Date(item.fromDate);
+      const toDate = new Date(item.toDate);
+      return (
+        item.service === demand.businessService &&
+        fromDate <= selectedFrom &&
+        toDate >= selectedTo
+      );
+    });
+  if (found) return true;
+  else {
+    dispatch(
+      toggleSnackbar(
+        true,
+        {
+          labelName: "Please select the right tax period",
+          labelKey: "UC_NEW_COLLECTION_WRONG_TAX_PERIOD_MSG"
+        },
+        "warning"
+      )
+    );
+    return false;
+  }
 };
