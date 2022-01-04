@@ -285,7 +285,7 @@ export const directMapping = async (
     else {
       directArr[i].val = getValue(
         directArr[i].val,
-        "",
+        "NA",
         directArr[i].valJsonPath
       );
       if (
