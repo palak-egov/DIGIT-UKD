@@ -19,6 +19,7 @@ const createOwnerDetails = () => ({
   dob:"",
   correspondenceAddress: "",
   key: Date.now(),
+  pan:""
 });
 
 const TLInOwnerDetailsEmployee = ({ config, onSelect, userType, formData, setError, formState, clearErrors }) => {
@@ -300,7 +301,8 @@ const OwnerForm = (_props) => {
                 control={control}
                 name={"pan"}
                 defaultValue={owner?.pan}
-                rules={{validate: { pattern: (val) => (/^[A-Za-z]{5}([0-9]){4}[A-Za-z]{1} *$/.test(val) ? true : t("TL_PANCARD_ERROR_MESSAGE")) } }}
+                //rules={{validate: { pattern: (val) => (/^[A-Za-z]{5}([0-9]){4}[A-Za-z]{1} *$/.test(val) ? true : t("TL_PANCARD_ERROR_MESSAGE")) } }}
+                rules={{ validate: (e) => ((e && getPattern("PAN").test(e)) || !e ? true : t("TL_PANCARD_ERROR_MESSAGE")) }}
                 render={(props) => (
                   <TextInput
                     value={props.value}
