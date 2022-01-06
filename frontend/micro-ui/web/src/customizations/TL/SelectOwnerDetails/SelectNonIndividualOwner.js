@@ -149,7 +149,7 @@ const SelectNonIndividualOwner = ({
       <CardLabel>{t("TL_TRADE_RELATIONSHIP")}</CardLabel>
       <Controller
         name="tradeRelationship"
-        rules={{ required: true }}
+       // rules={{ required: true }}
         control={control}
         render={({ onChange, onBlur, value }) => (
           <RadioOrSelect
@@ -165,7 +165,7 @@ const SelectNonIndividualOwner = ({
       <CardLabel>{t("TL_EMAIL_LABEL")}</CardLabel>
       <Controller
         name="email"
-        rules={{ required: true }}
+        //rules={{ required: true }}
         control={control}
         render={({ onChange, onBlur, value }) => (
           <div className="field-container">
