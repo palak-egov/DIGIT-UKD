@@ -86,7 +86,7 @@ const SelectTradeName = ({
           onChange={setSelectTradeName}
           disable={isEdit}
           {...(validation = {
-            pattern: "^[a-zA-Z-.`' ]*$",
+            pattern: "^[^{0-9}^\$\"'<>?\\\\~`!@#$%^()+={}\[\]*,._:;“”‘’]*$",
             isRequired: true,
             type: "text",
             title: t("TL_INVALID_TRADE_NAME"),
