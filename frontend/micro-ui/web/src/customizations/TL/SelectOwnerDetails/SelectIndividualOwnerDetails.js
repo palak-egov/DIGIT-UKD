@@ -182,7 +182,6 @@ const IndividualOwnerForm = ({
   const { errors } = formState;
 
   const formValue = watch();
-debugger
   useEffect(() => {
     const keys = Object.keys(formValue);
     const part = {};
@@ -255,15 +254,7 @@ debugger
           onClick={(e) => deleteOwner(ownerIndex)}
         />
       )}
-      <CardLabel>{t("TL_MOBILE_NUMBER_LABEL") + "*"}</CardLabel>
-      <Controller
-        name="mobileNumber"
-        rules={{ required: true }}
-        control={control}
-        render={({ onChange, onBlur, value }) => (
-          <MobileNumber onChange={onChange} value={value} />
-        )}
-      />
+     
       <CardLabel>{t("TL_OWNER_NAME") + "*"}</CardLabel>
       <div className="field-container">
         <Controller
@@ -281,7 +272,15 @@ debugger
           )}
         />
       </div>
-
+      <CardLabel>{t("TL_MOBILE_NUMBER_LABEL") + "*"}</CardLabel>
+      <Controller
+        name="mobileNumber"
+        rules={{ required: true }}
+        control={control}
+        render={({ onChange, onBlur, value }) => (
+          <MobileNumber onChange={onChange} value={value} />
+        )}
+      />
       <CardLabel>{t("TL_FATHER_HUSBAND_NAME_LABEL") + "*"}</CardLabel>
       <div className="field-container">
         <Controller

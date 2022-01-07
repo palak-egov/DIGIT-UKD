@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   FormStep,
   TextInput,
@@ -6,18 +6,136 @@ import {
   RadioOrSelect,
   MobileNumber,
   DatePicker,
+  LinkButton,
 } from "@egovernments/digit-ui-react-components";
 
 import { useForm, Controller } from "react-hook-form";
 
 import _ from "lodash";
+import { getPattern } from "../../utils";
 
-const SelectNonIndividualOwner = ({
+const newOwner = {
+  mobileNumber: "",
+  ownerName: "",
+  fatherHusbandName: "",
+  relationship: "",
+  gender: "",
+  DOB: "",
+  email: "",
+  panNo: "",
+  correspondenceAddress: "",
+  tradeRelationship: "",
+  designation: ""
+};
+
+const SelectNonIndividualOwner = ({ t, config, onSelect, userType, formData }) => {
+  let ismultiple = formData?.ownershipCategory?.code?.includes("SINGLEOWNER")
+    ? false
+    : true;
+
+  const [owners, setOwners] = useState(() => {
+    return formData?.[config.key]?.owners?.length
+      ? formData?.[config.key]?.owners
+      : [newOwner];
+  });
+
+  useEffect(() => {
+    if (!ismultiple && owners.length > 1) {
+      setOwners([owners[0]]);
+    }
+  }, [owners]);
+
+  const setOwner = (index, owner) => {
+    setOwners(owners?.map((e, i) => (index === i ? owner : e)));
+  };
+
+  const addOwner = () => {
+    setOwners([...owners, newOwner]);
+  };
+
+  const deleteOwner = (index) => {
+    setOwners(
+      owners.filter((e, i) => {
+        console.log(index, i, e, index == i ? "deleted" : "", "index");
+        return index != i;
+      })
+    );
+  };
+
+  const goNext = () => {
+    onSelect(config.key, {
+      owners: owners?.map((e) => {
+        const { errors, ...o } = e;
+        return o;
+      }),
+    });
+  };
+
+  return (
+    <FormStep
+      config={config}
+      onSelect={goNext}
+      isDisabled={
+        owners?.filter?.((e) => Object.keys(e?.errors || {}).length)?.length
+      }
+      t={t}
+    >
+      {owners?.map((_owner, i) => {
+        const { ...owner } = _owner;
+        return (
+          <IndividualOwnerForm
+            {...{
+              t,
+              config,
+              onSelect,
+              userType,
+              formData,
+              setOwner,
+              owner,
+              owners,
+              deleteOwner,
+            }}
+            ownerIndex={i}
+            key={i}
+          />
+        );
+      })}
+      {ismultiple && (
+        <div>
+          {/* <hr color="#d6d5d4" className="break-line"></hr> */}
+          <div
+            style={{
+              justifyContent: "center",
+              display: "flex",
+              paddingBottom: "15px",
+              color: "#FF8C00",
+            }}
+          >
+           {/*  <button
+              type="button"
+              style={{ paddingTop: "10px" }}
+              onClick={() => addOwner()}
+            >
+              {t("TL_ADD_OWNER_LABEL")}
+            </button> */}
+          </div>
+        </div>
+      )}
+    </FormStep>
+  );
+};
+
+const IndividualOwnerForm = ({
   t,
   config,
   onSelect,
   userType,
   formData,
+  owner,
+  setOwner,
+  ownerIndex,
+  owners,
+  deleteOwner,
 }) => {
   const stateId = window.Digit.ULBService.getStateId();
   const { data: genderMenu } = window.Digit.Hooks.tl.useTLGenderMDMS(
@@ -27,24 +145,25 @@ const SelectNonIndividualOwner = ({
     {}
   );
 
+  let ismultiple = formData?.ownershipCategory?.code?.includes("SINGLEOWNER")
+    ? false
+    : true;
+
   const defaultValues = {
-    mobileNumber: formData?.[config.key]?.mobileNumber,
-    authorisedPersonName: formData?.[config.key]?.authorisedPersonName,
-    fatherHusbandName: formData?.[config.key]?.fatherHusbandName,
-    gender: formData?.[config.key]?.gender,
-    tradeRelationship: formData?.[config.key]?.tradeRelationship,
-    email: formData?.[config.key]?.email,
-    designation: formData?.[config.key]?.designation,
-    relationship: formData?.[config.key]?.relationship,
-    DOB: formData?.[config.key]?.DOB,
-    correspondenceAddress: formData?.[config.key]?.correspondenceAddress,
+    mobileNumber: owner?.mobileNumber,
+    ownerName: owner?.ownerName,
+    fatherHusbandName: owner?.fatherHusbandName,
+    relationship: owner?.relationship,
+    gender: owner?.gender,
+    DOB: owner?.DOB,
+    email: owner?.email,
+    panNo: owner?.panNo,
+    correspondenceAddress: owner?.correspondenceAddress,
+    tradeRelationship: owner?.tradeRelationship,
+    designation : owner?.designation
   };
 
   const [_formValue, setFormValue] = useState(defaultValues);
-
-  useEffect(() => {
-    trigger();
-  }, []);
 
   const TradeRelationshipMenu = [
     { i18nKey: "TL_PROPRIETOR", code: "PROPRIETOR" },
@@ -65,11 +184,6 @@ const SelectNonIndividualOwner = ({
   const { errors } = formState;
 
   const formValue = watch();
-
-  const goNext = () => {
-    onSelect(config.key, { ...formData?.[config.key], ...formValue });
-  };
-
   useEffect(() => {
     const keys = Object.keys(formValue);
     const part = {};
@@ -77,32 +191,77 @@ const SelectNonIndividualOwner = ({
     if (!_.isEqual(formValue, part)) {
       trigger();
       setFormValue(formValue);
+      setOwner(ownerIndex, { ...formValue, errors });
     }
   }, [formValue]);
 
-  console.log(errors, formValue, "errors here");
+  useEffect(() => {
+    if (owner) {
+      Object.keys(owners[ownerIndex])?.forEach((key) => {
+        if (key !== "errors") setValue(key, owners[ownerIndex]?.[key]);
+      });
+    }
+  }, [owner]);
+
+  useEffect(() => {
+    trigger();
+  }, []);
+
+  useEffect(() => {
+    setOwner(ownerIndex, { ...formValue, errors });
+  }, [errors]);
 
   return (
-    <FormStep
-      config={config}
-      onSelect={goNext}
-      isDisabled={Object.keys(errors).length > 0}
-      t={t}
+    <div
+      style={
+        ismultiple
+          ? {
+              border: "solid",
+              borderRadius: "5px",
+              padding: "10px",
+              paddingTop: "20px",
+              marginTop: "10px",
+              borderColor: "#f3f3f3",
+              background: "#FAFAFA",
+            }
+          : {}
+      }
     >
-      <CardLabel>{t("TL_MOBILE_NUMBER_LABEL")}</CardLabel>
-      <Controller
-        name="mobileNumber"
-        rules={{ required: true }}
-        control={control}
-        render={({ onChange, onBlur, value }) => (
-          <MobileNumber onChange={onChange} value={value} />
-        )}
-      />
-      <CardLabel>{t("TL_AUTHORISED_PERSON_LABEL")}</CardLabel>
+ {/*      {ismultiple && (
+        <LinkButton
+          label={
+            <div>
+              <span>
+                <svg
+                  style={{
+                    float: "right",
+                    position: "relative",
+                    bottom: "5px",
+                  }}
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z"
+                    fill={!(owners.length == 1) ? "#494848" : "#FAFAFA"}
+                  />
+                </svg>
+              </span>
+            </div>
+          }
+          style={{ width: "100px", display: "inline" }}
+          onClick={(e) => deleteOwner(ownerIndex)}
+        />
+      )} */}
+      
+      <CardLabel>{t("TL_AUTHORISED_PERSON_LABEL") + "*"}</CardLabel>
       <div className="field-container">
         <Controller
-          name="authorisedPersonName"
-          rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+          name="ownerName"
+          rules={{ required: true, pattern: getPattern("Name") }}
           control={control}
           render={({ onChange, onBlur, value }) => (
             <TextInput
@@ -115,11 +274,21 @@ const SelectNonIndividualOwner = ({
           )}
         />
       </div>
-      <CardLabel>{t("TL_FATHER_HUSBAND_NAME_LABEL")}</CardLabel>
+      <CardLabel>{t("TL_MOBILE_NUMBER_LABEL") + "*"}</CardLabel>
+      <Controller
+        name="mobileNumber"
+        rules={{ required: true }}
+        control={control}
+        render={({ onChange, onBlur, value }) => (
+          <MobileNumber onChange={onChange} value={value} />
+        )}
+      />
+
+      <CardLabel>{t("TL_FATHER_HUSBAND_NAME_LABEL") + "*"}</CardLabel>
       <div className="field-container">
         <Controller
           name="fatherHusbandName"
-          rules={{ required: true, pattern: /^[a-zA-Z]{1,}$/ }}
+          rules={{ required: true, pattern: getPattern("Name") }}
           control={control}
           render={({ onChange, onBlur, value }) => (
             <TextInput
@@ -129,7 +298,38 @@ const SelectNonIndividualOwner = ({
           )}
         />
       </div>
-      <CardLabel>{t("TL_GENDER_LABEL")}</CardLabel>
+      <CardLabel>{t("TL_DESIGNATION") + "*"}</CardLabel>
+      <div className="field-container">
+        <Controller
+          name="designation"
+          rules={{ required: true, pattern: getPattern("Name") }}
+          control={control}
+          render={({ onChange, onBlur, value }) => (
+            <TextInput
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+            />
+          )}
+        />
+      </div>
+      <CardLabel>{t("TL_RELATIONSHIP") + "*"}</CardLabel>
+      <Controller
+        name="relationship"
+        rules={{ required: true }}
+        control={control}
+        render={({ onChange, onBlur, value }) => (
+          <RadioOrSelect
+            options={relationshipMenu || []}
+            onSelect={onChange}
+            selectedOption={value}
+            optionKey={"i18nKey"}
+            onBlur={onBlur}
+            t={t}
+          />
+        )}
+      />
+
+      <CardLabel>{t("TL_GENDER_LABEL") + "*"}</CardLabel>
       <Controller
         name="gender"
         rules={{ required: true }}
@@ -146,10 +346,60 @@ const SelectNonIndividualOwner = ({
         )}
       />
 
+      <CardLabel>{t("TL_EMAIL_LABEL")}</CardLabel>
+      <Controller
+        name="email"
+        rules={{ pattern: getPattern("Email") }}
+        control={control}
+        render={({ onChange, onBlur, value }) => (
+          <div className="field-container">
+            <TextInput
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+            />
+          </div>
+        )}
+      />
+
+      {/* <CardLabel>{t("TL_PAN_NO_LABEL")}</CardLabel>
+      <Controller
+        name="panNo"
+        rules={{ pattern: getPattern("PAN") }}
+        control={control}
+        render={({ onChange, onBlur, value }) => (
+          <TextInput value={value} onChange={(e) => onChange(e.target.value)} />
+        )}
+      /> */}
+
+      <CardLabel>{t("TL_DATE_OF_BIRTH_LABEL") + "*"}</CardLabel>
+      <Controller
+        name="DOB"
+        rules={{ required: true }}
+        control={control}
+        render={({ onChange, onBlur, value }) => (
+          <DatePicker onChange={onChange} date={value} />
+        )}
+      />
+
+      <CardLabel>{t("TL_CORRESPONDENCE_ADDRESS_LABEL") + "*"}</CardLabel>
+      <Controller
+        name="correspondenceAddress"
+        rules={{ required: true, pattern: getPattern("Address") }}
+        control={control}
+        render={({ onChange, onBlur, value }) => (
+          <div className="field-container">
+            <TextInput
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+            />
+          </div>
+        )}
+      />
+
       <CardLabel>{t("TL_TRADE_RELATIONSHIP")}</CardLabel>
       <Controller
         name="tradeRelationship"
-       // rules={{ required: true }}
+        rules={{}}
         control={control}
         render={({ onChange, onBlur, value }) => (
           <RadioOrSelect
@@ -162,86 +412,7 @@ const SelectNonIndividualOwner = ({
           />
         )}
       />
-      <CardLabel>{t("TL_EMAIL_LABEL")}</CardLabel>
-      <Controller
-        name="email"
-        //rules={{ required: true }}
-        control={control}
-        render={({ onChange, onBlur, value }) => (
-          <div className="field-container">
-            <TextInput
-              value={value}
-              onChange={(e) => onChange(e.target.value)}
-            />
-          </div>
-        )}
-      />
-
-      <CardLabel>{t("TL_OFFICIAL_MOBILE_NUMBER_LABEL")}</CardLabel>
-      <Controller
-        name="mobileNumber"
-        rules={{ required: true }}
-        control={control}
-        render={({ onChange, onBlur, value }) => (
-          <MobileNumber onChange={onChange} value={value} />
-        )}
-      />
-      <CardLabel>{t("TL_DESIGNATION_LABEL")}</CardLabel>
-      <Controller
-        name="designation"
-        rules={{ required: true }}
-        control={control}
-        render={({ onChange, onBlur, value }) => (
-          <div className="field-container">
-            <TextInput
-              value={value}
-              onChange={(e) => onChange(e.target.value)}
-            />
-          </div>
-        )}
-      />
-
-      <CardLabel>{t("TL_RELATIONSHIP_LABEL")}</CardLabel>
-      <Controller
-        name="relationship"
-        rules={{ required: true }}
-        control={control}
-        render={({ onChange, onBlur, value }) => (
-          <RadioOrSelect
-            options={relationshipMenu}
-            selectedOption={value}
-            onSelect={onChange}
-            optionKey={"i18nKey"}
-            t={t}
-          />
-        )}
-      />
-
-      <CardLabel>{t("TL_DATE_OF_BIRTH_LABEL")}</CardLabel>
-      <Controller
-        name="DOB"
-        rules={{ required: true }}
-        control={control}
-        render={({ onChange, onBlur, value }) => (
-          <DatePicker onChange={onChange} date={value} />
-        )}
-      />
-
-      <CardLabel>{t("TL_CORRESPONDENCE_ADDRESS_LABEL")}</CardLabel>
-      <Controller
-        name="correspondenceAddress"
-        rules={{ required: true }}
-        control={control}
-        render={({ onChange, onBlur, value }) => (
-          <div className="field-container">
-            <TextInput
-              value={value}
-              onChange={(e) => onChange(e.target.value)}
-            />
-          </div>
-        )}
-      />
-    </FormStep>
+    </div>
   );
 };
 
