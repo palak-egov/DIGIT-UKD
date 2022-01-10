@@ -20,7 +20,7 @@ import {
   PaymentModule,
   PaymentLinks,
   paymentConfigs,
-} from "@egovernments/digit-ui-module-common";
+} from "./customizations/common/src/Module";
 import { DigitUI } from "@egovernments/digit-ui-module-core";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 import {
