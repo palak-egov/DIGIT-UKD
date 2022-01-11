@@ -259,7 +259,7 @@ const IndividualOwnerForm = ({
       <div className="field-container">
         <Controller
           name="ownerName"
-          rules={{ required: true, pattern: getPattern("Name") }}
+          rules={{ required: t("REQUIRED_FIELD"), validate: { pattern: (val) => (/^[^{0-9}^\$\"'<>?\\\\~`!@#$%^()+={}\[\]*,._:;“”‘’]*$/.test(val) ? true : t("INVALID_NAME")) } }}
           control={control}
           render={({ onChange, onBlur, value }) => (
             <TextInput
