@@ -383,7 +383,8 @@ const OwnerForm = (_props) => {
             <Controller
               control={control}
               name={"relationship"}
-              defaultValue={owner?.relationship}
+              defaultValue= {{code: owner?.relationship,
+                i18nKey: owner?.relationship &&  `TL_${owner?.relationship}`}}      
                rules={{ required: "RelationShip Required" }}
               render={(props) => (
                 <Dropdown
