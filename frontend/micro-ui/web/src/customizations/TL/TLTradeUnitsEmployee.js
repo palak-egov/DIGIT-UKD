@@ -180,11 +180,11 @@ const TLTradeUnitsEmployee = ({
           {...commonProps}
         />
       ))}
-      <LinkButton
+    {  !isRenewal && <LinkButton
         label={t("TL_ADD_TRADE_UNIT")}
         onClick={addNewUnits}
         style={{ color: "#F47738", width: "fit-content" }}
-      />
+      />}
     </React.Fragment>
   );
 };
