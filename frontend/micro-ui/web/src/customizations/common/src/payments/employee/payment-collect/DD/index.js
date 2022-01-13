@@ -103,7 +103,7 @@ export const DDDetailsComponent = (props) => {
             <h2 className="card-label">{t("PAYMENT_IFSC_CODE_LABEL")} *</h2>
             <div className="field">
               <div>
-                <div className="dd-date">
+                <div className="cheque-date">
                   <input value={ifscCode} type="text" onChange={handleIFSCChange} minlength="11" maxlength="11" required />
                   <button type="button" onClick={setBankDetailsFromIFSC}>
                     <SearchIconSvg />
