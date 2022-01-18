@@ -21,6 +21,10 @@ router.post(
     var bussinessService = req.query.bussinessService;
     var receiptKey = req.query.pdfKey;
     var requestinfo = req.body;
+
+    console.log("consumerCode-->", consumerCode);
+    console.log("bussinessService-->", bussinessService);
+
     if (requestinfo == undefined) {
       return renderError(res, "requestinfo can not be null", 400);
     }
@@ -43,6 +47,13 @@ router.post(
       if (payments && payments.Payments && payments.Payments.length > 0) {
         var pdfResponse;
         var pdfkey = receiptKey || config.pdf.consolidated_receipt_template;
+
+        if (bussinessService === 'PT'|| bussinessService === 'TL'){
+          pdfkey = receiptKey || config.pdf.consolidated_receipt_template;
+        }else{
+          pdfkey = config.pdf.misc_receipt_template;
+        }
+
         try {
           pdfResponse = await create_pdf(
             tenantId,
