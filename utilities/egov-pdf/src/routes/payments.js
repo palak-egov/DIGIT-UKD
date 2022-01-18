@@ -52,6 +52,7 @@ router.post(
           pdfkey = receiptKey || config.pdf.consolidated_receipt_template;
         }else{
           pdfkey = config.pdf.misc_receipt_template;
+          console.log("pdfkey--->", pdfkey);
         }
 
         try {
