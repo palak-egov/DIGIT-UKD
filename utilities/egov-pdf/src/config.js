@@ -34,8 +34,7 @@ module.exports = {
     wns_one_time_receipt:
       process.env.WNS_ONE_TIME_RECEIPT || "ws-onetime-receipt",
     wns_bill: 
-    process.env.WNS_BILL || "ws-bill",
-    misc_receipt_template: "misc-receipt",
+    process.env.WNS_BILL || "ws-bill"
   },
   app: {
     port: parseInt(process.env.APP_PORT) || 8080,
