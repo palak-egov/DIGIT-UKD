@@ -50,10 +50,10 @@ export const CollectPayment = (props) => {
     { code: "CASH", label: t("COMMON_MASTERS_PAYMENTMODE_CASH") },
     { code: "CHEQUE", label: t("COMMON_MASTERS_PAYMENTMODE_CHEQUE") },
     //{ code: "CARD", label: t("COMMON_MASTERS_PAYMENTMODE_CREDIT/DEBIT CARD") },
-    { code: "DD", label: "Demand Draft" },
-    { code: "POS", label: "POS" },
+    { code: "DD", label: t("COMMON_MASTERS_PAYMENTMODE_DD")  },
+    { code: "POS", label: t("COMMON_MASTERS_PAYMENTMODE_POS") },
     // { code: "OFFLINE_NEFT", label: "Offline NEFT" },
-     { code: "OFFLINE_RTGS", label: "RTGS" },
+     { code: "OFFLINE_RTGS",  label: t("COMMON_MASTERS_PAYMENTMODE_RTGS") },
     // { code: "POSTAL_ORDER", label: "Postal Order" },
   ];
 
