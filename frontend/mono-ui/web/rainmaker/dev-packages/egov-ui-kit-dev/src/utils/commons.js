@@ -932,7 +932,10 @@ export const getApplicationType = async (applicationNumber, tenantId, creationRe
         return 'PT.MUTATION';
       } else if (creationReason == 'CREATE') {
         return 'PT.CREATE';
-      } else if (creationReason == 'UPDATE') {
+      }
+      else if (creationReason == 'UPDATE' && applicationNumber.includes("UK-MT-")) {
+        return 'PT.MUTATION';}
+      else if (creationReason == 'UPDATE') {
         return 'PT.CREATE';
       }
       else {

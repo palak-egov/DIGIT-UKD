@@ -12,6 +12,7 @@ import { downloadReceipt } from "egov-ui-kit/redux/properties/actions";
 class PaymentHistory extends Component {
     constructor(props) {
         super(props);
+        
         this.state = {
             items: [],
             showItems: false,
@@ -41,13 +42,16 @@ class PaymentHistory extends Component {
             outline: "none",
             alignItems: "right",
         };
-        const { Payments = [], downloadReceipt, properties, workflowStatus } = this.props;
+        const { Payments = [] ,downloadReceipt, properties, workflowStatus} = this.props;
         var finalStatus = workflowStatus && workflowStatus.ProcessInstances[0] && workflowStatus.ProcessInstances[0].action;
-        const workFlowLastModifiedDate =
-          workflowStatus && workflowStatus.ProcessInstances[0] && workflowStatus.ProcessInstances[0].auditDetails.lastModifiedTime;
-        const paymentDate = Payments && Payments[0] && Payments[0].transactionDate;
-        let IsDateValid = workFlowLastModifiedDate > paymentDate;
+        const workFlowLastModifiedDate =  workflowStatus && workflowStatus.ProcessInstances[0] && workflowStatus.ProcessInstances[0].auditDetails.lastModifiedTime;
+        const paymentDate =  Payments && Payments[0] && Payments[0].transactionDate;
+        let IsDateValid   = workFlowLastModifiedDate>paymentDate;
+
         const paymentHistoryItems = Payments.map((payment, index) => {
+            
+            if(payment.paymentStatus!='CANCELLED')
+          {
             const amount=payment.totalAmountPaid==0?'0':payment.totalAmountPaid;
             return (
                 <div  style={{borderTop: "1px solid #474343", height: "91px" }}>
@@ -58,7 +62,7 @@ class PaymentHistory extends Component {
                         {getFullRow("PT_HISTORY_BILL_PERIOD", this.getBillPeriod(payment.paymentDetails[0].bill.billDetails), 6)}
                         <div className="col-sm-6 col-xs-12" style={{ marginBottom: 10, marginTop: 5 }}>
                             <div className="assess-history" style={{ float: "right" }}>
-                            {(this.props.properties.status!=="INWORKFLOW" && !IsDateValid && finalStatus !== "APPROVED" && payment.instrumentStatus!=="CANCELLED")? <Button
+                            {(this.props.properties.status!=="INWORKFLOW" && !IsDateValid && finalStatus !== "APPROVED" && payment.instrumentStatus!=="CANCELLED")?<Button
                                     label={<Label buttonLabel={true} label="PT_DOWNLOAD_RECEIPT" color="rgb(254, 122, 81)" fontSize="16px" height="35px" labelStyle={labelStyle} />}
                                     buttonStyle={buttonStyle}
                                     onClick={() => {
@@ -74,7 +78,7 @@ class PaymentHistory extends Component {
                         </div >
                     </div>)               
             
-        })
+        }})
         return paymentHistoryItems;
     }
 
@@ -83,9 +87,21 @@ class PaymentHistory extends Component {
         const { Payments = [] } = this.props;
 
         let paymentHistoryItem = [];
-        if (Payments.length > 0) {
+       
+        let finalPayments=[];
+       
+        Payments.map((payment, index) => {
+            if(payment && payment.paymentStatus!='CANCELLED')
+            {
+                finalPayments.push(payment);
+            }
+        })
+      
+        if (finalPayments.length > 0) {
+            
             paymentHistoryItem = this.getTransformedPaymentHistory();
         }
+       
         const items = this.state.showItems ? this.state.items : [];
         const errorMessage = this.state.showItems&&items.length==0 ? this.state.errorMessage : '';
         return (<HistoryCard header={'PT_PAYMENT_HISTORY'} items={items} errorMessage={errorMessage} onHeaderClick={() => {
