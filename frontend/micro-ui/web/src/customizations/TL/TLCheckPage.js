@@ -111,7 +111,8 @@ const CheckPage = ({ onSubmit, value }) => {
     pitDetail,
     isEditProperty,
     noofemployees,
-    operationalarea
+    operationalarea,
+    tradeLicenseDetail
   } = value;
 
    const [declaration, setDeclaration] = useState(false)
@@ -159,22 +160,22 @@ const CheckPage = ({ onSubmit, value }) => {
           />
           <Row
             label={t("TL_OCCUPANCY_TYPE")}
-            text={t(TradeDetails?.OccupancyType?.code)}
+            text={t(TradeDetails?.OccupancyType?.code || tradeLicenseDetail?.additionalDetail?.occupancyType)}
             actionButton={<ActionButton jumpTo={`${routeLink}/OccupancyType`} />}
           />
            <Row
             label={t("TL_GST_NO")}
-            text={t(TradeDetails?.gstNo)}
+            text={t(TradeDetails?.gstNo || tradeLicenseDetail?.additionalDetail?.gstNo)}
             actionButton={<ActionButton jumpTo={`${routeLink}/gst-no`} />}
           />
           <Row
             label={t("TL_NO_OF_EMPLOYEES")}
-            text={t(noofemployees?.noofemployees)}
+            text={t(noofemployees?.noofemployees || tradeLicenseDetail?.noOfEmployees)}
             actionButton={<ActionButton jumpTo={`${routeLink}/noofemployees`} />}
           />
            <Row
             label={t("TL_OPERATIONAL_AREA")}
-            text={t(operationalarea?.operationalarea)}
+            text={t(operationalarea?.operationalarea || tradeLicenseDetail?.operationalArea)}
             actionButton={<ActionButton jumpTo={`${routeLink}/operationalarea`} />}
           />
           <Row
@@ -208,7 +209,7 @@ const CheckPage = ({ onSubmit, value }) => {
               <ActionButton jumpTo={`${routeLink}/commencement-date`} />
             }
           />
-          {TradeDetails.units.map((unit, index) => (
+          {TradeDetails && TradeDetails.units && TradeDetails.units.map((unit, index) => (
             <div key={index}>
               <CardSubHeader>
                 {t("TL_UNIT_HEADER")}-{index + 1}
@@ -250,7 +251,7 @@ const CheckPage = ({ onSubmit, value }) => {
               />
             </div>
           ))}
-          {TradeDetails.accessories &&
+          {TradeDetails && TradeDetails.accessories &&
             TradeDetails.accessories.map((acc, index) => (
               <div key={index}>
                 <CardSubHeader>
@@ -300,8 +301,65 @@ const CheckPage = ({ onSubmit, value }) => {
             }`}
             actionButton={<ActionButton jumpTo={`${routeLink}/map`} />}
           />
-          <CardSubHeader>{t("TL_NEW_OWNER_DETAILS_HEADER")}</CardSubHeader>
-          {owners.owners &&
+             <CardSubHeader>{t("TL_NEW_OWNER_DETAILS_HEADER")}</CardSubHeader>
+          {tradeLicenseDetail && tradeLicenseDetail.owners &&
+          tradeLicenseDetail.owners.map((owner, index) => (
+              <div key={index}>
+                <CardSubHeader>
+                  {t("TL_PAYMENT_PAID_BY_PLACEHOLDER")}-{index + 1}
+                </CardSubHeader>
+                <Row
+                  label={t("TL_COMMON_TABLE_COL_OWN_NAME")}
+                  text={t(owner?.name)}
+                  actionButton={
+                    <ActionButton jumpTo={`${routeLink}/owner-details`} />
+                  }
+                />
+                <Row
+                  label={t("TL_NEW_OWNER_DETAILS_GENDER_LABEL")}
+                  text={t(owner?.gender)}
+                  actionButton={
+                    <ActionButton jumpTo={`${routeLink}/owner-details`} />
+                  }
+                />
+                <Row
+                  label={t("TL_MOBILE_NUMBER_LABEL")}
+                  text={t(owner?.mobileNumber)}
+                  actionButton={
+                    <ActionButton jumpTo={`${routeLink}/owner-details`} />
+                  }
+                />
+                <Row
+                  label={t("TL_FATHER_OR_HUSBAND_LABEL")}
+                  text={t(owner?.fatherOrHusbandName)}
+                  actionButton={
+                    <ActionButton jumpTo={`${routeLink}/owner-details`} />
+                  }
+                />
+                <Row
+                  label={t("TL_RELAIONSHIP_LABEL")}
+                  text={t(owner?.relationship)}
+                  actionButton={
+                    <ActionButton jumpTo={`${routeLink}/owner-details`} />
+                  }
+                />                
+                <Row
+                  label={t("TL_TRADE_RELAIONSHIP_LABEL")}
+                  text={t(owner?.tradeRelationship?.code)}
+                  actionButton={
+                    <ActionButton jumpTo={`${routeLink}/owner-details`} />
+                  }
+                />
+                 <Row
+                  label={t("TL_PANCARD_LABEL")}
+                  text={t(owner?.pan)}
+                  actionButton={
+                    <ActionButton jumpTo={`${routeLink}/owner-details`} />
+                  }
+                />
+              </div>
+            ))}
+          {!isEdit && owners && owners.owners &&
             owners.owners.map((owner, index) => (
               <div key={index}>
                 <CardSubHeader>
