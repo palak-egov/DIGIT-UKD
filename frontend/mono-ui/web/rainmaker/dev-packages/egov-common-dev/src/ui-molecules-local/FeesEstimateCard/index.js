@@ -10,7 +10,7 @@ import { LabelContainer } from "egov-ui-framework/ui-containers";
 import EstimateCardContainer from "../../ui-containers-local/EstimateCardContainer";
 import get from "lodash/get";
 import { ifUserRoleExists } from "egov-common/ui-config/screens/specs/utils";
-
+import { getLocaleLabels } from "egov-ui-framework/ui-utils/commons";
 
 const roleExists = ifUserRoleExists("CITIZEN");
 
@@ -82,7 +82,28 @@ function totalAmount(arr) {
     .map(item => (item.value ? item.value : 0))
     .reduce((prev, next) => prev + next, 0);
 }
+function getNameFromTax(name)
+{
 
+  if(name=='PT_TAX'){
+    let fy=" ("+getCurrentFinancialYear()+")"
+  return getLocaleLabels(name,name)+fy;}
+  else 
+  return getLocaleLabels(name,name)
+}
+var getCurrentFinancialYear = function getCurrentFinancialYear() {
+  var today = new Date();
+  var curMonth = today.getMonth();
+  var fiscalYr = "";
+  if (curMonth > 3) {
+    var nextYr1 = (today.getFullYear() + 1).toString();
+    fiscalYr = today.getFullYear().toString() + "-" + nextYr1;
+  } else {
+    var nextYr2 = today.getFullYear().toString();
+    fiscalYr = (today.getFullYear() - 1).toString() + "-" + nextYr2;
+  }
+  return fiscalYr;
+};
 
 function FeesEstimateCard(props) {
   
@@ -151,7 +172,7 @@ function FeesEstimateCard(props) {
                 <Grid container xs={8}>
                   <LabelContainer
                     labelName={fee.name.labelName}
-                    labelKey={fee.name.labelKey}
+                    labelKey={getNameFromTax(fee.name.labelKey)}
                     style={styles.taxStylesLeft}
                   />
                   {/*tooltip*/}
