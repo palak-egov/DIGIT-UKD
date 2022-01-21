@@ -544,7 +544,7 @@ export const stringToBoolean = (value) => {
 export const convertToEditTrade = (data, fy = []) => {
   const currrentFYending = fy.filter(item => item.code === data?.financialYear)[0]
     .endingDate;
-  const nextFinancialYearForRenewal = fy.filter(item => item.startingDate === currrentFYending)[0].code;
+    let nextFinancialYearForRenewal = fy.filter(item => item.startingDate === currrentFYending+1000)[0].code;
   let isDirectrenewal = stringToBoolean(sessionStorage.getItem("isDirectRenewal"));
   let formdata = {
     Licenses: [
@@ -1030,9 +1030,8 @@ export const formatFormDataToCreateTLApiObject = (formData) => {
       additionalDetail: {
         occupancyType: formData?.TradeDetails?.OccupancyType?.code,
         gstNo: formData?.TradeDetails?.gstNo,
-
         electricityConnectionNo: formData?.address?.electricityConnectionNo,
-        relationType: `RELATIONTYPE.${formData?.owners?.owners[0]?.tradeRelationship?.code}`, //to be validated from formdata?.owners
+        //relationType:  formData?.owners?.[0]?.tradeRelationship?.code && `RELATIONTYPE.${formData?.owners?.[0]?.tradeRelationship?.code}`, //to be validated from formdata?.owners
       },
       operationalArea: formData?.operationalarea?.operationalarea, // to be added
       noOfEmployees: formData?.noofemployees?.noofemployees, // to be added
@@ -1042,6 +1041,7 @@ export const formatFormDataToCreateTLApiObject = (formData) => {
         uomValue: e.unit,
         rate: e.rate, //needs to be added // billing slab service
       })),
+      institution: formData?.owners?.owners?.[0]?.designation ?  {designation: formData?.owners?.owners?.[0]?.designation}:null,        
       subOwnerShipCategory: formData?.ownershipCategory?.code,
       owners: formData?.owners?.owners?.map((e) => ({
         userName: e.ownerName, //to be checked
