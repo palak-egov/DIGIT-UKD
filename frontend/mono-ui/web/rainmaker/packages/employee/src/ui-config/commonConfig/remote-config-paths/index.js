@@ -32,6 +32,9 @@ const remoteConfigPath = (path, screenKey) => {
     case "egov-common":
       config = require(`egov-common/ui-config/screens/specs/${path}/${screenKey}`).default;
       break;
+    case "bill-amend":
+      config = require(`egov-billamend/ui-config/screens/specs/${path}/${screenKey}`).default;
+      break;
     // case "egov-boilerplate":
     //   config = require(`egov-boilerplate/ui-config/screens/specs/${path}/${screenKey}`).default;
     //   break;
