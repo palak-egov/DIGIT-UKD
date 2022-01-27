@@ -66,9 +66,14 @@ const getTradeEditDetails = (data) => {
       ownerarray.push({
         gender: { code: `${ob.gender}`, name: `${!ob?.gender.includes("FEMALE") ? "Male" : "Female"}`, value: `${!ob?.gender.includes("FEMALE") ? "Male" : "Female"}`, i18nKey:`TL_GENDER_${ob.gender}` },
         isprimaryowner: false,
-        name: ob.name,
-        mobilenumber: ob.mobileNumber,
-        permanentAddress: ob.permanentAddress,
+        name: ob?.name,
+        mobileNumber: ob?.mobileNumber,
+        permanentAddress: ob?.permanentAddress,
+        fatherOrHusbandName: ob?.fatherOrHusbandName,
+        relationship: { code: `${ob.relationship}`, name: `${!ob?.gender.includes("FATHER") ? "Father" : "Mother"}`, value: `${!ob?.gender.includes("MOTHER") ? "Father" : "Mother"}`, i18nKey:`TL_GENDER_${ob.relationship}` },
+        emailId: ob?.emailId,
+        pan: ob?.pan,
+        DOB: ob?.DOB,
         id: ob.id,
       })
     })
@@ -191,12 +196,9 @@ const TLRenewTrade = (  props ) => {
   return (
    <Switch>
        {config.map((routeObj, index) => {
-           console.log("prasad inside config")
 
         const { component, texts, inputs, key } = routeObj;
-        console.log("prasad before  Component")
         const Component = typeof component === "string" ? window.Digit.ComponentRegistryService.getComponent(component) : component;
-        console.log("prasad after  Component", Component)
         return (
           <Route path={`${getPath(match.path, match.params)}/${routeObj.route}`} key={index}>
             <Component config={{ texts, inputs, key }} onSelect={handleSelect} onSkip={handleSkip} t={t} formData={params} onAdd={handleMultiple} />

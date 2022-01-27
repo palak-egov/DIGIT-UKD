@@ -98,7 +98,6 @@ const getPath = (path, params) => {
 
 const TLCheckPage = ({ onSubmit, value }) => {
 
-  console.log("prasad TLCheckPage", TLCheckPage);
   
   let isEdit = window.location.href.includes("renew-trade");
   const { t } = useTranslation();
