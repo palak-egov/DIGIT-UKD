@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 // import AppBar from "@material-ui/core/AppBar";
 import "./index.css";
 import { getLocale, getTenantId, getUserInfo, setStoredModulesList, setModule } from "egov-ui-kit/utils/localStorageUtils";
+import {  getModuleName } from "egov-ui-kit/utils/commons";
 import digitLogo from "egov-ui-kit/assets/images/Digit_logo.png";
 import Label from "egov-ui-kit/utils/translationNode";
 import { isPublicSearch } from "egov-ui-framework/ui-utils/commons";
@@ -11,8 +12,8 @@ import { fetchLocalizationLabel, setLocalizationLabels } from "egov-ui-kit/redux
 import { DropDown, AppBar } from "components";
 import { getQueryArg } from "egov-ui-kit/utils/commons";
 import Toolbar from "material-ui/Toolbar";
-import msevaLogo from "egov-ui-kit/assets/images/mseva-punjab.png";
-import { getModuleName } from "../utils/commons";
+import msevaLogo from "egov-ui-kit/assets/images/logo.png";
+import commonConfig from "config/common.js";
 
 const getUlbGradeLabel = (ulbGrade) => {
   if (ulbGrade) {
@@ -27,7 +28,7 @@ const getUlbGradeLabel = (ulbGrade) => {
 const withoutAuthorization = (redirectionUrl) => (Component) => {
   class Wrapper extends React.Component {
     state = {
-      languageSelected: getLocale(),
+      languageSelected: getLocale() || "en_IN"
     };
     style = {
       baseStyle: {
@@ -85,23 +86,27 @@ const withoutAuthorization = (redirectionUrl) => (Component) => {
     onLanguageChange = (event, index, value) => {
       //const {setRote} = this.props;
       this.setState({ languageSelected: value });
-      let tenantId = getTenantId();
+      let tenantId = process.env.REACT_APP_NAME === "Citizen" ? commonConfig.tenantId : getTenantId();
+      setModule(getModuleName());
+      let module = getModuleName();
 
-      if (process.env.REACT_APP_NAME === "Citizen") {
-        const tenantInfo = getQueryArg(window.location.href, "tenantId");
+/* if (process.env.REACT_APP_NAME === "Citizen") {
+       /*  const tenantInfo = getQueryArg(window.location.href, "tenantId");
         const userInfo = JSON.parse(getUserInfo());
         tenantId = userInfo && userInfo.permanentCity;
         tenantId = tenantInfo ? tenantInfo : tenantId;
-      }
+        tenantId = "uk"
+
+      } */
       var resetList=[];
       var newList =JSON.stringify(resetList);
       setStoredModulesList(newList);
-      let locale= getLocale();
+      let locale= getLocale() || "en_IN";
       let resultArray=[];
       setLocalizationLabels(locale, resultArray);
-      this.props.fetchLocalizationLabel(value, tenantId, tenantId);
+     // this.props.fetchLocalizationLabel = (locale, module, tenantId, isFromModule) => {
+      this.props.fetchLocalizationLabel(value, module, tenantId);
     };
-
 
     checkForPublicSeach = () => {
       return isPublicSearch();
@@ -158,8 +163,8 @@ const withoutAuthorization = (redirectionUrl) => (Component) => {
                       </div>
                     )}
                   </Toolbar>
-                  <div className="appbar-right-logo">
-                    <img src={digitLogo} />
+                  <div className="appbar-right-logo" style={{maxWidth:"250px"}}>
+                    <img src={msevaLogo} />
                   </div>
                 </AppBar>
               </div>
