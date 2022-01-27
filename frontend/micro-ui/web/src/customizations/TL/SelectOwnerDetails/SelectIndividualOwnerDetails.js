@@ -153,11 +153,11 @@ const IndividualOwnerForm = ({
     name: owner?.name,
     fatherOrHusbandName: owner?.fatherOrHusbandName,
     relationship: owner?.relationship,
-    gender: owner?.gender ||  owner?.gender?.code,
+    gender: owner?.gender,
     DOB: owner?.DOB,
     email: owner?.email,
     pan: owner?.pan,
-    correspondenceAddress: owner?.correspondenceAddress || owner?.permanentAddress,
+    correspondenceAddress: owner?.correspondenceAddress,
     tradeRelationship: owner?.tradeRelationship,
   };
 
