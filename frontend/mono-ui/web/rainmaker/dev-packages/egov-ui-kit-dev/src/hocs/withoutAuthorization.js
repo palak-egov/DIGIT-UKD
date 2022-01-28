@@ -164,7 +164,7 @@ const withoutAuthorization = (redirectionUrl) => (Component) => {
                     )}
                   </Toolbar>
                   <div className="appbar-right-logo">
-                    <img src={msevaLogo} />
+                    <img src={digitLogo} />
                   </div>
                 </AppBar>
               </div>

@@ -96,7 +96,9 @@ const getPath = (path, params) => {
   return path;
 };
 
-const CheckPage = ({ onSubmit, value }) => {
+const TLCheckPage = ({ onSubmit, value }) => {
+
+  
   let isEdit = window.location.href.includes("renew-trade");
   const { t } = useTranslation();
   const history = useHistory();
@@ -302,8 +304,8 @@ const CheckPage = ({ onSubmit, value }) => {
             actionButton={<ActionButton jumpTo={`${routeLink}/map`} />}
           />
              <CardSubHeader>{t("TL_NEW_OWNER_DETAILS_HEADER")}</CardSubHeader>
-          {tradeLicenseDetail && tradeLicenseDetail.owners &&
-          tradeLicenseDetail.owners.map((owner, index) => (
+          {isEdit && owners && owners.owners &&
+            owners.owners.map((owner, index)=> (
               <div key={index}>
                 <CardSubHeader>
                   {t("TL_PAYMENT_PAID_BY_PLACEHOLDER")}-{index + 1}
@@ -317,7 +319,7 @@ const CheckPage = ({ onSubmit, value }) => {
                 />
                 <Row
                   label={t("TL_NEW_OWNER_DETAILS_GENDER_LABEL")}
-                  text={t(owner?.gender)}
+                  text={t(owner?.gender?.i18nKey)}
                   actionButton={
                     <ActionButton jumpTo={`${routeLink}/owner-details`} />
                   }
@@ -338,7 +340,7 @@ const CheckPage = ({ onSubmit, value }) => {
                 />
                 <Row
                   label={t("TL_RELAIONSHIP_LABEL")}
-                  text={t(owner?.relationship)}
+                  text={t(owner?.relationship?.code)}
                   actionButton={
                     <ActionButton jumpTo={`${routeLink}/owner-details`} />
                   }
@@ -367,7 +369,7 @@ const CheckPage = ({ onSubmit, value }) => {
                 </CardSubHeader>
                 <Row
                   label={t("TL_COMMON_TABLE_COL_OWN_NAME")}
-                  text={t(owner?.ownerName)}
+                  text={t(owner?.name)}
                   actionButton={
                     <ActionButton jumpTo={`${routeLink}/owner-details`} />
                   }
@@ -388,7 +390,7 @@ const CheckPage = ({ onSubmit, value }) => {
                 />
                 <Row
                   label={t("TL_FATHER_OR_HUSBAND_LABEL")}
-                  text={t(owner?.fatherHusbandName)}
+                  text={t(owner?.fatherOrHusbandName)}
                   actionButton={
                     <ActionButton jumpTo={`${routeLink}/owner-details`} />
                   }
@@ -409,7 +411,7 @@ const CheckPage = ({ onSubmit, value }) => {
                 />
                  <Row
                   label={t("TL_PANCARD_LABEL")}
-                  text={t(owner?.panNo)}
+                  text={t(owner?.pan)}
                   actionButton={
                     <ActionButton jumpTo={`${routeLink}/owner-details`} />
                   }
@@ -449,8 +451,11 @@ const CheckPage = ({ onSubmit, value }) => {
 
 // TLGSTNumber
 
-const customize = () => {
-  window.Digit.ComponentRegistryService.setComponent("TLCheckPage", CheckPage);
+
+
+const customize = (props) => {
+  window.Digit.ComponentRegistryService.setComponent("TLCheckPage", TLCheckPage);
+  return <TLCheckPage {...props}/>
 };
 
 export default customize;

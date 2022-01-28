@@ -159,11 +159,11 @@ export const getownerarray = (data) => {
   let ownerarray = [];
   data?.owners.owners.map((ob) => {
     ownerarray.push({
-      mobileNumber: ob.mobilenumber,
+      mobileNumber: ob.mobileNumber,
       name: ob.name,
-      fatherOrHusbandName: "",
-      relationship: "",
-      dob: null,
+      fatherOrHusbandName:ob.fatherOrHusbandName,
+      relationship: ob.relationship,
+      dob: ob.dob,
       gender: ob.gender.code,
       permanentAddress: data?.owners?.permanentAddress,
     });
@@ -178,7 +178,7 @@ export const gettradeownerarray = (data) => {
     data?.owners?.owners.map((newowner) => {
       if(oldowner.id === newowner.id)
       {
-        if((oldowner.name !== newowner.name) || (oldowner.gender !== newowner.gender.code) || (oldowner.mobileNumber !== newowner.mobilenumber) || (oldowner.permanentAddress !== data?.owners?.permanentAddress))
+        if((oldowner.name !== newowner.name) || (oldowner.gender !== newowner.gender.code) || (oldowner.mobileNumber !== newowner.mobileNumber) || (oldowner.permanentAddress !== data?.owners?.permanentAddress))
         {
         if (oldowner.name !== newowner.name)
         {
@@ -188,9 +188,9 @@ export const gettradeownerarray = (data) => {
         {
           oldowner.gender = newowner.gender.code;
         }
-        if(oldowner.mobileNumber !== newowner.mobilenumber)
+        if(oldowner.mobileNumber !== newowner.mobileNumber)
         {
-          oldowner.mobileNumber = newowner.mobilenumber;
+          oldowner.mobileNumber = newowner.mobileNumber;
         }
         if(oldowner.permanentAddress !== data?.owners?.permanentAddress)
         {
@@ -215,7 +215,7 @@ export const gettradeownerarray = (data) => {
     if(!ob.id)
     {
       tradeownerarray.push({
-              mobileNumber: ob.mobilenumber,
+              mobileNumber: ob.mobileNumber,
               name: ob.name,
               fatherOrHusbandName: "",
               relationship: "",
@@ -1044,13 +1044,13 @@ export const formatFormDataToCreateTLApiObject = (formData) => {
       institution: formData?.owners?.owners?.[0]?.designation ?  {designation: formData?.owners?.owners?.[0]?.designation}:null,        
       subOwnerShipCategory: formData?.ownershipCategory?.code,
       owners: formData?.owners?.owners?.map((e) => ({
-        userName: e.ownerName, //to be checked
-        name: e.ownerName,
+        userName: e.name, //to be checked
+        name: e.name,
         gender: e?.gender?.code,
         mobileNumber: e?.mobileNumber,
         emailId: e?.email,
         altContactNumber: null,
-        pan: e?.panNo, // to be added
+        pan: e?.pan, // to be added
         aadhaarNumber: null,
         permanentAddress: e.correspondenceAddress, // to be validated
         permanentCity: null,
@@ -1063,7 +1063,7 @@ export const formatFormDataToCreateTLApiObject = (formData) => {
         type: "CITIZEN",
         accountLocked: false,
         accountLockedDate: 0,
-        fatherOrHusbandName: e.fatherHusbandName,
+        fatherOrHusbandName: e.fatherOrHusbandName,
         signature: null,
         bloodGroup: null,
         photo: null,

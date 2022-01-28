@@ -16,13 +16,13 @@ import { getPattern } from "../../utils";
 
 const newOwner = {
   mobileNumber: "",
-  ownerName: "",
-  fatherHusbandName: "",
+  name: "",
+  fatherOrHusbandName: "",
   relationship: "",
   gender: "",
   DOB: "",
   email: "",
-  panNo: "",
+  pan: "",
   correspondenceAddress: "",
   tradeRelationship: "",
   designation: ""
@@ -151,14 +151,14 @@ const IndividualOwnerForm = ({
 
   const defaultValues = {
     mobileNumber: owner?.mobileNumber,
-    ownerName: owner?.ownerName,
-    fatherHusbandName: owner?.fatherHusbandName,
+    name: owner?.name,
+    fatherOrHusbandName: owner?.fatherOrHusbandName,
     relationship: owner?.relationship,
-    gender: owner?.gender,
+    gender: owner?.gender ||  owner?.gender?.code,
     DOB: owner?.DOB,
     email: owner?.email,
-    panNo: owner?.panNo,
-    correspondenceAddress: owner?.correspondenceAddress,
+    pan: owner?.pan,
+    correspondenceAddress: owner?.correspondenceAddress || owner?.permanentAddress,
     tradeRelationship: owner?.tradeRelationship,
     designation : owner?.designation
   };
@@ -260,7 +260,7 @@ const IndividualOwnerForm = ({
       <CardLabel>{t("TL_AUTHORISED_PERSON_LABEL") + "*"}</CardLabel>
       <div className="field-container">
         <Controller
-          name="ownerName"
+          name="name"
           rules={{ required: t("REQUIRED_FIELD"), validate: { pattern: (val) => (/^[^{0-9}^\$\"'<>?\\\\~`!@#$%^()+={}\[\]*,._:;“”‘’]*$/.test(val) ? true : t("INVALID_NAME")) } }}
           control={control}
           render={({ onChange, onBlur, value }) => (
@@ -287,7 +287,7 @@ const IndividualOwnerForm = ({
       <CardLabel>{t("TL_FATHER_HUSBAND_NAME_LABEL") + "*"}</CardLabel>
       <div className="field-container">
         <Controller
-          name="fatherHusbandName"
+          name="fatherOrHusbandName"
           rules={{ required: true, pattern: getPattern("Name") }}
           control={control}
           render={({ onChange, onBlur, value }) => (
@@ -363,7 +363,7 @@ const IndividualOwnerForm = ({
 
       {/* <CardLabel>{t("TL_PAN_NO_LABEL")}</CardLabel>
       <Controller
-        name="panNo"
+        name="pan"
         rules={{ pattern: getPattern("PAN") }}
         control={control}
         render={({ onChange, onBlur, value }) => (

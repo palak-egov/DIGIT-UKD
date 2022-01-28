@@ -151,11 +151,11 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
   );
 };
 
-const customize = () => {
-  window.Digit.ComponentRegistryService.setComponent(
-    "TLAcknowledgement",
-    TLAcknowledgement
-  );
+
+const customize = (props) => {
+  window.Digit.ComponentRegistryService.setComponent("TLAcknowledgement", TLAcknowledgement);
+  return <TLAcknowledgement {...props}/>
 };
+
 
 export default customize;

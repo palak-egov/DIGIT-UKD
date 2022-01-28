@@ -14,6 +14,7 @@ import ApplicationDetails from "./TL/ApplicationDetails"
 import TLTradeUnitsEmployee from "./TL/TLTradeUnitsEmployee"
 import TLDocumentsEmployee from "./TL/TLDocumentsEmployee"
 import CreateChallen from "./mCollect/CreateChallen"
+import TLRenewTrade from "./TL/RenewTrade"
 
 export const customizations = [
   SelectTradeLicenceCustomization,
@@ -29,5 +30,6 @@ export const customizations = [
   ApplicationDetails,
   TLTradeUnitsEmployee,
   TLDocumentsEmployee,
-  CreateChallen,  
+  CreateChallen,
+  TLRenewTrade
 ];
