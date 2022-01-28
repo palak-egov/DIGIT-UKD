@@ -61,7 +61,7 @@ router.post(
         var filename = `${pdfkey}_${new Date().getTime()}`;
 
         //pdfData = pdfResponse.data.read();
-        res.writeHead(200, {
+        res.writeHead(201, {
           "Content-Type": "application/pdf",
           "Content-Disposition": `attachment; filename=${filename}.pdf`,
         });
