@@ -5,11 +5,12 @@ import * as func from "../utils/Category"
 import { FormComposer } from  "../utils/FormComposer";
 import { sortDropdownNames } from "../utils";
 import { stringReplaceAll } from "../utils";
+import { Loader } from "@egovernments/digit-ui-react-components";
 import { useParams, useHistory, useRouteMatch } from "react-router-dom";
 const CreateChallen = ({ ChallanData }) => {
   const childRef = useRef();
-  const history = useHistory();
-  const { url } = useRouteMatch();
+  const history = useHistory(); 
+  const { url } = useRouteMatch(); 
   let defaultval;
   let isEdit = false;
   if (url.includes("modify-challan")) {
@@ -30,6 +31,7 @@ const CreateChallen = ({ ChallanData }) => {
   const cities = window.Digit.Hooks.mcollect.usemcollectTenants();
   const getCities = () => cities?.filter((e) => e.code === window.Digit.ULBService.getCurrentTenantId()) || [];
   const { t } = useTranslation();
+  // const [isLoading, setisLoading]=useState(false)
   const { data: fetchedLocalities } = window.Digit.Hooks.useBoundaryLocalities(
     getCities()[0]?.code,
     "revenue",
@@ -244,6 +246,7 @@ const CreateChallen = ({ ChallanData }) => {
   }, [pincode]);
 
   const onSubmit = (data) => {
+    setSubmitValve(false)
     TaxHeadMasterFields.map((ele) => {
       return { taxHeadCode: ele.code, amount: data[ele.code.split(".").join("_")] };
     });
@@ -302,6 +305,7 @@ const CreateChallen = ({ ChallanData }) => {
     if (isEdit) {
       window.Digit.MCollectService.update({ Challan: Challan }, tenantId)
         .then((result, err) => {
+          setSubmitValve(false)
           if (result.challans && result.challans.length > 0) {
             const challan = result.challans[0];
             let LastModifiedTime = window.Digit.SessionStorage.set("isMcollectAppChanged", challan.auditDetails.lastModifiedTime);
@@ -321,6 +325,7 @@ const CreateChallen = ({ ChallanData }) => {
     } else {
       window.Digit.MCollectService.create({ Challan: Challan }, tenantId)
         .then((result, err) => {
+          setSubmitValve(false)
           if (result.challans && result.challans.length > 0) {
             const challan = result.challans[0];
             window.Digit.MCollectService.generateBill(challan.challanNo, tenantId, challan.businessService, "challan").then((response) => {
@@ -538,6 +543,7 @@ const CreateChallen = ({ ChallanData }) => {
       return config;
     }
   }
+
 
   return (
     <div>
