@@ -29,16 +29,16 @@ const PDFSvg = ({ width = 20, height = 20, style }) => (
 
 function TLDocument({ value = {} }) {
   const { t } = useTranslation();
-  const { isLoading, isError, error, data } = window.Digit.Hooks.tl.useTLDocumentSearch(
+  const { isLoading, isError, error, data } = value && window.Digit.Hooks.tl.useTLDocumentSearch(
     {
-      value,
+      value
     },
     { value }
   );
   let documents = [];
-  documents.push(value.owners.documents["ProofOfIdentity"]);
-  documents.push(value.owners.documents["ProofOfOwnership"]);
-  documents.push(value.owners.documents["OwnerPhotoProof"]);
+  documents.push(value && value.owners.documents["ProofOfIdentity"]);
+  documents.push(value && value.owners.documents["ProofOfOwnership"]);
+  documents.push(value && value.owners.documents["OwnerPhotoProof"]);
   
 
   if (isLoading) {
@@ -191,8 +191,8 @@ const TLCheckPage = ({ onSubmit, value }) => {
             label={t("TL_STRUCTURE_SUB_TYPE")}
             text={t(
               TradeDetails?.StructureType.code !== "IMMOVABLE"
-                ? TradeDetails?.VehicleType.i18nKey
-                : TradeDetails?.BuildingType.i18nKey
+                ? TradeDetails?.VehicleType?.i18nKey
+                : TradeDetails?.BuildingType?.i18nKey
             )}
             actionButton={
               <ActionButton
