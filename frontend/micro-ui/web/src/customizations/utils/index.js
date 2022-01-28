@@ -44,19 +44,19 @@ export const useLocalities = (tenant, boundaryType = "revenue", config, t) => {
   });
 };
 
-export const   receipt_download = (bussinessService, consumerCode, tenantId, pdfKey="misc-receipt") => {
-  Request({
-    url: "/egov-pdf/download/PAYMENT/consolidatedreceipt",
-    data: {},
-    useCache: true,
-    method: "POST",
-    params: { bussinessService, consumerCode, tenantId, pdfKey},
-    auth: true,
-    locale: true,
-    userService: true,
-    userDownload: true,
-  })
-  }
+// export const   receipt_download = (bussinessService, consumerCode, tenantId, pdfKey="misc-receipt") => {
+//   Request({
+//     url: "/egov-pdf/download/PAYMENT/consolidatedreceipt",
+//     data: {},
+//     useCache: true,
+//     method: "POST",
+//     params: { bussinessService, consumerCode, tenantId, pdfKey},
+//     auth: true,
+//     locale: true,
+//     userService: true,
+//     userDownload: true,
+//   })
+//   }
 
 export const sortDropdownNames = (options, optionkey, locilizationkey) => {
   return options.sort((a, b) => locilizationkey(a[optionkey]).localeCompare(locilizationkey(b[optionkey])));
