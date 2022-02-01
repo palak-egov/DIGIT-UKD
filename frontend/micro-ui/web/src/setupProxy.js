@@ -28,6 +28,7 @@ module.exports = function (app) {
     "/egov-user-event",
     "/echallan-services",
     "/inbox",
-    "/egov-pdf"
+    "/egov-pdf",
+    "/egov-searcher"
   ].forEach((location) => app.use(location, createProxy));
 };

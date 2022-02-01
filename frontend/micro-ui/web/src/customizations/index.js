@@ -14,6 +14,8 @@ import ApplicationDetails from "./TL/ApplicationDetails"
 import TLTradeUnitsEmployee from "./TL/TLTradeUnitsEmployee"
 import TLDocumentsEmployee from "./TL/TLDocumentsEmployee"
 import CreateChallen from "./mCollect/CreateChallen"
+import CitizenSearchResults from "./mCollect/SearchResults/index"
+import SearchChallanComponent from "./mCollect/SearchChallan/index"
 import TLRenewTrade from "./TL/RenewTrade"
 
 export const customizations = [
@@ -31,5 +33,7 @@ export const customizations = [
   TLTradeUnitsEmployee,
   TLDocumentsEmployee,
   CreateChallen,
-  TLRenewTrade
+  TLRenewTrade,
+  CitizenSearchResults,
+  SearchChallanComponent
 ];
