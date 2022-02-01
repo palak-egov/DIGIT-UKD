@@ -116,7 +116,7 @@ const SelectStreet = ({ t, config, onSelect, userType, formData, formState, setE
               control={control}
               defaultValue={formData?.address?.[input.name]}
               name={input.name}
-              rules={{ validate: (e) => ((e && getPattern("Street").test(e)) || !e ? true : t("INVALID_ENTRY")) }}
+              //rules={{ validate: (e) => ((e && getPattern("Street").test(e)) || !e ? true : t("INVALID_ENTRY")) }}
               //rules={{ validate: convertValidationToRules(input) }}
               render={(_props) => (
                 <TextInput
