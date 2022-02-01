@@ -2418,9 +2418,24 @@ class FormWizardDataEntry extends Component {
       hideSpinner();
       this.setState({ nextButtonEnabled: true });
       alert(e);
-  }  
-
+  } 
  
+   const queryObject = [
+     { key: "consumerCode", value: propertyId },
+     { key: "tenantId", value: getTenantId() },
+     { key: "businessService", value: "PT" },
+   ];
+   try {
+      const response = await httpRequest(
+        "/billing-service/bill/v2/_fetchbill",
+        "_search",
+        queryObject
+      );
+      return response;
+    } catch (error) {
+      console.log(error, "fetxh");
+    }
+    
   };
   pay = async () => {
     const { callPGService, callDraft } = this;
