@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FormStep, TextInput, LabelFieldPair, CardLabel } from "@egovernments/digit-ui-react-components";
 import { useForm, Controller } from "react-hook-form";
 import _ from "lodash";
+import { getPattern } from '../utils';
 
 const SelectStreet = ({ t, config, onSelect, userType, formData, formState, setError, clearErrors }) => {
   const onSkip = () => onSelect();
@@ -115,7 +116,8 @@ const SelectStreet = ({ t, config, onSelect, userType, formData, formState, setE
               control={control}
               defaultValue={formData?.address?.[input.name]}
               name={input.name}
-              rules={{ validate: convertValidationToRules(input) }}
+              rules={{ validate: (e) => ((e && getPattern("Street").test(e)) || !e ? true : t("INVALID_ENTRY")) }}
+              //rules={{ validate: convertValidationToRules(input) }}
               render={(_props) => (
                 <TextInput
                   id={input.name}

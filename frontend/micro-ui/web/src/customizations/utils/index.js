@@ -838,6 +838,8 @@ export const getPattern = type => {
   switch (type) {
     case "Name":
       return /^[^{0-9}^\$\"<>?\\\\~!@#$%^()+={}\[\]*,/_:;“”‘’]{1,50}$/i;
+    case "Street":
+        return /^[^{0-9}^\$\"<>?\\\\~!@#$%^()+={}\[\]*,/_:;“”‘’]{1,256}$/i;    
     case "MobileNo":
       return /^[6789][0-9]{9}$/i;
     case "Amount":
