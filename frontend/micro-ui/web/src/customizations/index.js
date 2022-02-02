@@ -13,10 +13,7 @@ import TLOperationalArea from "./TL/TLOperationalArea";
 import ApplicationDetails from "./TL/ApplicationDetails"
 import TLTradeUnitsEmployee from "./TL/TLTradeUnitsEmployee"
 import TLDocumentsEmployee from "./TL/TLDocumentsEmployee"
-import CreateChallen from "./mCollect/CreateChallen"
-import CitizenSearchResults from "./mCollect/SearchResults/index"
-import SearchChallanComponent from "./mCollect/SearchChallan/index"
-import FilterMcs from './mCollect/FilterInbox/index'
+import MCollectNewChallan from "./mCollect/MCollectNewChallan"
 import TLRenewTrade from "./TL/RenewTrade"
 
 export const customizations = [
@@ -33,9 +30,6 @@ export const customizations = [
   ApplicationDetails,
   TLTradeUnitsEmployee,
   TLDocumentsEmployee,
-  CreateChallen,
-  TLRenewTrade,
-  CitizenSearchResults,
-  FilterMcs,
-  SearchChallanComponent
+  MCollectNewChallan,
+  TLRenewTrade
 ];
