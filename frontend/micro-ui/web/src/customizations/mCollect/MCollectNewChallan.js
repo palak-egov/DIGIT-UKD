@@ -7,12 +7,14 @@ import { sortDropdownNames } from "../utils";
 import { stringReplaceAll } from "../utils";
 import { Loader } from "@egovernments/digit-ui-react-components";
 import { useParams, useHistory, useRouteMatch } from "react-router-dom";
-const CreateChallen = ({ ChallanData }) => {
+const MCollectNewChallan = ({ ChallanData }) => {
+  console.log("Shreya test");
   const childRef = useRef();
   const history = useHistory(); 
   const { url } = useRouteMatch(); 
   let defaultval;
   let isEdit = false;
+  console.log("Shreya test");
   if (url.includes("modify-challan")) {
     isEdit = true;
   }
@@ -29,6 +31,7 @@ const CreateChallen = ({ ChallanData }) => {
     : {};
 
   const cities = window.Digit.Hooks.mcollect.usemcollectTenants();
+  const [isLoading,setisLoading]=useState(false);
   const getCities = () => cities?.filter((e) => e.code === window.Digit.ULBService.getCurrentTenantId()) || [];
   const { t } = useTranslation();
   // const [isLoading, setisLoading]=useState(false)
@@ -83,6 +86,7 @@ const CreateChallen = ({ ChallanData }) => {
   }
 
   function humanize(str) {
+    console.log("shreya");
     var frags = str.split("_");
     for (let i = 0; i < frags.length; i++) {
       frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
@@ -544,9 +548,13 @@ const CreateChallen = ({ ChallanData }) => {
     }
   }
 
+  // if (isLoading) {
+  //   return <Loader></Loader>
+  // }
 
   return (
     <div>
+      <h1>TEST</h1>
       <FormComposer
         ref={childRef}
         heading={isEdit ? t("UC_UPDATE_CHALLAN") : t("UC_COMMON_HEADER")}
@@ -562,9 +570,10 @@ const CreateChallen = ({ ChallanData }) => {
 };
 
 const customize = () => {
+  console.log("shreya customization");
   window.window.window.window.Digit.ComponentRegistryService.setComponent(
-    "CreateChallen",
-    CreateChallen
+    "MCollectNewChallan",
+    MCollectNewChallan
   );
 };
 
