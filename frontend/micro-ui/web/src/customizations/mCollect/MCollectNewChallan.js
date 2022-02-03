@@ -8,13 +8,11 @@ import { stringReplaceAll } from "../utils";
 import { Loader } from "@egovernments/digit-ui-react-components";
 import { useParams, useHistory, useRouteMatch } from "react-router-dom";
 const MCollectNewChallan = ({ ChallanData }) => {
-  console.log("Shreya test");
   const childRef = useRef();
   const history = useHistory(); 
   const { url } = useRouteMatch(); 
   let defaultval;
   let isEdit = false;
-  console.log("Shreya test");
   if (url.includes("modify-challan")) {
     isEdit = true;
   }
@@ -86,7 +84,6 @@ const MCollectNewChallan = ({ ChallanData }) => {
   }
 
   function humanize(str) {
-    console.log("shreya");
     var frags = str.split("_");
     for (let i = 0; i < frags.length; i++) {
       frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
@@ -569,7 +566,6 @@ const MCollectNewChallan = ({ ChallanData }) => {
 };
 
 const customize = () => {
-  console.log("shreya customization");
   window.window.window.window.Digit.ComponentRegistryService.setComponent(
     "MCollectNewChallan",
     MCollectNewChallan
