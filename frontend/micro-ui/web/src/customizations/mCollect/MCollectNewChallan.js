@@ -554,7 +554,6 @@ const MCollectNewChallan = ({ ChallanData }) => {
 
   return (
     <div>
-      <h1>TEST</h1>
       <FormComposer
         ref={childRef}
         heading={isEdit ? t("UC_UPDATE_CHALLAN") : t("UC_COMMON_HEADER")}
