@@ -2,3 +2,10 @@
     height: auto;
     max-height: 35px;
 }
+.citizen-home-footer-1{
+    position:initial;
+    @apply flex fixed w-full right-0 bottom-0 h-10 bg-grey-bg pb-md pt-sm justify-center z-50;
+    img{
+      @apply ml-sm
+    }
+}
