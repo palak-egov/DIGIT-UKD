@@ -30,7 +30,6 @@ const FilterInbox = ({
     let _new = { ..._searchParams, ...filterParam };
     if (keys_to_delete) keys_to_delete.forEach((key) => delete _new[key]);
     delete filterParam.delete;
-    console.log("ayush 1", _new);
     setSearchParams({ ..._new });
   };
 
@@ -41,7 +40,6 @@ const FilterInbox = ({
   };
 
   const selectLocality = (d, remove = false) => {
-    console.log("ayush", d, searchLocality, locality);
     if (remove) {
       setSearchLocality(
         searchLocality.filter((value) => {
