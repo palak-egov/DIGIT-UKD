@@ -53,6 +53,9 @@ const SelectOwnerShipDetails = ({
     [mainOwnerShipType]
   );
 
+  let isRenewal = window.location.href.includes("tl/renew-application-details");
+  if (window.location.href.includes("tl/edit-application-details")) isRenewal = true;
+
   useEffect(() => {
     if (
       ownership?.code &&
@@ -107,7 +110,7 @@ const SelectOwnerShipDetails = ({
               selectedOption={mainOwnerShipType}
               t={t}
               isDependent={false}
-              disabled={false}
+              disabled={isRenewal}
             />
           </div>
         </LabelFieldPair>
@@ -120,6 +123,7 @@ const SelectOwnerShipDetails = ({
               optionKey={"code"}
               selected={ownership}
               t={t}
+              disable={isRenewal}
             />
           </div>
         </LabelFieldPair>
