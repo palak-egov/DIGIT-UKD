@@ -15,6 +15,10 @@ import TLTradeUnitsEmployee from "./TL/TLTradeUnitsEmployee"
 import TLDocumentsEmployee from "./TL/TLDocumentsEmployee"
 import MCollectNewChallan from "./mCollect/MCollectNewChallan"
 import TLRenewTrade from "./TL/RenewTrade"
+import CitizenSearchResults from "./mCollect/SearchResults/index"
+import SearchChallanComponent from "./mCollect/SearchChallan/index"
+import FilterMcs from './mCollect/FilterInbox/index'
+
 
 export const customizations = [
   SelectTradeLicenceCustomization,
@@ -30,6 +34,10 @@ export const customizations = [
   ApplicationDetails,
   TLTradeUnitsEmployee,
   TLDocumentsEmployee,
+  TLRenewTrade,
+  CitizenSearchResults,
+  FilterMcs,
+  SearchChallanComponent,
   MCollectNewChallan,
   TLRenewTrade
 ];
