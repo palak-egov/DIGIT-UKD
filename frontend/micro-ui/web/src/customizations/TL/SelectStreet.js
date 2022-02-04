@@ -59,7 +59,7 @@ const SelectStreet = ({ t, config, onSelect, userType, formData, formState, setE
     ];
    } 
 
-  const convertValidationToRules = ({ validation, name, messages }) => {
+   const convertValidationToRules = ({ validation, name, messages }) => {
     if (validation) {
       let { pattern: valPattern, maxlength, minlength, required: valReq } = validation || {};
       let pattern = (value) => {
@@ -117,7 +117,7 @@ const SelectStreet = ({ t, config, onSelect, userType, formData, formState, setE
               defaultValue={formData?.address?.[input.name]}
               name={input.name}
               //rules={{ validate: (e) => ((e && getPattern("Street").test(e)) || !e ? true : t("INVALID_ENTRY")) }}
-              //rules={{ validate: convertValidationToRules(input) }}
+              rules={ () => convertValidationToRules(input)}
               render={(_props) => (
                 <TextInput
                   id={input.name}
