@@ -15,17 +15,17 @@ const TLGSTNumber = ({ t, config, onSelect, value, userType, formData }) => {
 
     const [gstNo, setGstNo] = useState(formData?.[config.key]?.gstNo);
 
-    useEffect(() => {
-      //console.log(gstNo,"this is gst no");
-     },[gstNo])
-
+    // useEffect(() => {
+    //   //console.log(gstNo,"this is gst no");
+    //  },[gstNo])
+    console.log("ayush",config)
 
     return (
       <FormStep
         config={config}
         onSelect={()=>onSelect(config.key, {...formData?.[config.key], gstNo })}
         t={t}
-        isDisabled={!getPattern("GSTNo").test(gstNo)}
+        // isDisabled={!getPattern("GSTNo").test(gstNo)}
       >
         <CardLabel>{t("TL_GST_NO")}</CardLabel>
         <TextInput value={gstNo} onChange={e=>setGstNo(e.target.value)} />

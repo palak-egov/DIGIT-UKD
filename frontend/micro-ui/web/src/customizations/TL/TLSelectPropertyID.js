@@ -30,7 +30,7 @@ const TLSelectPropertyID = ({ t, config, onSelect, value, userType, formData }) 
         onSelect={goNext}
         onSkip={onSkip}
         t={t}
-        isDisabled={!propertyId}
+        // isDisabled={!propertyId}
       >
         <CardLabel>{`${t("TL_LOCALIZATION_PROPERTY_ID")}`}</CardLabel>
         <TextInput
@@ -42,7 +42,7 @@ const TLSelectPropertyID = ({ t, config, onSelect, value, userType, formData }) 
           value={propertyId}
           onChange={setSelectpropertyId}
           disable={isEdit}
-          {...(validation = { pattern: "^[a-zA-Z-.`' ]*$", isRequired: true, type: "text", title: t("TL_INVALID_PROPERYID") })}
+          {...(validation = { pattern: "^[a-zA-Z-.`' ]*$", isRequired: false, type: "text", title: t("TL_INVALID_PROPERYID") })}
         />
       </FormStep>
       {<CitizenInfoLabel info={t("CS_FILE_APPLICATION_INFO_LABEL")} text={t("TL_LICENSE_ISSUE_YEAR_INFO_MSG") } />}
