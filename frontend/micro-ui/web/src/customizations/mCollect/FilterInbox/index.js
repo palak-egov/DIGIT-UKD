@@ -214,7 +214,7 @@ const FilterInbox = ({
                 {searchServiceCategory?.map((option, index) => {
                   return (
                     <RemoveableTag
-                      text={t(`${option.code}`)}
+                      text={t(`${option.code1}`)}
                       onClick={() => {
                         selectServiceCatagory(option, true);
                       }}
