@@ -894,7 +894,7 @@ pt_properties_registered_by_year = {'path': 'property-assessments/_search',
   "aggs": {{
     "ward": {{
       "terms": {{
-        "field": "Data.ward.locality.name.keyword",
+        "field": "Data.ward.name.keyword",
         "size":10000
       }},
       "aggs": {{
@@ -976,7 +976,7 @@ pt_properties_assessments = {'path': 'property-assessments/_search',
   "aggs": {{
     "ward": {{
       "terms": {{
-        "field": "Data.ward.locality.name.keyword",
+        "field": "Data.ward.name.keyword",
         "size":10000
       }},
       "aggs": {{
