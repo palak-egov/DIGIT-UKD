@@ -38,7 +38,7 @@ default_args = {
 module_map = {
     'TL' : (tl_queries, empty_tl_payload),
     'PT' : (pt_queries, empty_pt_payload),
-    #'MCOLLECT' : (mcollect_queries,empty_mcollect_payload)
+    'MCOLLECT' : (mcollect_queries,empty_mcollect_payload)
   
 }
 
@@ -375,28 +375,28 @@ load_pt = PythonOperator(
     op_kwargs={ 'module' : 'PT'},
     dag=dag)
 
-# extract_mcollect = PythonOperator(
-#     task_id='elastic_search_extract_mcollect',
-#     python_callable=dump_kibana,
-#     provide_context=True,
-#     do_xcom_push=True,
-#     op_kwargs={ 'module' : 'MCOLLECT'},
-#     dag=dag)
+extract_mcollect = PythonOperator(
+    task_id='elastic_search_extract_mcollect',
+    python_callable=dump_kibana,
+    provide_context=True,
+    do_xcom_push=True,
+    op_kwargs={ 'module' : 'MCOLLECT'},
+    dag=dag)
 
-# transform_mcollect = PythonOperator(
-#     task_id='nudb_transform_mcollect',
-#     python_callable=transform,
-#     provide_context=True,
-#     dag=dag)
+transform_mcollect = PythonOperator(
+    task_id='nudb_transform_mcollect',
+    python_callable=transform,
+    provide_context=True,
+    dag=dag)
 
-# load_mcollect = PythonOperator(
-#     task_id='nudb_ingest_load_mcollect',
-#     python_callable=load,
-#     provide_context=True,
-#     op_kwargs={ 'module' : 'MCOLLECT'},
-#     dag=dag)
+load_mcollect = PythonOperator(
+    task_id='nudb_ingest_load_mcollect',
+    python_callable=load,
+    provide_context=True,
+    op_kwargs={ 'module' : 'MCOLLECT'},
+    dag=dag)
 
 extract_tl >> transform_tl >> load_tl
 extract_pt >> transform_pt >> load_pt
-#extract_mcollect>>transform_mcollect>>load_mcollect
+extract_mcollect>>transform_mcollect>>load_mcollect
  
