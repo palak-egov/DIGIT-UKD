@@ -99,6 +99,7 @@ mcollect_total_by_categories = {
 }
 
 
+
 def extract_mcollect_todays_collection(metrics, region_bucket):
     status_agg = region_bucket.get('byStatus')
     status_buckets = status_agg.get('buckets')
@@ -256,6 +257,7 @@ mcollect_todays_collection = {
 
     """
 }
+
 
 
 def extract_mcollect_receipts(metrics, region_bucket):
@@ -559,6 +561,7 @@ mcollect_challans = {
 
     """
 }
+
 
 
 mcollect_queries = [mcollect_total_by_categories, mcollect_todays_collection, mcollect_receipts, mcollect_challans]
