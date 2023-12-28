@@ -161,43 +161,43 @@ const createPdfBinary = async (
       //
       process.nextTick(function () {
         uploadFiles(
-          dbInsertSingleRecords,
-          dbInsertBulkRecords,
-          formatconfig,
-          listDocDefinition,
-          key,
-          false,
-          jobid,
-          noOfDefinitions,
-          entityIds,
-          starttime,
-          successCallback,
-          errorCallback,
-          tenantId,
-          totalobjectcount,
-          userid,
-          documentType,
-          moduleName
-        ),
-        uploadFiles(
-          dbInsertSingleRecords,
-          dbInsertBulkRecords,
-          formatconfig,
-          listDocDefinition,
-          key,
-          true,
-          jobid,
-          noOfDefinitions,
-          entityIds,
-          starttime,
-          successCallback,
-          errorCallback,
-          tenantId,
-          totalobjectcount,
-          userid,
-          documentType,
-          moduleName
-        )
+            dbInsertSingleRecords,
+            dbInsertBulkRecords,
+            formatconfig,
+            listDocDefinition,
+            key,
+            false,
+            jobid,
+            noOfDefinitions,
+            entityIds,
+            starttime,
+            successCallback,
+            errorCallback,
+            tenantId,
+            totalobjectcount,
+            userid,
+            documentType,
+            moduleName
+          ),
+          uploadFiles(
+            dbInsertSingleRecords,
+            dbInsertBulkRecords,
+            formatconfig,
+            listDocDefinition,
+            key,
+            true,
+            jobid,
+            noOfDefinitions,
+            entityIds,
+            starttime,
+            successCallback,
+            errorCallback,
+            tenantId,
+            totalobjectcount,
+            userid,
+            documentType,
+            moduleName
+          )
       });
     }
   } catch (err) {
@@ -405,6 +405,7 @@ app.post(
       var dataconfig = dataConfigMap[key];
       logger.info("received createnosave request on key: " + key);
       requestInfo = get(req.body, "RequestInfo");
+      //
 
       var valid = validateRequest(req, res, key, tenantId, requestInfo);
 
@@ -430,18 +431,23 @@ app.post(
       }
 
       if (valid) {
-        let [formatConfigByFile, totalobjectcount, entityIds] =
-          await prepareBegin(
-            key,
-            req,
-            requestInfo,
-            true,
-            formatconfig,
-            dataconfig
-          );
+        let [
+          formatConfigByFile,
+          totalobjectcount,
+          entityIds,
+        ] = await prepareBegin(
+          key,
+          req,
+          requestInfo,
+          true,
+          formatconfig,
+          dataconfig
+        );
         // restoring footer function
         formatConfigByFile[0].footer = convertFooterStringtoFunctionIfExist(formatconfig.footer);
+        console.log("formatConfigByFile[0].footer", formatConfigByFile[0].footer);
         const doc = printer.createPdfKitDocument(formatConfigByFile[0]);
+        console.log("doc",doc);
         let fileNameAppend = "-" + new Date().getTime();
         let filename = key + "" + fileNameAppend + ".pdf";
 
@@ -739,15 +745,13 @@ export const createAndSave = async (
     ).catch((err) => {
       logger.error(err.stack || err);
       errorCallback({
-        message:
-          "error occurred in createPdfBinary call: " + (typeof err === "string")
-            ? err
-            : err.message,
+        message: "error occurred in createPdfBinary call: " + (typeof err === "string") ?
+          err :
+          err.message,
       });
     });
   }
 };
-
 const updateBorderlayout = (formatconfig) => {
   formatconfig.content = formatconfig.content.map((item) => {
     if (
@@ -771,8 +775,8 @@ const updateBorderlayout = (formatconfig) => {
 export const fillValues = (variableTovalueMap, formatconfig) => {
   let input = JSON.stringify(formatconfig).replace(/\\/g, "");
   
-  console.log(variableTovalueMap);
-  console.log(mustache.render(input, variableTovalueMap).replace(/""/g,"\"").replace(/"\[/g,"\[").replace(/\]"/g,"\]").replace(/\]\[/g,"\],\[").replace(/"\{/g,"\{").replace(/\}"/g,"\}"));
+  //console.log(variableTovalueMap);
+  //console.log(mustache.render(input, variableTovalueMap).replace(/""/g,"\"").replace(/"\[/g,"\[").replace(/\]"/g,"\]").replace(/\]\[/g,"\],\[").replace(/"\{/g,"\{").replace(/\}"/g,"\}"));
   let output = JSON.parse(
     mustache
       .render(input, variableTovalueMap)
@@ -878,6 +882,7 @@ const prepareBegin = async (
       message: `baseKeyPath is absent in config`
     };
   }
+  console.log("inside prepareBegin");
   return await prepareBulk(
     key,
     dataconfig,
